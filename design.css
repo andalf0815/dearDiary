@@ -1,0 +1,53 @@
+* {
+  box-sizing: border-box;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+}
+
+html {
+  font-size: 62.5%;
+  padding: 0;
+  margin: 0;
+}
+
+body {
+  background-image: url("src/background_diary.png");
+}
+
+body,
+input {
+  font-size: 1.8rem;
+  margin: 0;
+}
+
+.card {
+  border: 0.1rem solid grey;
+  border-radius: 0.4rem;
+  box-shadow: 0.1rem 0.1rem 1.1rem grey;
+}
+
+.input-border-bottom {
+  border: none;
+  border-bottom: 0.2rem solid #4e91f0;
+  background: none;
+}
+
+.input-border-bottom:focus-visible {
+  border: none;
+  outline: none;
+  border-bottom: 0.2rem solid #ff9514;
+}
+
+.display-none {
+  display: none;
+}
+
+@media only screen and (max-width: 600px) {
+  body,
+  main {
+    height: 100vh;
+  }
+
+  .card {
+    height: 100vh;
+  }
+}
