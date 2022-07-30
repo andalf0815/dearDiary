@@ -1,0 +1,19 @@
+{
+  "block": [
+    "/accesslist.json",
+    "/config.json",
+    "/helpers.js",
+    "/mimetypes.json",
+    "/server.js",
+    "/todo.md"
+  ],
+  "login": [
+    "/dashboard.html",
+    "/script.js"
+  ],
+  "groups": {
+    "admin": [
+      "/admin.html"
+    ]
+  }
+}

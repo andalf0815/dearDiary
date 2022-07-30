@@ -1,0 +1,28 @@
+{
+  "root": {
+    "id": "2feb4b2a-8e32-4294-a32d-82855c965b7b",
+    "groups": [
+      "admin"
+    ],
+    "username": "root",
+    "password": "55ea6cbb4ad36f3b167acd8e41b91923fdb53f6ff59c845dd322a2a3d754a238"
+  },
+  "user": {
+    "id": "264c2fc7-4e06-4b78-9271-94cdcbee9fe9",
+    "groups": [],
+    "username": "user",
+    "password": "652b88a1eae03c4e05c16fb57a896657c2e3f8234b9aa9addab7fb951c2abadf"
+  },
+  "andalf": {
+    "id": "69bcd128-a87f-4363-b6fe-100b22ce5be9",
+    "groups": [],
+    "username": "andalf",
+    "password": "934c9a35804f406a1cf48f584d55e96f808e6a8c837c5e6a11b1145fdbc24ff0"
+  },
+  "andreas-gruber@outlook.at": {
+    "id": "70e74204-4a1d-4a43-81c9-c9c02b797c78",
+    "groups": [],
+    "username": "andreas-gruber@outlook.at",
+    "password": "b6207cac112cca3d86584c25b395c05805c29249799badb12cfaaa1799e85e68"
+  }
+}
