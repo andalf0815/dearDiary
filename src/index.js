@@ -12,14 +12,14 @@ $register.addEventListener("click", () => {
     // switch to register view and set action to ?register
 
     $form.setAttribute("action", "/?register");
-    $submit.value = "Registrieren";
-    $register.textContent = "Einloggen";
+    $submit.value = "Sign Up";
+    $register.textContent = "Log In";
   } else {
     // switch to login view and set action to ?login
 
     $form.setAttribute("action", "/?login");
-    $submit.value = "Einloggen";
-    $register.textContent = "Registrieren";
+    $submit.value = "Log In";
+    $register.textContent = "Sign Up";
   }
 
   // Toogle the second password input field and the data-login attribute in frm_login
