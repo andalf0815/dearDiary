@@ -1,5 +1,6 @@
 #frm_login {
-  margin: 10% auto;
+  margin: 10rem auto;
+  background-color: #ECF3FD;
   min-width: 50rem;
   width: 35%;
   min-height: 40rem;
@@ -8,7 +9,7 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  background-color: #ECF3FD;
+  padding: 5rem;
 }
 
 #frm_login img {
@@ -53,5 +54,7 @@
     min-width: 100%;
     height: 100%;
     margin: 0;
+    justify-content: end;
+    padding-bottom: 20vh;
   }
 }
