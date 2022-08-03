@@ -48,6 +48,14 @@
   color: grey;
 }
 
+[data-matching=true] {
+  color: #0fb10f;
+}
+
+[data-matching=false] {
+  color: red;
+}
+
 @media only screen and (max-width: 600px) {
   #frm_login {
     width: 100%;

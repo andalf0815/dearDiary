@@ -12,12 +12,13 @@
     <main>
       <form id="frm_login" class="card" action="/?login" method="post" data-login>
         <img src="images/logo_diary2.png" style="width: 15rem" alt="Logo" />
-        <input name="username" class="input-border-bottom" type="text" placeholder="Email" />
+        <input name="username" class="input-border-bottom" type="text" placeholder="Email" required />
         <input
           name="password"
           class="input-border-bottom"
           type="password"
           placeholder="Password"
+          required
         />
         <input
           class="input-border-bottom"
@@ -25,6 +26,7 @@
           placeholder="Repeat Password"
           hidden
         />
+        <span id="span_validation" hidden></span>
         <input class="card" type="submit" value="Log In" />
         <a id="btn_register" href="javascript:void(0)">Sign Up</a>
       </form>

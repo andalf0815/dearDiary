@@ -33,7 +33,7 @@
     color: white;
     font-size: 2.5rem;
 
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
   }
@@ -46,6 +46,14 @@
     text-decoration: none;
     color: grey;
   }
+}
+
+[data-matching=true] {
+  color: #0fb10f;
+}
+
+[data-matching=false] {
+  color: red;
 }
 
 @media only screen and (max-width: 600px) {
