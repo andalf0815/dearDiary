@@ -245,10 +245,15 @@ const server = http.createServer(function(request, response) {
           return;
         }
 
-        // Die erfolgreiche Registrierung mit dem Status Code 201 (Created) und einem simplen Text
-        // beantworten
+        // Die erfolgreiche Registrierung mit dem Status Code 201 (Created) beantworten
         response.statusCode = 201;
-        response.end('Registriert');
+
+        // Den User nach dem Registrieren an die Index Seite weiterleiten
+        response.setHeader('Location', 'index.html');
+
+        // Anfrage abschließen
+        response.end();
+        return
       });
     });
 
@@ -276,10 +281,24 @@ const server = http.createServer(function(request, response) {
     return;
   }
 
-  // Anfragen welche direkt mit / enden als Anfrage auf die entsprechende index.html Datei behandeln
+  // Anfragen welche direkt mit / enden als Anfrage auf die entsprechende index.html (Login) Datei behandeln
+  // Sollte eine gültige Session bestehen, dann gleich auf die homepage weiterleiten (Aktuell eingeloggter User versucht die Login page aufzurufen)
   if (request.url.pathname.endsWith('/')) {
-    request.url.pathname += 'index.html';
+    if (!session){
+      request.url.pathname += 'index.html';
+    }else{
+      // Wenn der User gerade eingeloggt ist, dann seine Anfrage an die Index Seite direkt an die homepage weiterleiten
+      response.statusCode = 302;
+      response.setHeader('Location', config.session.homepage);
+
+      // Anfrage abschließen
+      response.end();
+      return
+    }
+
   }
+
+  console.log('session', session);
 
 
   /*************************************/
