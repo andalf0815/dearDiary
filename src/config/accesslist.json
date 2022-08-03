@@ -8,7 +8,7 @@
     "/todo.md"
   ],
   "login": [
-    "/dashboard.html",
+    "/pages/dashboard.html",
     "/script.js"
   ],
   "groups": {
