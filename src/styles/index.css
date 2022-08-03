@@ -16,7 +16,7 @@
   margin-bottom: 2rem;
 }
 
-#frm_login input[type="text"],
+#frm_login input[type="email"],
 #frm_login input[type="password"] {
   padding: 0 0.4rem;
   margin-bottom: 1.2rem;
