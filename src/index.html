@@ -17,6 +17,8 @@
           name="password"
           class="input-border-bottom"
           type="password"
+          title="Min. 6, max. 30 characters, at least one number and one special character (#$@!%§&*?)"
+          pattern="(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%§&*?])[A-Za-z\d#$@!%§&*?]{6,30}$"
           placeholder="Password"
           required
         />
