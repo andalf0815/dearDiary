@@ -236,7 +236,7 @@ const server = http.createServer(function(request, response) {
       };
 
       // Die Users Datenbank speichern und dem Benutzer entsprechend antworten
-      fs.writeFile('users.json', JSON.stringify(users, null, 2), function(error) {
+      fs.writeFile('data/users.json', JSON.stringify(users, null, 2), function(error) {
         // Wenn ein Fehler beim Speichern der Datenbank auftritt dem Benutzer mit dem Status Code
         // 500 (Internal Server Error) antworten
         if (error) {
