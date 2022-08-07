@@ -246,7 +246,7 @@ const server = http.createServer(function(request, response) {
         }
 
         // Die erfolgreiche Registrierung mit dem Status Code 201 (Created) beantworten
-        response.statusCode = 201;
+        response.statusCode = 302;
 
         // Den User nach dem Registrieren an die Index Seite weiterleiten
         response.setHeader('Location', 'index.html');
