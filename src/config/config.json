@@ -17,6 +17,10 @@
   ],
   "users": {
     "limits": {
+      "login": {
+        "attempts": 5,
+        "block": 10
+      },
       "username": {
         "min": 3,
         "max": 32

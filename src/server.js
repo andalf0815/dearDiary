@@ -4,7 +4,13 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const http = require("http");
-const { getBody, getBodyParams, getCookies } = require("./lib/helpers.js");
+const {
+  getBody,
+  getBodyParams,
+  getBodyJSON,
+  getCookies,
+  executeSnippets,
+} = require("./lib/helpers.js");
 
 // Statische Daten einbinden
 const accesslist = require("./config/accesslist.json");
@@ -12,10 +18,20 @@ const config = require("./config/config.json");
 const mimetypes = require("./config/mimetypes.json");
 const users = require("./data/users.json");
 
+// Templates
+const templates = {};
+for (const file of fs.readdirSync('./templates')) {
+  if (!file.endsWith('.html')) continue;
+  templates[file.split('.')[0]] = fs.readFileSync(`./templates/${file}`, 'utf8');
+}
+
 // Runtime
+const loginSecurity = {
+  attempts: {},
+  timeouts: {},
+};
 const sessions = Object.create(null);
 const sessionTimeouts = {};
-const snippetMatcher = /\{\{(?<code>.*?)\}\}/gs;
 
 // Webserver erstellen
 const server = http.createServer(function (request, response) {
@@ -65,8 +81,7 @@ const server = http.createServer(function (request, response) {
     getBodyParams(request, function (error, params) {
       // Fehler beim Sammeln des Body mit dem Status Code 500 (Internal Server Error) beantworten
       if (error) {
-        response.statusCode = 500;
-        response.end();
+        response.endWithStatus(500);
         return;
       }
 
@@ -81,13 +96,18 @@ const server = http.createServer(function (request, response) {
         params.password.length < config.users.limits.password.min ||
         params.password.length > config.users.limits.password.max
       ) {
-        response.statusCode = 400;
-        response.end();
+        response.endWithStatus(400);
         return;
       }
 
       // Benutzername und Passwort aus dem geparsten Body der Anfrage extrahieren
       let { username, password } = params;
+
+      // abort right away if there is still a login timeout running for the user
+      if (loginSecurity.attempts[username] === false) {
+        response.endWithStatus(425);
+        return;
+      }
 
       // Das Passwort hashen, sodass wir es mit dem gespeicherten Passwort vergleichen können. Der
       // Hash setzt sich zusammen aus dem Benutzernamen, seinem Passwort sowie dem globalen Hash,
@@ -100,17 +120,49 @@ const server = http.createServer(function (request, response) {
       // Prüfen, ob der Benutzer nicht existiert oder das Passwort falsch ist und mit dem Status
       // Code 403 (Forbidden) antworten
       if (!users[username] || users[username].password !== password) {
-        response.statusCode = 403;
-        response.end();
+        // Counter für ungültige Anmeldeversuche sicherstellen und dessen Wert erhöhen
+        loginSecurity.attempts[username] ??= 0;
+        loginSecurity.attempts[username]++;
+
+        // Prüfen, ob der Benutzer mehr ungültige Anmeldeversuche als erlaubt unternommen hat und
+        // falls ja, dann deaktivieren wir den Login komplett
+        if (
+          loginSecurity.attempts[username] >= config.users.limits.login.attempts
+        ) {
+          loginSecurity.attempts[username] = false;
+        }
+
+        // Bestehende Timeouts zum Aufräumen stoppen und einen neuen Timeout zum Zurücksetzen des
+        // Login-Zählers bzw. der Anmeldesperre setzen
+        clearTimeout(loginSecurity.timeouts[username]);
+        loginSecurity.timeouts[username] = setTimeout(function () {
+          // Zähler und Timeout für den Benutzer zurücksetzen, wodurch der Login wieder erlaubt wird
+          delete loginSecurity.attempts[username];
+          delete loginSecurity.timeouts[username];
+        }, config.users.limits.login.block * 1000 * 60);
+
+        // Gescheiterten Anmeldeversuch mit dem Status Code 403 (Forbidden) beantworten
+        response.endWithStatus(403);
         return;
       }
 
       // An dieser Stelle angelangt wissen wir nun, dass ein registrierter Benutzer sich mit seinem
       // korrekten Passwort am Server angemeldet hat
 
-      // Sollte der Benutzer noch keine Session haben, weil er bereits angemeldet ist, dann
+      // Gibt es bereits eine Session, allerdings für einen anderen Benutzer, dann melden wir diesen
+      // zunächst ab
+      if (session && session.username !== username) {
+        // Timeout zum automatischen Ablaufen der Session löschen
+        clearTimeout(sessionTimeouts[username]);
+        delete sessionTimeouts[username];
+
+        // Session Inhalt löschen
+        delete sessions[sessionID];
+      }
+
+      // Sollte der Benutzer noch keine Session haben, weil er noch nicht angemeldet ist, dann
       // erstellen wir nun eine neue Session inklusive Cookie
-      if (!session) {
+      if (!sessions[sessionID]) {
         // Session ID zufällig generieren
         const sessionID = crypto
           .randomBytes(config.session.signs / 2)
@@ -190,8 +242,7 @@ const server = http.createServer(function (request, response) {
     getBodyParams(request, function (error, params) {
       // Fehler beim Sammeln des Body mit dem Status Code 500 (Internal Server Error) beantworten
       if (error) {
-        response.statusCode = 500;
-        response.end();
+        response.endWithStatus(500);
         return;
       }
 
@@ -206,8 +257,7 @@ const server = http.createServer(function (request, response) {
         params.password.length < config.users.limits.password.min ||
         params.password.length > config.users.limits.password.max
       ) {
-        response.statusCode = 400;
-        response.end();
+        response.endWithStatus(400);
         return;
       }
 
@@ -216,8 +266,7 @@ const server = http.createServer(function (request, response) {
 
       // Wenn der Benutzer bereits existiert mit dem Status Code 409 (Conflict) antworten
       if (users[username]) {
-        response.statusCode = 409;
-        response.end();
+        response.endWithStatus(409);
         return;
       }
 
@@ -248,8 +297,7 @@ const server = http.createServer(function (request, response) {
           // Wenn ein Fehler beim Speichern der Datenbank auftritt dem Benutzer mit dem Status Code
           // 500 (Internal Server Error) antworten
           if (error) {
-            response.statusCode = 500;
-            response.end();
+            response.endWithStatus(500);
             return;
           }
 
@@ -282,8 +330,7 @@ const server = http.createServer(function (request, response) {
   // Da die Endpunkte nun bearbeitet wurden sind wir im Bereich des reinen Fileservers, welcher nur
   // GET und HEAD Anfragen beantwortet. Alle anderen Anfragen werden explizit nicht unterstützt.
   if (request.method !== "GET" && request.method !== "HEAD") {
-    response.statusCode = 405;
-    response.end();
+    response.endWithStatus(405);
     return;
   }
 
@@ -310,28 +357,40 @@ const server = http.createServer(function (request, response) {
   /*************************************/
 
   // Zugriff auf alle Dateien der Blocklist mit dem Status Code 403 (Forbidden) verbieten
-  if (accesslist.block.includes(request.url.pathname)) {
-    response.statusCode = 403;
-    response.end();
+  if (accesslist.block?.includes(request.url.pathname)) {
+    response.endWithStatus(403);
     return;
   }
 
-  // Zugriff auf alle Dateien, welche einen Login voraussetzen, für nicht angemeldete Benutzer verbieten mit dem Status Code 403 (Forbidden) verbieten
-  if (!session && accesslist.login.includes(request.url.pathname)) {
-    response.statusCode = 403;
-    response.end();
+  // Zugriff auf Dateien für Benutzer ohne Anmeldung überprüfen beziehungsweise mit dem Status Code
+  // 403 (Forbidden) verbieten
+  if (!session) {
+    // Wenn eine Allowlist existiert, dann darf ein nicht angemeldeter Benutzer nur auf die Dateien
+    // der Allowlist zugreifen und sonst nichts
+    if (accesslist.allow instanceof Array) {
+      // Zugriffe auf alle Dateien, welche nicht explizit in der Allowlist stehen, verbieten
+      if (!accesslist.allow.includes(request.url.pathname)) {
+        response.endWithStatus(403);
     return;
+  }
+    }
+
+    // Existiert keine Allowlist, dann darf ein nicht angemeldeter Benutzer nur auf die Dateien der
+    // `login` Liste nicht zugreifen
+    else if (accesslist.login?.includes(request.url.pathname)) {
+      response.endWithStatus(403);
+    return;
+    }
   }
 
   // Zugriff auf alle Dateien, welche eine bestimmte Gruppe voraussetzen, mit dem Status Code 403
   // (Forbidden) verbieten
-  for (const [group, files] of Object.entries(accesslist.groups)) {
+  for (const [group, files] of Object.entries(accesslist.groups ?? {})) {
     if (
       files.includes(request.url.pathname) &&
-      (!session || !session.groups.includes(group))
+      (!session || !session.groups?.includes(group))
     ) {
-      response.statusCode = 403;
-      response.end();
+      response.endWithStatus(403);
       return;
     }
   }
@@ -348,24 +407,21 @@ const server = http.createServer(function (request, response) {
       // Datei existiert nicht oder würde sich in einem Ordner befinden, welcher nicht existiert,
       // wird mit dem Status Code 404 (Not Found) beantwortet
       if (error.code === "ENOENT" || error.code === "ENOTDIR") {
-        response.statusCode = 404;
-        response.end();
+        response.endWithStatus(404);
         return;
       }
 
       // Die angeforderte Ressource ist ein Ordner, wofür wir explitit kein Dateianzeige anzeigen
       // wollen, sondern die Anfrage mit dem Status Code 403 (Forbidden) beantworten
       else if (error.code === "EISDIR") {
-        response.statusCode = 403;
-        response.end();
+        response.endWithStatus(403);
         return;
       }
 
       // Alle anderen aufgetretenen Fehler beantworten wir mit dem Status Code 500 (Internal Server
       // Error), sodass der Benutzer weiß, dass etwas schief gelaufen ist, worauf er keinen Einfluss
       // hat
-      response.statusCode = 500;
-      response.end();
+      response.endWithStatus(500);
       return;
     }
 
@@ -380,38 +436,14 @@ const server = http.createServer(function (request, response) {
     // Die Ausführung von Snippets in der angeforderten Datei auf Basis ausgewählter Dateiendungen
     // erlauben
     if (config.snippets.includes(extension)) {
-      // Zunächst die Datei in einen String umwandeln, da sie bisher noch als Buffer vorliegt
-      file = file.toString();
-
-      // Snippet übergreifender geteilter Kontext
-      const self = {};
-
-      // Datei nach Snippets durchsuchen, um diese auszuführen
-      file = file.replaceAll(snippetMatcher, function () {
-        // Gefundenen Code Block aus den Parametern extrahieren (der letzte Parameter der Callback
-        // Funktion enthält die named groups des regulären Ausdrucks)
-        const { code } = Array.prototype.at.call(arguments, -1);
-
-        // Versuchen das gefundene Snippet auszuführen. Dabei stellen wir den Request, den Response,
-        // die Session sowie den Snippet übergreifenden geteilten Kontext zur Verfügung.
-        // Sollte das Snippet mit undefined oder null beenden, dann verwenden wir einen leeren Text
-        try {
-          return (
-            new Function(
-              "request",
-              "response",
-              "session",
-              "self",
-              `${code.includes("\n") ? "" : "return "}${code}`
-            )(request, response, session, self) ?? ""
-          );
-        } catch (error) {
-          // Einen Fehler bei der Ausführung des Snippets sowie dessen Code auf der Konsole ausgeben
-          // und einen leeren Text für die Stelle des Snippets zurückgeben
-          error.cause = `Error in '${request.url.pathname}': ${code.trim()}`;
-          console.error(error);
-          return "";
-        }
+      // Zunächst die Datei in einen String umwandeln, da sie bisher noch als Buffer vorliegt und
+      // dann die darin enthaltenen Snippets ausführen. Zur Ausführung werden einige Objekte des
+      // Servers durchgereicht, sodass die Snippets darauf zugreifen können.
+      file = executeSnippets(file.toString(), {
+        request,
+        response,
+        session,
+        ...templates,
       });
     }
 
