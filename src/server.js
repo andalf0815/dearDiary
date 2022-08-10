@@ -1,32 +1,26 @@
-'use strict';
-
+"use strict";
 
 // Module einbinden
-const crypto = require('crypto');
-const fs = require('fs');
-const http = require('http');
-const { getBody, getBodyParams, getCookies } = require('./lib/helpers.js');
-
+const crypto = require("crypto");
+const fs = require("fs");
+const http = require("http");
+const { getBody, getBodyParams, getCookies } = require("./lib/helpers.js");
 
 // Statische Daten einbinden
-const accesslist = require('./config/accesslist.json');
-const config = require('./config/config.json');
-const mimetypes = require('./config/mimetypes.json');
-const users = require('./data/users.json');
-
+const accesslist = require("./config/accesslist.json");
+const config = require("./config/config.json");
+const mimetypes = require("./config/mimetypes.json");
+const users = require("./data/users.json");
 
 // Runtime
 const sessions = Object.create(null);
 const sessionTimeouts = {};
 const snippetMatcher = /\{\{(?<code>.*?)\}\}/gs;
 
-
 // Webserver erstellen
-const server = http.createServer(function(request, response) {
-
+const server = http.createServer(function (request, response) {
   // URL der Anfrage vorbereiten und direkt im Request wieder speichern
-  request.url = new URL(request.url, 'http://localhost');
-
+  request.url = new URL(request.url, "http://localhost");
 
   /*******************************************/
   /* SESSION WIEDERHERSTELLEN UND VERLÄNGERN */
@@ -42,14 +36,18 @@ const server = http.createServer(function(request, response) {
     clearTimeout(sessionTimeouts[session.username]);
 
     // Einen neuen Timeout zum automatischen Löschen der Session starten
-    sessionTimeouts[session.username] = setTimeout(function() {
+    sessionTimeouts[session.username] = setTimeout(function () {
       delete sessions[sessionID];
     }, 60 * 1000 * config.session.duration);
 
     // Session Cookie mit der verlängerten Ablaufdauer setzen
-    response.setHeader('Set-Cookie', `sessionID=${sessionID}; Max-Age=${60 * config.session.duration}; HttpOnly`);
+    response.setHeader(
+      "Set-Cookie",
+      `sessionID=${sessionID}; Max-Age=${
+        60 * config.session.duration
+      }; HttpOnly`
+    );
   }
-
 
   /*************************************************/
   /* ENDPUNKTE FÜR LOGIN, LOGOUT UND REGISTRIERUNG */
@@ -59,12 +57,12 @@ const server = http.createServer(function(request, response) {
   // Login Endpunkt
   // POST /?login
   if (
-    request.url.pathname === '/' &&
-    request.url.searchParams.get('login') === '' &&
-    request.method === 'POST'
+    request.url.pathname === "/" &&
+    request.url.searchParams.get("login") === "" &&
+    request.method === "POST"
   ) {
     // Eingehenden Body als Query String sammeln und verarbeiten
-    getBodyParams(request, function(error, params) {
+    getBodyParams(request, function (error, params) {
       // Fehler beim Sammeln des Body mit dem Status Code 500 (Internal Server Error) beantworten
       if (error) {
         response.statusCode = 500;
@@ -97,7 +95,7 @@ const server = http.createServer(function(request, response) {
       password = crypto
         .createHash(config.crypto.hash)
         .update(`${username}:${password}:${config.crypto.salt}`)
-        .digest('hex');
+        .digest("hex");
 
       // Prüfen, ob der Benutzer nicht existiert oder das Passwort falsch ist und mit dem Status
       // Code 403 (Forbidden) antworten
@@ -114,24 +112,31 @@ const server = http.createServer(function(request, response) {
       // erstellen wir nun eine neue Session inklusive Cookie
       if (!session) {
         // Session ID zufällig generieren
-        const sessionID = crypto.randomBytes(config.session.signs / 2).toString('hex');
+        const sessionID = crypto
+          .randomBytes(config.session.signs / 2)
+          .toString("hex");
 
         // Benutzerprofil aus der Users Datenbank in die Session mit der generierten ID speichern
         sessions[sessionID] = users[username];
 
         // Timeout zum automatischen Ablaufen der Session erstellen
-        sessionTimeouts[username] = setTimeout(function() {
+        sessionTimeouts[username] = setTimeout(function () {
           delete sessions[sessionID];
         }, 60 * 1000 * config.session.duration);
 
         // Session ID mittels Cookie, welches ein Ablaufdatum hat sowie nicht per JavaScript ausge-
         // lesen werden darf, an den Client senden
-        response.setHeader('Set-Cookie', `sessionID=${sessionID}; Max-Age=${60 * config.session.duration}; HttpOnly`);
+        response.setHeader(
+          "Set-Cookie",
+          `sessionID=${sessionID}; Max-Age=${
+            60 * config.session.duration
+          }; HttpOnly`
+        );
       }
 
       // Anfrage des Benutzers an die Startseite nach dem Login weiterleiten
       response.statusCode = 302;
-      response.setHeader('Location', config.session.homepage);
+      response.setHeader("Location", config.session.homepage);
 
       // Anfrage abschließen
       response.end();
@@ -145,9 +150,9 @@ const server = http.createServer(function(request, response) {
   // Logout Endpunkt
   // GET /?logout
   if (
-    request.url.pathname === '/' &&
-    request.url.searchParams.get('logout') === '' &&
-    request.method === 'GET'
+    request.url.pathname === "/" &&
+    request.url.searchParams.get("logout") === "" &&
+    request.method === "GET"
   ) {
     // Nur wenn der Benutzer eine Session hat diese Löschen, was zB nicht der Fall ist, wenn ein
     // nicht angemeldeter Benutzer den Logout Endpunkt ansteuert
@@ -162,11 +167,11 @@ const server = http.createServer(function(request, response) {
 
     // Dem Client mitteilen, dass dieser sein Session Cookie löschen soll, indem wir die Lebensdauer
     // des Cookie auf 0 setzen
-    response.setHeader('Set-Cookie', 'sessionID=; Max-Age=0; HttpOnly');
+    response.setHeader("Set-Cookie", "sessionID=; Max-Age=0; HttpOnly");
 
     // Anfrage des Benutzers nach dem Logout zur Anmeldeseite weiterleiten
     response.statusCode = 302;
-    response.setHeader('Location', '/');
+    response.setHeader("Location", "/");
     response.end();
 
     // Dieser Endpunkt ist eine in sich geschlossene Einheit und die Anfrage wurde beantwortet
@@ -177,12 +182,12 @@ const server = http.createServer(function(request, response) {
   // Register Endpunkt
   // POST /?register
   if (
-    request.url.pathname === '/' &&
-    request.url.searchParams.get('register') === '' &&
-    request.method === 'POST'
+    request.url.pathname === "/" &&
+    request.url.searchParams.get("register") === "" &&
+    request.method === "POST"
   ) {
     // Eingehenden Body als Query String sammeln und verarbeiten
-    getBodyParams(request, function(error, params) {
+    getBodyParams(request, function (error, params) {
       // Fehler beim Sammeln des Body mit dem Status Code 500 (Internal Server Error) beantworten
       if (error) {
         response.statusCode = 500;
@@ -225,7 +230,7 @@ const server = http.createServer(function(request, response) {
       password = crypto
         .createHash(config.crypto.hash)
         .update(`${username}:${password}:${config.crypto.salt}`)
-        .digest('hex');
+        .digest("hex");
 
       // Neuen Eintrag für den zu registrierenden Benutzer in der Users Datenbank erstellen
       users[username] = {
@@ -236,31 +241,33 @@ const server = http.createServer(function(request, response) {
       };
 
       // Die Users Datenbank speichern und dem Benutzer entsprechend antworten
-      fs.writeFile('data/users.json', JSON.stringify(users, null, 2), function(error) {
-        // Wenn ein Fehler beim Speichern der Datenbank auftritt dem Benutzer mit dem Status Code
-        // 500 (Internal Server Error) antworten
-        if (error) {
-          response.statusCode = 500;
+      fs.writeFile(
+        "data/users.json",
+        JSON.stringify(users, null, 2),
+        function (error) {
+          // Wenn ein Fehler beim Speichern der Datenbank auftritt dem Benutzer mit dem Status Code
+          // 500 (Internal Server Error) antworten
+          if (error) {
+            response.statusCode = 500;
+            response.end();
+            return;
+          }
+
+          // Die erfolgreiche Registrierung mit dem Status Code 302 beantworten und
+          // Den User an die Index Seite weiterleiten
+          response.statusCode = 302;
+          response.setHeader("Location", "index.html");
+
+          // Anfrage abschließen
           response.end();
           return;
         }
-
-        // Die erfolgreiche Registrierung mit dem Status Code 201 (Created) beantworten
-        response.statusCode = 302;
-
-        // Den User nach dem Registrieren an die Index Seite weiterleiten
-        response.setHeader('Location', 'index.html');
-
-        // Anfrage abschließen
-        response.end();
-        return
-      });
+      );
     });
 
     // Dieser Endpunkt ist eine in sich geschlossene Einheit und die Anfrage wurde beantwortet
     return;
   }
-
 
   /*********************/
   /* WEITERE ENDPUNKTE */
@@ -268,14 +275,13 @@ const server = http.createServer(function(request, response) {
 
   // Eigene Endpunkte hier einbinden
 
-
   /*******************************************************/
   /* HTTP METHODE PRÜFEN UND INDEX.HTML DATEIEN ERGÄNZEN */
   /*******************************************************/
 
   // Da die Endpunkte nun bearbeitet wurden sind wir im Bereich des reinen Fileservers, welcher nur
   // GET und HEAD Anfragen beantwortet. Alle anderen Anfragen werden explizit nicht unterstützt.
-  if (request.method !== 'GET' && request.method !== 'HEAD') {
+  if (request.method !== "GET" && request.method !== "HEAD") {
     response.statusCode = 405;
     response.end();
     return;
@@ -283,23 +289,21 @@ const server = http.createServer(function(request, response) {
 
   // Anfragen welche direkt mit / enden als Anfrage auf die entsprechende index.html (Login) Datei behandeln
   // Sollte eine gültige Session bestehen, dann gleich auf die homepage weiterleiten (Aktuell eingeloggter User versucht die Login page aufzurufen)
-  if (request.url.pathname.endsWith('/')) {
-    if (!session){
-      request.url.pathname += 'index.html';
-    }else{
+  if (request.url.pathname.endsWith("/")) {
+    if (!session) {
+      request.url.pathname += "index.html";
+    } else {
       // Wenn der User gerade eingeloggt ist, dann seine Anfrage an die Index Seite direkt an die homepage weiterleiten
       response.statusCode = 302;
-      response.setHeader('Location', config.session.homepage);
+      response.setHeader("Location", config.session.homepage);
 
       // Anfrage abschließen
       response.end();
-      return
+      return;
     }
-
   }
 
-  console.log('session', session);
-
+  console.log("session", session);
 
   /*************************************/
   /* ACCESSLIST: BLOCK, LOGIN, GRUPPEN */
@@ -321,7 +325,7 @@ const server = http.createServer(function(request, response) {
 
   // Zugriff auf alle Dateien, welche eine bestimmte Gruppe voraussetzen, mit dem Status Code 403
   // (Forbidden) verbieten
-  for (const [ group, files ] of Object.entries(accesslist.groups)) {
+  for (const [group, files] of Object.entries(accesslist.groups)) {
     if (
       files.includes(request.url.pathname) &&
       (!session || !session.groups.includes(group))
@@ -332,19 +336,18 @@ const server = http.createServer(function(request, response) {
     }
   }
 
-
   /***********************************************/
   /* DATEIEN VOM DATEISYSTEM AUSLESEN UND SENDEN */
   /***********************************************/
 
   // Alle Filter sind zu diesem Zeitpunkt durchgelaufen, daher versuchen wir nun konkret die ange-
   // forderte Datei zu laden und damit zu antworten
-  fs.readFile(`.${request.url.pathname}`, function(error, file) {
+  fs.readFile(`.${request.url.pathname}`, function (error, file) {
     // Fehler beim Zugriff auf die angeforderte Datei mit dem entsprechenden Status Code beantworten
     if (error) {
       // Datei existiert nicht oder würde sich in einem Ordner befinden, welcher nicht existiert,
       // wird mit dem Status Code 404 (Not Found) beantwortet
-      if (error.code === 'ENOENT' || error.code === 'ENOTDIR') {
+      if (error.code === "ENOENT" || error.code === "ENOTDIR") {
         response.statusCode = 404;
         response.end();
         return;
@@ -352,7 +355,7 @@ const server = http.createServer(function(request, response) {
 
       // Die angeforderte Ressource ist ein Ordner, wofür wir explitit kein Dateianzeige anzeigen
       // wollen, sondern die Anfrage mit dem Status Code 403 (Forbidden) beantworten
-      else if (error.code === 'EISDIR') {
+      else if (error.code === "EISDIR") {
         response.statusCode = 403;
         response.end();
         return;
@@ -368,12 +371,11 @@ const server = http.createServer(function(request, response) {
 
     // Versuchen den Mimetype der angeforderten Datei auf Basis der Dateiendung zu ermitteln und als
     // Header setzen
-    const extension = request.url.pathname.split('.').at(-1);
+    const extension = request.url.pathname.split(".").at(-1);
     const mimetype = mimetypes[extension];
     if (mimetype) {
-      response.setHeader('Content-Type', mimetype);
+      response.setHeader("Content-Type", mimetype);
     }
-
 
     // Die Ausführung von Snippets in der angeforderten Datei auf Basis ausgewählter Dateiendungen
     // erlauben
@@ -385,7 +387,7 @@ const server = http.createServer(function(request, response) {
       const self = {};
 
       // Datei nach Snippets durchsuchen, um diese auszuführen
-      file = file.replaceAll(snippetMatcher, function() {
+      file = file.replaceAll(snippetMatcher, function () {
         // Gefundenen Code Block aus den Parametern extrahieren (der letzte Parameter der Callback
         // Funktion enthält die named groups des regulären Ausdrucks)
         const { code } = Array.prototype.at.call(arguments, -1);
@@ -394,39 +396,31 @@ const server = http.createServer(function(request, response) {
         // die Session sowie den Snippet übergreifenden geteilten Kontext zur Verfügung.
         // Sollte das Snippet mit undefined oder null beenden, dann verwenden wir einen leeren Text
         try {
-          return (new Function(
-            'request',
-            'response',
-            'session',
-            'self',
-            `${code.includes('\n') ? '' : 'return '}${code}`,
-          )(
-            request,
-            response,
-            session,
-            self,
-          )) ?? '';
-        }
-
-        // Einen Fehler bei der Ausführung des Snippets sowie dessen Code auf der Konsole ausgeben
-        // und einen leeren Text für die Stelle des Snippets zurückgeben
-        catch(error) {
+          return (
+            new Function(
+              "request",
+              "response",
+              "session",
+              "self",
+              `${code.includes("\n") ? "" : "return "}${code}`
+            )(request, response, session, self) ?? ""
+          );
+        } catch (error) {
+          // Einen Fehler bei der Ausführung des Snippets sowie dessen Code auf der Konsole ausgeben
+          // und einen leeren Text für die Stelle des Snippets zurückgeben
           error.cause = `Error in '${request.url.pathname}': ${code.trim()}`;
           console.error(error);
-          return '';
+          return "";
         }
       });
     }
 
-
     // Anfrage mit der existierenden Datei beantworten
     response.end(file);
   });
-
 });
 
-
 // Server auf dem angegebenen Port der Konfigurationsdatei starten
-server.listen(config.server.port, function() {
+server.listen(config.server.port, function () {
   console.log(`Server wurde auf Port ${config.server.port} gestartet`);
 });
