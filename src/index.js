@@ -7,24 +7,65 @@ const $pswList = document.querySelectorAll('[type="password"]');
 
 const $validation = document.querySelector("#p_validation");
 
-const pswPattern = "(?=.*[a-zA-Z])(?=.*\d)(?=.*[#$@!%§&*?])[A-Za-z\d#$@!%§&*?]{6,30}$";
-const pswTitle = "Min. 6, max. 30 characters, at least one number and one special character (#$@!%§&*?)";
+const pswPattern =
+  "(?=.*[a-zA-Z])(?=.*d)(?=.*[#$@!%§&*?])[A-Za-zd#$@!%§&*?]{6,30}$";
+const pswTitle =
+  "Min. 6, max. 30 characters, at least one number and one special character (#$@!%§&*?)";
 
 /**********/
 /* EVENTS */
 /**********/
 
-// Check the password validation before the submit action will be triggered (only in register view)
-// First step = Stop the form on submitting
-// Second step = Check if the password matches -> If yes, then submit the form
+// When clicking on submit button then we will check some things
+// according to which view is selected (login / register) and then
+// send the request to the server
+// Further we register the xhr eventlistener within the submit eventlistener
 
 $form.addEventListener("submit", (event) => {
-  if($form.dataset.login === undefined){
-    event.preventDefault();
+  let isLogin = $form.dataset.login === "" ? true : false;
+
+  // Get the username and the password from the form,
+  // create a queryString and a XMLHttpRequest
+  let username = event.target[0].value;
+  let psw = event.target[1].value;
+
+  const params = `username=${username}&password=${psw}`;
+  const xhr = new XMLHttpRequest();
+
+  // Listen to the response of the server and check if the
+  // login/registration did work
+  xhr.addEventListener(
+    "load",
+    () => {
+      // If we get not an status of OK or Forwarded, then inform the user
+      // with the proper message according to the current view (login/regiater)
+      if (xhr.status !== 200 && xhr.status !== 302) {
+        isLogin
+          ? alert("Login fehlgeschlagen!")
+          : alert("Registrierung fehlgeschlagen!");
+        return;
+      }
+      window.location.href = xhr.responseURL;
+    },
+    // Because the xhr load listener is created within the
+    // submit listener, we only want to create the listener once
+    { once: true }
+  );
+
+  // Here we are again in the submit listener
+
+  // If we are in the register view, then make the password validation check
+  // before send then the request to the server
+  if (!isLogin) {
     if ($validation.dataset.matching === "true") {
-      $form.submit();
+      xhr.open("post", "/?register", true);
+      xhr.send(params);
+      return;
     }
+    return;
   }
+  xhr.open("post", "/?login", true);
+  xhr.send(params);
 });
 
 // Set an eventListener to toggle between the login view
@@ -34,16 +75,14 @@ $register.addEventListener("click", () => {
   if ($form.dataset.login !== undefined) {
     // Click on Sign Up -> switch to register view from sign in view and set action to ?register
 
-    $form.setAttribute("action", "/?register");
     $submit.value = "Sign Up";
     $register.textContent = "Log In";
     $validation.hidden = false;
     $pswList[0].setAttribute("pattern", pswPattern);
     $pswList[0].setAttribute("title", pswTitle);
   } else {
-    // Click on Log In -> switch to login view register view and set action to ?login
 
-    $form.setAttribute("action", "/?login");
+    // Click on Log In -> switch to login view register view and set action to ?login
     $submit.value = "Log In";
     $register.textContent = "Sign Up";
     $validation.hidden = true;
@@ -52,7 +91,6 @@ $register.addEventListener("click", () => {
   }
 
   // Toogle the second password input field and the data-login attribute in frm_login
-
   $form.toggleAttribute("data-login");
   $pswList[1].toggleAttribute("hidden");
   $pswList[1].toggleAttribute("required");
