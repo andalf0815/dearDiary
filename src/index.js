@@ -8,9 +8,9 @@ const $pswList = document.querySelectorAll('[type="password"]');
 const $validation = document.querySelector("#p_validation");
 
 const pswPattern =
-  "(?=.*[a-zA-Z])(?=.*d)(?=.*[#$@!%§&*?])[A-Za-zd#$@!%§&*?]{6,30}$";
+ "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{6,30}$";
 const pswTitle =
-  "Min. 6, max. 30 characters, at least one number and one special character (#$@!%§&*?)";
+  "Min. 6, max. 30 characters, at least one number and one special character (!@#$%^&*_=+-)";
 
 /**********/
 /* EVENTS */
