@@ -96,7 +96,7 @@ $register.addEventListener("click", () => {
   $pswList[1].toggleAttribute("required");
 });
 
-// EventListener for validating the repeated password -> Check if the repeated password is the same as the first entered
+// EventListener registered on the password input fields for validating the repeated password -> Check if the repeated password is the same as the first entered on every key up
 
 for (let $element of $pswList) {
   $element.addEventListener("keyup", () => {
