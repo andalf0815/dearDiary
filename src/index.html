@@ -5,13 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Dear Diary - Dashboard</title>
     <link rel="stylesheet" href="styles/design.css" />
-    <link rel="stylesheet" href="styles/index.css" />
     <script src="index.js" defer></script>
   </head>
   <body>
     <main>
       <form id="frm_login" class="card" action="javascript:void(0);" data-login>
-        <img src="images/logo_diary2.png" style="width: 15rem" alt="Logo" />
+        <img class="logo-l" alt="Logo" />
         <input name="username" class="input-border-bottom" type="email" placeholder="Email" required />
         <input
           name="password"
@@ -28,7 +27,7 @@
         />
         <p id="p_validation" hidden></p>
         <input class="card" type="submit" value="Log In" />
-        <a id="btn_register" href="javascript:void(0)">Sign Up</a>
+        <a id="btn_register" class="a-btn-s" href="javascript:void(0)">Sign Up</a>
       </form>
     </main>
   </body>
