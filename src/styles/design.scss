@@ -12,16 +12,22 @@
 
 * {
   box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  position: relative;
+  // overflow: hidden;
   font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
 }
 
 html {
+  width: 100%;
+  height: 100%;
   font-size: 62.5%;
-  padding: 0;
-  margin: 0;
 }
 
 body {
+  width: 100%;
+  height: 100%;
   background-image: url("../images/background_diary.png");
 }
 
@@ -29,6 +35,38 @@ body,
 input {
   font-size: 1.8rem;
   margin: 0;
+}
+
+nav {
+  top: 0;
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  height: 7rem;
+  position: sticky;
+  background-color: #3783EE;
+  border-bottom: 0.3rem solid #ff9514;
+  padding: 0 1rem;
+
+  &>* {
+    margin: auto 0;
+  }
+
+  a {
+    color: white;
+  }
+}
+
+main {
+  width: 100%;
+  height: calc(100% - 7rem); // Remove the height of the nav
+  min-height: 50rem;
+  padding: 3rem;
+}
+
+hr {
+  flex-grow: 1;
+  border: none;
 }
 
 .card {
@@ -52,7 +90,6 @@ input {
 .a-btn-s {
   font-size: smaller;
   text-decoration: none;
-  color: grey;
 }
 
 .logo-s {
@@ -110,6 +147,7 @@ input {
     position: absolute;
     right: 1rem;
     bottom: 1rem;
+    color: grey;
   }
 }
 
@@ -121,32 +159,97 @@ input {
   color: red;
 }
 
+/******************/
+/* dashboard.html */
+/******************/
+
+.bdy-dashboard {
+
+  header {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0 3rem 0;
+
+    input {
+      width: 16rem;
+    }
+  }
+
+  main {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    background-color: aliceblue;
+
+    section {
+      display: flex;
+      gap: 3rem;
+      width: 100%;
+      height: 30%;
+      padding: 2rem;
+      min-height: 15rem;
+      background-color: #2cc3b4;
+      overflow-x: scroll;
+
+      article {
+        width: 50%;
+        background-color: #3783EE;
+      }
+    }
+  }
+
+  article {
+    display: flex;
+    flex-wrap: wrap;
+
+    h3 {
+      width: 100%;
+    }
+  }
+}
+
+/*--------------------------------------------------------------------------------*/
 /*-----------------------------Max screen width 600px-----------------------------*/
+/*--------------------------------------------------------------------------------*/
 @media only screen and (max-width: 600px) {
 
   /*******************/
   /* Overall styling */
   /*******************/
 
-  body,
   main {
-    height: 100vh;
-  }
-
-  .card {
-    height: 100vh;
+    padding: 1rem;
   }
 
   /**************/
   /* index.html */
   /**************/
+  .bdy-index {
+    main {
+      height: 100%;
+    }
 
-  #frm_login {
-    width: 100%;
+    #frm_login {
+      width: 100%;
+      min-width: 100%;
+      height: 100%;
+      margin: 0;
+      justify-content: end;
+      padding-bottom: 20vh;
+    }
+  }
+}
+
+/*--------------------------------------------------------------------------------*/
+/*-----------------------------Max screen width 1000px-----------------------------*/
+/*--------------------------------------------------------------------------------*/
+@media only screen and (max-width: 1000px) {
+
+  /**************/
+  /* dashboard.html */
+  /**************/
+
+  .bdy-dashboard main section article {
     min-width: 100%;
-    height: 100%;
-    margin: 0;
-    justify-content: end;
-    padding-bottom: 20vh;
   }
 }
