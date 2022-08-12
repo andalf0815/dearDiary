@@ -350,8 +350,6 @@ const server = http.createServer(function (request, response) {
     }
   }
 
-  console.log("session", session);
-
   /*************************************/
   /* ACCESSLIST: BLOCK, LOGIN, GRUPPEN */
   /*************************************/
