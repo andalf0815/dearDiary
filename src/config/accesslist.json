@@ -1,9 +1,10 @@
 {
   "block": [
-    "/accesslist.json",
-    "/config.json",
-    "/helpers.js",
-    "/mimetypes.json",
+    "/config/accesslist.json",
+    "/data/users.json",
+    "/config/config.json",
+    "/lib/helpers.js",
+    "/config/mimetypes.json",
     "/server.js",
     "/todo.md"
   ],

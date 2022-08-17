@@ -22,6 +22,7 @@ const pswTitle =
 // Further we register the xhr eventlistener within the submit eventlistener
 
 $form.addEventListener("submit", (event) => {
+  event.preventDefault();
   let isLogin = $form.dataset.login === "" ? true : false;
 
   // Get the username and the password from the form,
@@ -29,7 +30,7 @@ $form.addEventListener("submit", (event) => {
   let username = event.target[0].value;
   let psw = event.target[1].value;
 
-  const params = `username=${username}&password=${psw}`;
+  const params = new URLSearchParams({"username": username, "password": psw});
   const xhr = new XMLHttpRequest();
 
   // Listen to the response of the server and check if the
@@ -40,9 +41,7 @@ $form.addEventListener("submit", (event) => {
       // If we get not an status of OK or Forwarded, then inform the user
       // with the proper message according to the current view (login/regiater)
       if (xhr.status !== 200 && xhr.status !== 302) {
-        isLogin
-          ? alert("Login fehlgeschlagen!")
-          : alert("Registrierung fehlgeschlagen!");
+          alert(`${isLogin ? 'Login' : 'Registrierung'} fehlgeschlagen!`)
         return;
       }
       window.location.href = xhr.responseURL;
@@ -71,7 +70,8 @@ $form.addEventListener("submit", (event) => {
 // Set an eventListener to toggle between the login view
 // and the register view
 
-$register.addEventListener("click", () => {
+$register.addEventListener("click", (event) => {
+  event.preventDefault();
   if ($form.dataset.login !== undefined) {
     // Click on Sign Up -> switch to register view from sign in view and set action to ?register
 

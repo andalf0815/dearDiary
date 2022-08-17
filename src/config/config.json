@@ -1,7 +1,7 @@
 {
   "crypto": {
     "hash": "sha256",
-    "salt": "1b3da00f-bf0d-4a23-bd74-418e31168ca5"
+    "salt": "2c3dbb0f-bf0d-4a23-bd74-418f56168ci6"
   },
   "server": {
     "port": 80
