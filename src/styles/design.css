@@ -5,6 +5,13 @@
   --logo: url("../images/logo_diary.png");
   --test-image: url("https://picsum.photos/200");
   --width-img-container: 21rem;
+  --img-locations: url("../images/locations.png");
+  --img-exercises: url("../images/exercises.png");
+  --img-persons: url("../images/persons.png");
+  --color-turkis: #2cc3b4;
+  --color-lightBlue: #4e91f0;
+  --color-deepBlue: #3783EE;
+  --color-orange: #ff9514;
 }
 
 /*******************/
@@ -31,20 +38,21 @@ body {
 }
 
 body,
-input {
+input,
+textarea {
   font-size: 1.8rem;
   margin: 0;
 }
 
 nav {
   top: 0;
-  z-index: 1;
+  z-index: 5;
   display: flex;
   justify-content: center;
   height: 6rem;
   position: sticky;
-  background-color: #3783EE;
-  border-bottom: .3rem solid #ff9514;
+  background-color: var(--color-deepBlue);
+  border-bottom: 0.3rem solid var(--color-orange);
   padding: 0 1rem;
 }
 
@@ -67,6 +75,54 @@ hr {
   border: none;
 }
 
+fieldset {
+  border: none;
+}
+
+:not(input[type="text"]),
+:not(textarea) {
+  user-select: none;
+}
+
+::-webkit-scrollbar {
+  width: 1rem;
+  height: 1rem;
+}
+
+::-webkit-scrollbar-track {
+  box-shadow: inset 0 0 .3rem grey;
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: var(--color-turkis);
+}
+
+.icon-locations::before {
+  background-image: var(--img-locations);
+}
+
+.icon-exercises::before {
+  background-image: var(--img-exercises);
+}
+
+.icon-persons::before {
+  background-image: var(--img-persons);
+}
+
+.icon-tags::before {
+  content: "";
+  display: inline-block;
+  max-height: 100%;
+  width: 2.5rem;
+  height: 2.5rem;
+  background-size: contain;
+  background-repeat: no-repeat;
+}
+
 .card {
   border: 0.1rem solid grey;
   border-radius: .4rem;
@@ -75,19 +131,33 @@ hr {
 
 .input-border-bottom {
   border: none;
-  border-bottom: .2rem solid #4e91f0;
+  border-bottom: 0.2rem solid var(--color-lightBlue);
   background: none;
 }
 
 .input-border-bottom:focus-visible {
   border: none;
   outline: none;
-  border-bottom: .2rem solid #ff9514;
+  border-bottom: 0.2rem solid var(--color-orange);
 }
 
 .a-btn-s {
   font-size: smaller;
   text-decoration: none;
+}
+
+.btn-primary {
+  margin-top: 2rem;
+  width: 18rem;
+  height: 4.5rem;
+  background-color: var(--color-turkis);
+  border: none;
+  color: white;
+  font-size: 2.5rem;
+}
+
+.btn-primary:hover {
+  cursor: pointer;
 }
 
 .logo-s {
@@ -127,20 +197,6 @@ hr {
   font-size: 2.5rem;
 }
 
-#frm_login input[type="submit"] {
-  margin-top: 2rem;
-  width: 18rem;
-  height: 4.5rem;
-  background-color: #2cc3b4;
-  border: none;
-  color: white;
-  font-size: 2.5rem;
-}
-
-#frm_login input[type="submit"]:hover {
-  cursor: pointer;
-}
-
 #frm_login a {
   position: absolute;
   right: 1rem;
@@ -159,21 +215,90 @@ hr {
 /******************/
 /* dashboard.html */
 /******************/
-.bdy-dashboard header {
+.bdy-dashboard .dialog-section {
   display: flex;
   margin-bottom: 2rem;
   margin-top: 1rem;
   gap: 1rem;
 }
 
-.bdy-dashboard header span {
+.bdy-dashboard .dialog-section span {
   font-size: 3rem;
-  color: green;
+  color: #2CC3B4;
 }
 
-.bdy-dashboard header input {
+.bdy-dashboard .dialog-section #inp_title {
   width: 26rem;
   font-size: 3rem;
+  z-index: 4;
+}
+
+.bdy-dashboard .dialog-section dialog {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin: auto;
+  width: 60%;
+  position: absolute;
+  top: -2rem;
+  z-index: 3;
+  padding: 8rem 6rem 2.5rem 6rem;
+}
+
+.bdy-dashboard .dialog-section dialog > div:first-child {
+  display: flex;
+}
+
+.bdy-dashboard .dialog-section dialog > div:first-child #inp_entryDate {
+  width: 30%;
+}
+
+.bdy-dashboard .dialog-section dialog > div:first-child #img_favorite {
+  content: url("../images/y-star-not-filled.png");
+}
+
+.bdy-dashboard .dialog-section dialog > div:first-child #img_favorite:hover {
+  content: url("../images/y-star-filled.png");
+}
+
+.bdy-dashboard .dialog-section dialog > div:first-child #img_favorite[data-favoriteSet] {
+  content: url("../images/y-star-filled.png");
+}
+
+.bdy-dashboard .dialog-section dialog > div:first-child #img_favorite[data-favoriteSet]:hover {
+  content: url("../images/y-star-not-filled.png");
+}
+
+.bdy-dashboard .dialog-section dialog > div:nth-child(2) {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.bdy-dashboard .dialog-section dialog > div:nth-child(2) #div_emojis {
+  display: flex;
+  overflow-x: auto;
+}
+
+.bdy-dashboard .dialog-section dialog > div:nth-child(2) #div_emojis > span {
+  cursor: pointer;
+}
+
+.bdy-dashboard .dialog-section dialog > div:nth-child(2) #div_emojis > span[data-selected] {
+  background-color: var(--color-deepBlue);
+}
+
+.bdy-dashboard .dialog-section dialog > div:nth-child(2) #ta_description {
+  resize: none;
+}
+
+.bdy-dashboard .dialog-section dialog > div:nth-child(2) fieldset {
+  display: flex;
+  gap: 1rem;
+}
+
+.bdy-dashboard .dialog-section dialog > div:nth-child(2) input {
+  width: 100%;
 }
 
 .bdy-dashboard main {
@@ -184,7 +309,24 @@ hr {
   margin: 0 auto;
 }
 
-.bdy-dashboard main section {
+.bdy-dashboard main .arrow-left,
+.bdy-dashboard main .arrow-right {
+  width: 4rem;
+  height: 4rem;
+  position: absolute;
+  top: calc(50% - 2rem);
+  z-index: 1;
+}
+
+.bdy-dashboard main .arrow-left {
+  left: -2rem;
+}
+
+.bdy-dashboard main .arrow-right {
+  right: -2rem;
+}
+
+.bdy-dashboard main .articles {
   display: flex;
   gap: 2rem;
   width: 100%;
@@ -192,27 +334,27 @@ hr {
   overflow-x: scroll;
 }
 
-.bdy-dashboard main section::-webkit-scrollbar {
+.bdy-dashboard main .articles::-webkit-scrollbar {
   display: none;
 }
 
-.bdy-dashboard main section article {
+.bdy-dashboard main .articles article {
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
   align-items: flex-start;
   align-content: flex-start;
-  width: 50%;
+  min-width: calc(50% - 1rem);
   padding: 2rem;
-  background-color: #3783EE;
+  background-color: var(--color-deepBlue);
 }
 
-.bdy-dashboard main section article h4 {
+.bdy-dashboard main .articles article h4 {
   width: 90%;
   padding-bottom: 1rem;
 }
 
-.bdy-dashboard main section article span {
+.bdy-dashboard main .articles article span {
   width: 5%;
   text-align: right;
   transform: scalex(-1);
@@ -222,17 +364,17 @@ hr {
   color: lightgrey;
 }
 
-.bdy-dashboard main section article span:hover {
+.bdy-dashboard main .articles article span:hover {
   cursor: pointer;
   color: dimgrey;
 }
 
-.bdy-dashboard main section article h2 {
+.bdy-dashboard main .articles article h2 {
   width: 100%;
   padding-bottom: 1rem;
 }
 
-.bdy-dashboard main section article .description {
+.bdy-dashboard main .articles article .prev-description {
   margin-bottom: 1.5rem;
   padding-right: 1rem;
   display: -webkit-box;
@@ -241,21 +383,9 @@ hr {
   overflow: hidden;
 }
 
-.bdy-dashboard main section article .locations::before {
-  background-image: url(../images/locations.png);
-}
-
-.bdy-dashboard main section article .exercises::before {
-  background-image: url(../images/exercises.png);
-}
-
-.bdy-dashboard main section article .persons::before {
-  background-image: url(../images/persons.png);
-}
-
-.bdy-dashboard main section article .locations,
-.bdy-dashboard main section article .exercises,
-.bdy-dashboard main section article .persons {
+.bdy-dashboard main .articles article .locations,
+.bdy-dashboard main .articles article .exercises,
+.bdy-dashboard main .articles article .persons {
   display: flex;
   align-items: flex-start;
   flex-wrap: wrap;
@@ -264,48 +394,38 @@ hr {
   padding-bottom: .5rem;
 }
 
-.bdy-dashboard main section article .locations > p:not(:last-child),
-.bdy-dashboard main section article .exercises > p:not(:last-child),
-.bdy-dashboard main section article .persons > p:not(:last-child) {
+.bdy-dashboard main .articles article .locations > p:not(:last-child),
+.bdy-dashboard main .articles article .exercises > p:not(:last-child),
+.bdy-dashboard main .articles article .persons > p:not(:last-child) {
   border-right: .1rem solid black;
   padding-right: 1rem;
 }
 
-.bdy-dashboard main section article .locations > p:nth-child(3),
-.bdy-dashboard main section article .exercises > p:nth-child(3),
-.bdy-dashboard main section article .persons > p:nth-child(3) {
+.bdy-dashboard main .articles article .locations > p:nth-child(3),
+.bdy-dashboard main .articles article .exercises > p:nth-child(3),
+.bdy-dashboard main .articles article .persons > p:nth-child(3) {
   visibility: hidden;
 }
 
-.bdy-dashboard main section article .locations > p:nth-child(3):before,
-.bdy-dashboard main section article .exercises > p:nth-child(3):before,
-.bdy-dashboard main section article .persons > p:nth-child(3):before {
+.bdy-dashboard main .articles article .locations > p:nth-child(3):before,
+.bdy-dashboard main .articles article .exercises > p:nth-child(3):before,
+.bdy-dashboard main .articles article .persons > p:nth-child(3):before {
   content: "...";
   position: absolute;
   visibility: visible;
 }
 
-.bdy-dashboard main section article .locations > p:nth-child(n+4),
-.bdy-dashboard main section article .exercises > p:nth-child(n+4),
-.bdy-dashboard main section article .persons > p:nth-child(n+4) {
+.bdy-dashboard main .articles article .locations > p:nth-child(n+4),
+.bdy-dashboard main .articles article .exercises > p:nth-child(n+4),
+.bdy-dashboard main .articles article .persons > p:nth-child(n+4) {
   display: none;
 }
 
-.bdy-dashboard main section article .locations::before,
-.bdy-dashboard main section article .exercises::before,
-.bdy-dashboard main section article .persons::before {
-  content: "";
-  max-height: 100%;
-  width: 2.5rem;
-  height: 2.5rem;
-  background-size: contain;
-}
-
-.bdy-dashboard main section article > div:first-of-type {
+.bdy-dashboard main .articles article > div:first-of-type {
   width: calc(100% - var(--width-img-container));
 }
 
-.bdy-dashboard main section article .images {
+.bdy-dashboard main .articles article .images {
   display: grid;
   grid-template-rows: auto auto;
   grid-template-columns: auto auto;
@@ -313,7 +433,7 @@ hr {
   height: 100%;
 }
 
-.bdy-dashboard main section article .images img {
+.bdy-dashboard main .articles article .images img {
   content: var(--test-image);
   object-fit: cover;
   width: 10rem;
@@ -326,6 +446,30 @@ hr {
   background-size: inherit;
   background-position: right;
   background-repeat: no-repeat;
+}
+
+/*--------------------------------------------------------------------------------*/
+/*-----------------------------Max screen width 1100px-----------------------------*/
+/*--------------------------------------------------------------------------------*/
+@media only screen and (max-width: 1100px) {
+  /*******************/
+  /* Overall styling */
+  /*******************/
+  nav {
+    position: relative;
+  }
+  main {
+    height: auto;
+  }
+  /**************/
+  /* dashboard.html */
+  /**************/
+  .bdy-dashboard .dialog-section dialog {
+    width: 100%;
+  }
+  .bdy-dashboard main .articles article {
+    min-width: 100%;
+  }
 }
 
 /*--------------------------------------------------------------------------------*/
@@ -355,28 +499,26 @@ hr {
   /**************/
   /* dashboard.html */
   /**************/
-  .bdy-dashboard main section article > div:first-of-type {
+  .bdy-dashboard .dialog-section dialog > div:first-child {
+    margin-top: 5rem;
+    flex-direction: column-reverse;
+    gap: .5rem;
+  }
+  .bdy-dashboard .dialog-section dialog > div:first-child #inp_entryDate {
+    width: 50%;
+    margin: auto;
+  }
+  .bdy-dashboard .dialog-section dialog > div:first-child #img_favorite {
+    max-width: 3rem;
+    margin: auto;
+  }
+  .bdy-dashboard main section .arrow-left {
+    left: -1rem;
+  }
+  .bdy-dashboard main section .arrow-right {
+    right: -1rem;
+  }
+  .bdy-dashboard main section .articles article > div:first-of-type {
     width: 100%;
-  }
-}
-
-/*--------------------------------------------------------------------------------*/
-/*-----------------------------Max screen width 1100px-----------------------------*/
-/*--------------------------------------------------------------------------------*/
-@media only screen and (max-width: 1100px) {
-  /*******************/
-  /* Overall styling */
-  /*******************/
-  nav {
-    position: relative;
-  }
-  main {
-    height: auto;
-  }
-  /**************/
-  /* dashboard.html */
-  /**************/
-  .bdy-dashboard article {
-    min-width: 100%;
   }
 }

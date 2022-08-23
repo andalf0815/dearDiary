@@ -14,203 +14,468 @@
       <a href="/?logout" class="a-btn-s">Abmelden</a>
     </nav>
     <main>
-      <header>
+      <section class="dialog-section">
         <hr />
         <span>&#9660;</span>
         <input
           type="text"
+          id="inp_title"
           class="input-border-bottom"
           placeholder="How was your day?"
         />
         <hr />
-      </header>
-      <section>
-        <article class="card favorite">
-          <h4>Two weeks ago...</h4>
-          <span>&#9998;</span>
-          <h2>&#128516; Good coding day</h2>
+        <dialog open>
           <div>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </p>
-            <div class="locations">
-              <p>Obertilliach</p>
-              <p>Zirl</p>
-              <p>wirl</p>
-              <p>kirl</p>
-              <p>sirl</p>
-            </div>
-            <div class="exercises">
-              <p>Radfahren</p>
-              <p>Wandern</p>
-            </div>
-            <div class="persons">
-              <p>Emil</p>
-              <p>Tobias</p>
-            </div>
+            <input type="date" id="inp_entryDate" class="input-border-bottom" />
+            <hr />
+            <img id="img_favorite" alt="Favorite" />
           </div>
           <div>
-            <div class="images">
-              <img alt="Img 1" />
-              <img alt="Img 2" />
-              <img alt="Img 3" />
-              <img alt="Img 4" />
+            <div id="div_emojis" rows="1">
+              <span data-selected>&#128512;</span>
+              <span>&#128517;</span>
+              <span>&#128519;</span>
+              <span>&#128520;</span>
+              <span>&#128524;</span>
+              <span>&#128525;</span>
+              <span>&#128526;</span>
+              <span>&#128529;</span>
+              <span>&#128531;</span>
+              <span>&#128532;</span>
+              <span>&#128533;</span>
+              <span>&#128546;</span>
+              <span>&#128557;</span>
+              <span>&#128564;</span>
+              <span>&#128565;</span>
+              <span>&#129322;</span>
+              <span>&#129324;</span>
+              <span>&#129327;</span>
+              <span>&#129326;</span>
+              <span>&#129298;</span>
+              <span>&#129301;</span>
             </div>
+            <textarea
+              id="ta_description"
+              rows="5"
+              placeholder="Description"
+              class="input-border-bottom"
+            ></textarea>
+            <fieldset>
+              <input type="file" name="images" accept="image/*,video/*" multiple>
+            </fieldset>
+            <fieldset id="fs_locations" class="icon-locations icon-tags">
+              <input
+                type="text"
+                class="input-border-bottom"
+                placeholder="Locations"
+              />
+            </fieldset>
+            <fieldset id="fs_exercises" class="icon-exercises icon-tags">
+              <input
+                type="text"
+                class="input-border-bottom"
+                placeholder="Exercises"
+              />
+            </fieldset>
+            <fieldset id="fs_persons" class="icon-persons icon-tags">
+              <input
+                type="text"
+                class="input-border-bottom"
+                placeholder="Persons"
+              />
+            </fieldset>
+            <input
+              type="submit"
+              class="card btn-primary"
+              name="submit"
+              value="Save"
+            />
           </div>
-        </article>
-        <article class="card">
-          <h4>Two weeks ago...</h4>
-          <span>&#9998;</span>
-          <h2>&#128516; Good coding day</h2>
-          <div>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </p>
-            <div class="locations">
-              <p>Obertilliach</p>
-              <p>Zirl</p>
-            </div>
-            <div class="exercises">
-              <p>Radfahren</p>
-              <p>Wandern</p>
-            </div>
-            <div class="persons">
-              <p>Emil</p>
-              <p>Tobias</p>
-            </div>
-          </div>
-          <div>
-            <div class="images">
-              <img alt="Img 1" />
-              <img alt="Img 2" />
-              <img alt="Img 3" />
-              <img alt="Img 4" />
-            </div>
-          </div>
-        </article>
+        </dialog>
       </section>
       <section>
-        <article class="card">
-          <h4>Two weeks ago...</h4>
-          <span>&#9998;</span>
-          <h2>&#128516; Good coding day</h2>
-          <div>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </p>
-            <div class="locations">
-              <p>Obertilliach</p>
-              <p>Zirl</p>
+        <img src="../images/arrow-left.png" class="arrow-left" hidden />
+        <img src="../images/arrow-right.png" class="arrow-right" hidden />
+        <div class="articles">
+          <article class="card favorite">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations icon-locations icon-tags">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+                <p>wirl</p>
+                <p>kirl</p>
+                <p>sirl</p>
+              </div>
+              <div class="exercises icon-exercises icon-tags">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons icon-persons icon-tags">
+                <p>Emil</p>
+                <p>Tobias</p>
+              </div>
             </div>
-            <div class="exercises">
-              <p>Radfahren</p>
-              <p>Wandern</p>
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
             </div>
-            <div class="persons">
-              <p>Emil</p>
-              <p>Tobias</p>
+          </article>
+          <article class="card">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+              </div>
+              <div class="exercises">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons">
+                <p>Emil</p>
+                <p>Tobias</p>
+              </div>
             </div>
-          </div>
-          <div>
-            <div class="images">
-              <img alt="Img 1" />
-              <img alt="Img 2" />
-              <img alt="Img 3" />
-              <img alt="Img 4" />
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
             </div>
-          </div>
-        </article>
-        <article class="card">
-          <h4>Two weeks ago...</h4>
-          <span>&#9998;</span>
-          <h2>&#128516; Good coding day</h2>
-          <div>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </p>
-            <div class="locations">
-              <p>Obertilliach</p>
-              <p>Zirl</p>
+          </article>
+          <article class="card">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+                <p>Lieblingsort</p>
+              </div>
+              <div class="exercises">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons">
+                <p>Emil</p>
+                <p>Tobias</p>
+                <p>Lieblingsperson</p>
+              </div>
             </div>
-            <div class="exercises">
-              <p>Radfahren</p>
-              <p>Wandern</p>
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
             </div>
-            <div class="persons">
-              <p>Emil</p>
-              <p>Tobias</p>
+          </article>
+        </div>
+      </section>
+      <section>
+        <img src="../images/arrow-left.png" class="arrow-left" hidden />
+        <img src="../images/arrow-right.png" class="arrow-right" hidden />
+        <div class="articles">
+          <article class="card favorite">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+                <p>wirl</p>
+                <p>kirl</p>
+                <p>sirl</p>
+              </div>
+              <div class="exercises">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons">
+                <p>Emil</p>
+                <p>Tobias</p>
+              </div>
             </div>
-          </div>
-          <div>
-            <div class="images">
-              <img alt="Img 1" />
-              <img alt="Img 2" />
-              <img alt="Img 3" />
-              <img alt="Img 4" />
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
             </div>
-          </div>
-        </article>
-      </section>      <section>
-        <article class="card">
-          <h4>Two weeks ago...</h4>
-          <span>&#9998;</span>
-          <h2>&#128516; Good coding day</h2>
-          <div>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </p>
-            <div class="locations">
-              <p>Obertilliach</p>
-              <p>Zirl</p>
+          </article>
+          <article class="card">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+              </div>
+              <div class="exercises">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons">
+                <p>Emil</p>
+                <p>Tobias</p>
+              </div>
             </div>
-            <div class="exercises">
-              <p>Radfahren</p>
-              <p>Wandern</p>
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
             </div>
-            <div class="persons">
-              <p>Emil</p>
-              <p>Tobias</p>
+          </article>
+          <article class="card">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+                <p>Lieblingsort</p>
+              </div>
+              <div class="exercises">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons">
+                <p>Emil</p>
+                <p>Tobias</p>
+                <p>Lieblingsperson</p>
+              </div>
             </div>
-          </div>
-          <div>
-            <div class="images">
-              <img alt="Img 1" />
-              <img alt="Img 2" />
-              <img alt="Img 3" />
-              <img alt="Img 4" />
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
             </div>
-          </div>
-        </article>
-        <article class="card">
-          <h4>Two weeks ago...</h4>
-          <span>&#9998;</span>
-          <h2>&#128516; Good coding day</h2>
-          <div>
-            <p class="description">
-              Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
-            </p>
-            <div class="locations">
-              <p>Obertilliach</p>
-              <p>Zirl</p>
+          </article>
+        </div>
+      </section>
+      <section>
+        <img src="../images/arrow-left.png" class="arrow-left" hidden />
+        <img src="../images/arrow-right.png" class="arrow-right" hidden />
+        <div class="articles">
+          <article class="card favorite">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+                <p>wirl</p>
+                <p>kirl</p>
+                <p>sirl</p>
+              </div>
+              <div class="exercises">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons">
+                <p>Emil</p>
+                <p>Tobias</p>
+              </div>
             </div>
-            <div class="exercises">
-              <p>Radfahren</p>
-              <p>Wandern</p>
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
             </div>
-            <div class="persons">
-              <p>Emil</p>
-              <p>Tobias</p>
+          </article>
+          <article class="card">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+              </div>
+              <div class="exercises">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons">
+                <p>Emil</p>
+                <p>Tobias</p>
+              </div>
             </div>
-          </div>
-          <div>
-            <div class="images">
-              <img alt="Img 1" />
-              <img alt="Img 2" />
-              <img alt="Img 3" />
-              <img alt="Img 4" />
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
             </div>
-          </div>
-        </article>
+          </article>
+          <article class="card">
+            <h4>Two weeks ago...</h4>
+            <span>&#9998;</span>
+            <h2>&#128516; Good coding day</h2>
+            <div>
+              <p class="prev-description">
+                Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed
+                diam nonumy eirmod tempor invidunt ut labore et dolore magna
+                aliquyam erat, sed diam voluptua. At vero eos et accusam et
+                justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea
+                takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum
+                dolor sit amet, consetetur sadipscing elitr, sed diam nonumy
+                eirmod tempor invidunt ut labore et dolore magna aliquyam erat,
+                sed diam voluptua. At vero eos et accusam et justo duo dolores
+                et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus
+                est Lorem ipsum dolor sit amet.
+              </p>
+              <div class="locations">
+                <p>Obertilliach</p>
+                <p>Zirl</p>
+                <p>Lieblingsort</p>
+              </div>
+              <div class="exercises">
+                <p>Radfahren</p>
+                <p>Wandern</p>
+              </div>
+              <div class="persons">
+                <p>Emil</p>
+                <p>Tobias</p>
+                <p>Lieblingsperson</p>
+              </div>
+            </div>
+            <div>
+              <div class="images">
+                <img alt="Img 1" />
+                <img alt="Img 2" />
+                <img alt="Img 3" />
+                <img alt="Img 4" />
+              </div>
+            </div>
+          </article>
+        </div>
       </section>
     </main>
   </body>
