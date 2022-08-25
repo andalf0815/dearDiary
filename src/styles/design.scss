@@ -8,7 +8,7 @@
   --width-img-container: 21rem;
 
   --img-locations: url("../images/locations.png");
-  --img-exercises: url("../images/exercises.png");
+  --img-activities: url("../images/activities.png");
   --img-persons: url("../images/persons.png");
 
   --color-turkis: #2cc3b4;
@@ -109,8 +109,8 @@ fieldset {
   background-image: var(--img-locations);
 }
 
-.icon-exercises::before {
-  background-image: var(--img-exercises);
+.icon-activities::before {
+  background-image: var(--img-activities);
 }
 
 .icon-persons::before {
@@ -389,7 +389,7 @@ fieldset {
         }
 
         .locations,
-        .exercises,
+        .activities,
         .persons {
           display: flex;
           align-items: flex-start;
