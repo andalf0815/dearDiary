@@ -11,69 +11,7 @@ const sectionIds = ["section_favorites", "section_timeline_year", "section_timel
 
 // sections stores all created memory section DOM elements
 const sections = {};
-
-const memories = [
-  {
-    uuid: "67d5dc07-566e-44e0-a13b-2fa7f87d7b22",
-    entryDate: "20.08.2022",
-    favorite: false,
-    mood: "128517",
-    title: "Nice day",
-    description: `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-    erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-    sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-    et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
-    accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-    no sea takimata sanctus est Lorem ipsum dolor sit amet.`,
-    locations: ["Zirl", "Kematen"],
-    activities: ["Radfahren", "Wandern"],
-    persons: ["Chrissi", "Jakob"],
-    images: ["url", "url", "url"],
-  },
-  {
-    uuid: "4fac566b-e5a6-469e-ade2-ad9214d121ef",
-    entryDate: "21.08.2022",
-    favorite: true,
-    mood: "128519",
-    title: "Nice day",
-    description: `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-    erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-    sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-    et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
-    accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-    no sea takimata sanctus est Lorem ipsum dolor sit amet.`,
-    locations: ["Zirl", "Obertilliach"],
-    activities: ["Radfahren", "Wandern"],
-    persons: ["Elisabeth", "Chrissi", "Jakob"],
-    images: ["url", "url", "url"],
-  },
-  {
-    uuid: "1fa8a66b-e5a6-469e-23e2-ad9e43d121ef",
-    entryDate: "22.08.2022",
-    favorite: false,
-    mood: "128520",
-    title: "Nice day",
-    description: `Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam
-    nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam
-    erat, sed diam voluptua. At vero eos et accusam et justo duo dolores
-    et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est
-    Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur
-    sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore
-    et dolore magna aliquyam erat, sed diam voluptua. At vero eos et
-    accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren,
-    no sea takimata sanctus est Lorem ipsum dolor sit amet.`,
-    locations: ["Zirl", "Innsbruck", "Telfs"],
-    activities: ["Chillen", "Netflixen"],
-    persons: ["Chrissi"],
-    images: ["url", "url", "url"],
-  },
-];
+import memories from '../data/memories.json' assert {type: 'json'};
 
 // Copy the template_section and add it dynamically to the DOM
 // Add as much sections as are defined in the sectionIds array
@@ -106,7 +44,7 @@ for (const {
 
   // Set the data from the database to the memory article in the DOM elements
   $memory.dataset.uuid = uuid;
-  favorite && $memory.setAttribute("class", "favorite");
+  favorite && $memory.classList.add("favorite");
   $memory.querySelector("h6").textContent = "x days ago ...";
   $memory.querySelector("h4").textContent = entryDate;
   $memory.querySelector("h2").textContent = `${String.fromCodePoint(mood)} ${title}`;
@@ -133,5 +71,19 @@ for (const {
     $memory.querySelector(".persons").append(p);
   }
 
+  // Only for test purpose: Save every memory random in one of the three sections
+  // const randomIndex = Math.floor(Math.random() * 3);
+  // console.log(randomIndex)
   sections[sectionIds[2]].querySelector(".articles").append($memory);
 }
+
+// TODO: click on the arrows switch to the next memory
+const $nextArticle = document.querySelector(".arrow-right");
+
+$nextArticle.addEventListener("click", (e) => {
+  // console.log(e.target.parentElement.querySelector(".articles").offsetLeft);
+  e.target.parentElement.querySelector(".articles").scrollBy({
+    left: 500,
+    behavior: 'smooth'
+  });
+});

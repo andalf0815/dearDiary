@@ -1,15 +1,16 @@
 {
   "block": [
     "/config/accesslist.json",
-    "/data/users.json",
     "/config/config.json",
+    "/data/mimetypes.json",
+    "/data/users.json",
+    "/.gitignore",
     "/lib/helpers.js",
-    "/config/mimetypes.json",
-    "/server.js",
-    "/todo.md"
+    "/server.js"
   ],
   "login": [
     "/pages/dashboard.html",
+    "/pages/dashboard.js",
     "/script.js"
   ],
   "groups": {
