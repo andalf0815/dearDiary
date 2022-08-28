@@ -15,7 +15,7 @@ const {
 // Statische Daten einbinden
 const accesslist = require("./config/accesslist.json");
 const config = require("./config/config.json");
-const mimetypes = require("./config/mimetypes.json");
+const mimetypes = require("./data/mimetypes.json");
 const users = require("./data/users.json");
 
 // Templates
