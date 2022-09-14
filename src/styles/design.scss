@@ -108,8 +108,8 @@ fieldset {
 }
 .background-elements {
 
-  background-image: url("../images/yellowCircle.png"), url("../images/purpleSquare.png"), url("../images/blueCircle.png"), url("../images/blueLine.png"), url("../images/blueSquare.png"), url("../images/greenTriangle.png"), url("../images/purpleCircle.png"), url("../images/greenCircle.png");
-  background-position: 2% 8%, -3% 50%, 35% 55%, 0% 100%, 100% 30%, 90% 0%, 40% 100%, 110% 107%;
+  background-image: url("../images/purpleSquare.png"), url("../images/yellowCircle.png"), url("../images/blueCircle.png"), url("../images/blueLine.png"), url("../images/blueSquare.png"), url("../images/greenTriangle.png"), url("../images/purpleCircle.png"), url("../images/greenCircle.png");
+  background-position: 2% 4%, -3% 50%, 35% 55%, 0% 100%, 100% 30%, 90% 0%, 40% 100%, 110% 107%;
   background-repeat: no-repeat;
 }
 
@@ -347,10 +347,8 @@ fieldset {
         display: flex;
         gap: 2rem;
         width: 100%;
-        min-height: 28%;
         overflow-x: scroll;
         padding: 0.9rem;
-        scroll-snap-type: x mandatory;
 
         &::-webkit-scrollbar {
           display: none;
@@ -365,6 +363,10 @@ fieldset {
           min-width: calc(50% - 1rem);
           padding: 2rem;
           background-color: var(--color-lightBlue);
+
+          h6 {
+            color: var(--color-yellow);
+          }
 
           span {
             width: 5%;
