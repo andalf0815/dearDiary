@@ -249,8 +249,8 @@ fieldset {
   z-index: 4;
 }
 
-.bdy-dashboard main #dialog-section dialog {
-  display: none;
+.bdy-dashboard main #dialog-section dialog[open] {
+  display: flex;
   flex-direction: column;
   gap: 2rem;
   margin: auto;
@@ -261,60 +261,71 @@ fieldset {
   padding: 8rem 6rem 2.5rem 6rem;
 }
 
-.bdy-dashboard main #dialog-section dialog > div:first-child {
+.bdy-dashboard main #dialog-section dialog[open] > div:first-child {
   display: flex;
 }
 
-.bdy-dashboard main #dialog-section dialog > div:first-child #inp_entryDate {
+.bdy-dashboard main #dialog-section dialog[open] > div:first-child #inp_entryDate {
   width: 30%;
 }
 
-.bdy-dashboard main #dialog-section dialog > div:first-child #img_favorite {
+.bdy-dashboard main #dialog-section dialog[open] > div:first-child #img_favorite {
   content: url("../images/y-star-not-filled.png");
 }
 
-.bdy-dashboard main #dialog-section dialog > div:first-child #img_favorite:hover {
+.bdy-dashboard main #dialog-section dialog[open] > div:first-child #img_favorite:hover {
   content: url("../images/y-star-filled.png");
 }
 
-.bdy-dashboard main #dialog-section dialog > div:first-child #img_favorite[data-favoriteSet] {
+.bdy-dashboard main #dialog-section dialog[open] > div:first-child #img_favorite[data-favoriteSet] {
   content: url("../images/y-star-filled.png");
 }
 
-.bdy-dashboard main #dialog-section dialog > div:first-child #img_favorite[data-favoriteSet]:hover {
+.bdy-dashboard main #dialog-section dialog[open] > div:first-child #img_favorite[data-favoriteSet]:hover {
   content: url("../images/y-star-not-filled.png");
 }
 
-.bdy-dashboard main #dialog-section dialog > div:nth-child(2) {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.bdy-dashboard main #dialog-section dialog > div:nth-child(2) #div_emojis {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #div_emojis {
   display: flex;
   overflow-x: auto;
 }
 
-.bdy-dashboard main #dialog-section dialog > div:nth-child(2) #div_emojis > span {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #div_emojis > span {
   cursor: pointer;
 }
 
-.bdy-dashboard main #dialog-section dialog > div:nth-child(2) #div_emojis > span[data-selected] {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #div_emojis > span[data-selected] {
   background-color: var(--color-deepBlue);
 }
 
-.bdy-dashboard main #dialog-section dialog > div:nth-child(2) #ta_description {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #ta_description {
   resize: none;
 }
 
-.bdy-dashboard main #dialog-section dialog > div:nth-child(2) fieldset {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset {
   display: flex;
   gap: 1rem;
 }
 
-.bdy-dashboard main #dialog-section dialog > div:nth-child(2) input {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) input {
   width: 100%;
+}
+
+.bdy-dashboard main #dialog-section #div_dialogBackdrop {
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: black;
+  opacity: 0.5;
+  z-index: 2;
 }
 
 .bdy-dashboard main .article-section .arrow-left,

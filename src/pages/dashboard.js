@@ -6,6 +6,10 @@ const $main = document.querySelector("main");
 const $templ_section = document.querySelector("#template_section").content.firstElementChild;
 const $templ_memory = document.querySelector("#template_memory").content.firstElementChild;
 
+const $dialog = document.querySelector("dialog");
+const $dialogBackdrop = document.querySelector("#div_dialogBackdrop");
+const $memoryTitle = document.querySelector("#inp_title");
+
 // sectionIds stores the ids of all the possible memory sections
 const sectionIds = ["section_favorites", "section_timelineAll", "section_timelineRecentlyAdded"];
 
@@ -66,6 +70,16 @@ setSliderButtons();
 // When resizing the screen the arrow left + right buttons are loaded
 window.addEventListener("resize", () => {
   setSliderButtons();
+})
+
+$memoryTitle.addEventListener("click", () => {
+  $dialogBackdrop.hidden = false;
+  $dialog.setAttribute("open", "");
+})
+
+$dialogBackdrop.addEventListener("click", () => {
+  $dialogBackdrop.hidden = true;
+  $dialog.removeAttribute("open");
 })
 
 //*************//

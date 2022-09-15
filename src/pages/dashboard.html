@@ -20,7 +20,7 @@
         <span>&#9660;</span>
         <input type="text" id="inp_title" class="input-border-bottom" placeholder="How was your day?" />
         <hr />
-        <dialog hidden>
+        <dialog>
           <div>
             <input type="date" id="inp_entryDate" class="input-border-bottom" />
             <hr />
@@ -63,7 +63,7 @@
               <input type="text" class="input-border-bottom" placeholder="Locations" />
             </fieldset>
             <fieldset id="fs_activities" class="icon-activities icon-tags">
-              <input type="text" class="input-border-bottom" placeholder="activities" />
+              <input type="text" class="input-border-bottom" placeholder="Activities" />
             </fieldset>
             <fieldset id="fs_persons" class="icon-persons icon-tags">
               <input type="text" class="input-border-bottom" placeholder="Persons" />
@@ -71,6 +71,7 @@
             <input type="submit" class="card btn-primary" name="submit" value="Save" />
           </div>
         </dialog>
+        <div id="div_dialogBackdrop" hidden></div>
       </section>
     </main>
 
