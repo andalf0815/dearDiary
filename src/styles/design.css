@@ -238,7 +238,7 @@ fieldset {
   gap: 1rem;
 }
 
-.bdy-dashboard main #dialog-section span {
+.bdy-dashboard main #dialog-section #span_openFilter {
   font-size: 3rem;
   color: var(--color-lightGreen);
 }
@@ -252,11 +252,12 @@ fieldset {
 .bdy-dashboard main #dialog-section dialog[open] {
   display: flex;
   flex-direction: column;
+  border-radius: 0.4rem;
+  position: absolute;
+  top: -2rem;
   gap: 2rem;
   margin: auto;
   width: 60%;
-  position: absolute;
-  top: -2rem;
   z-index: 3;
   padding: 8rem 6rem 2.5rem 6rem;
 }
@@ -274,15 +275,11 @@ fieldset {
 }
 
 .bdy-dashboard main #dialog-section dialog[open] > div:first-child #img_favorite:hover {
-  content: url("../images/y-star-filled.png");
+  cursor: pointer;
 }
 
 .bdy-dashboard main #dialog-section dialog[open] > div:first-child #img_favorite[data-favoriteSet] {
   content: url("../images/y-star-filled.png");
-}
-
-.bdy-dashboard main #dialog-section dialog[open] > div:first-child #img_favorite[data-favoriteSet]:hover {
-  content: url("../images/y-star-not-filled.png");
 }
 
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) {
@@ -310,10 +307,15 @@ fieldset {
 
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset {
   display: flex;
+  flex-wrap: wrap;
   gap: 1rem;
 }
 
-.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) input {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset input {
+  width: calc(100% - 3.5rem);
+}
+
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) input[type="submit"] {
   width: 100%;
 }
 

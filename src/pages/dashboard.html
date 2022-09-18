@@ -17,7 +17,7 @@
     <main>
       <section id="dialog-section">
         <hr />
-        <span>&#9660;</span>
+        <span id="span_openFilter">&#9660;</span>
         <input type="text" id="inp_title" class="input-border-bottom" placeholder="How was your day?" />
         <hr />
         <dialog>
@@ -27,7 +27,7 @@
             <img id="img_favorite" alt="Favorite" />
           </div>
           <div>
-            <div id="div_emojis" rows="1">
+            <div id="div_emojis">
               <span data-selected>&#128512;</span>
               <span>&#128517;</span>
               <span>&#128519;</span>
@@ -59,13 +59,22 @@
             <fieldset>
               <input type="file" name="images" accept="image/*,video/*" multiple />
             </fieldset>
-            <fieldset id="fs_locations" class="icon-locations icon-tags">
+            <fieldset class="icon-locations icon-tags">
               <input type="text" class="input-border-bottom" placeholder="Locations" />
+              <span id="div_locations">
+                <span>
+                  Innsbruck
+                </span>
+                <span>
+                  Zirl
+                </span>
+              </span>
+
             </fieldset>
-            <fieldset id="fs_activities" class="icon-activities icon-tags">
+            <fieldset class="icon-activities icon-tags">
               <input type="text" class="input-border-bottom" placeholder="Activities" />
             </fieldset>
-            <fieldset id="fs_persons" class="icon-persons icon-tags">
+            <fieldset class="icon-persons icon-tags">
               <input type="text" class="input-border-bottom" placeholder="Persons" />
             </fieldset>
             <input type="submit" class="card btn-primary" name="submit" value="Save" />

@@ -243,7 +243,7 @@ fieldset {
       margin-top: 1rem;
       gap: 1rem;
 
-      span {
+      #span_openFilter {
         font-size: 3rem;
         color: var(--color-lightGreen);
       }
@@ -257,11 +257,12 @@ fieldset {
       dialog[open] {
         display: flex;
         flex-direction: column;
+        border-radius: 0.4rem;
+        position: absolute;
+        top: -2rem;
         gap: 2rem;
         margin: auto;
         width: 60%;
-        position: absolute;
-        top: -2rem;
         z-index: 3;
         padding: 8rem 6rem 2.5rem 6rem;
 
@@ -276,15 +277,11 @@ fieldset {
             content: url("../images/y-star-not-filled.png");
 
             &:hover {
-              content: url("../images/y-star-filled.png");
+              cursor: pointer;
             }
 
             &[data-favoriteSet] {
               content: url("../images/y-star-filled.png");
-
-              &:hover {
-                content: url("../images/y-star-not-filled.png");
-              }
             }
           }
         }
@@ -313,10 +310,15 @@ fieldset {
 
           fieldset {
             display: flex;
+            flex-wrap: wrap;
             gap: 1rem;
+
+            input {
+              width: calc(100% - 3.5rem);
+            }
           }
 
-          input {
+          input[type="submit"] {
             width: 100%;
           }
         }

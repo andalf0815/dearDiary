@@ -8,7 +8,10 @@ const $templ_memory = document.querySelector("#template_memory").content.firstEl
 
 const $dialog = document.querySelector("dialog");
 const $dialogBackdrop = document.querySelector("#div_dialogBackdrop");
+
 const $memoryTitle = document.querySelector("#inp_title");
+const $favorite = document.querySelector("#img_favorite");
+const $emojis = document.querySelector("#div_emojis");
 
 // sectionIds stores the ids of all the possible memory sections
 const sectionIds = ["section_favorites", "section_timelineAll", "section_timelineRecentlyAdded"];
@@ -70,17 +73,30 @@ setSliderButtons();
 // When resizing the screen the arrow left + right buttons are loaded
 window.addEventListener("resize", () => {
   setSliderButtons();
-})
+});
 
+// When clicking on the input field "how was your day", then open the dialog
 $memoryTitle.addEventListener("click", () => {
   $dialogBackdrop.hidden = false;
   $dialog.setAttribute("open", "");
-})
+});
 
+// When clicking outside the dialog, then close it
 $dialogBackdrop.addEventListener("click", () => {
   $dialogBackdrop.hidden = true;
   $dialog.removeAttribute("open");
-})
+});
+
+// Eventlistener for selectig an emoji
+$emojis.addEventListener("click", (e) => {
+  $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
+  e.target.setAttribute("data-selected", "");
+  console.log(e.target);
+});
+
+$favorite.addEventListener("click", () => {
+  $favorite.toggleAttribute("data-favoriteSet");
+});
 
 //*************//
 //* FUNCTIONS *//
