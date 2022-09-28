@@ -10,8 +10,15 @@ const $dialog = document.querySelector("dialog");
 const $dialogBackdrop = document.querySelector("#div_dialogBackdrop");
 
 const $memoryTitle = document.querySelector("#inp_title");
+const $memoryDate = document.querySelector("#inp_entryDate");
 const $favorite = document.querySelector("#img_favorite");
 const $emojis = document.querySelector("#div_emojis");
+const $description = document.querySelector("#ta_description");
+const $locations = document.querySelector("#span_locations");
+const $activities = document.querySelector("#span_activities");
+const $persons = document.querySelector("#span_persons");
+
+const $saveMemory = document.querySelector("#btn_saveMemory");
 
 // sectionIds stores the ids of all the possible memory sections
 const sectionIds = ["section_favorites", "section_timelineAll", "section_timelineRecentlyAdded"];
@@ -81,21 +88,54 @@ $memoryTitle.addEventListener("click", () => {
   $dialog.setAttribute("open", "");
 });
 
-// When clicking outside the dialog, then close it
-$dialogBackdrop.addEventListener("click", () => {
-  $dialogBackdrop.hidden = true;
-  $dialog.removeAttribute("open");
+// Eventlistener for selectig set a memory to favorite
+$favorite.addEventListener("click", () => {
+  $favorite.toggleAttribute("data-favoriteSet");
 });
 
 // Eventlistener for selectig an emoji
 $emojis.addEventListener("click", (e) => {
   $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
   e.target.setAttribute("data-selected", "");
-  console.log(e.target);
 });
 
-$favorite.addEventListener("click", () => {
-  $favorite.toggleAttribute("data-favoriteSet");
+//
+// SAVING A NEW MEMORY
+// Eventlistener for clicking the Save Button
+$saveMemory.addEventListener("click", () => {
+
+  const test = $favorite.dataset.favoriteset === "" ? true : false;
+
+  console.log(test);
+
+  const data = {
+    "entryDate": $memoryDate.value,
+    "title": $memoryTitle.value,
+    "favorite": $favorite.dataset.favoriteset === "" ? true : false,
+    "emoji": $emojis.querySelector("span[data-selected]").textContent,
+    "description": $description.value,
+    "locations": getTags($locations),
+    "activities": getTags($activities),
+    "persons": getTags($persons)
+  };
+
+  console.log(data);
+
+  // const xhr = new XMLHttpRequest();
+  // const params = new URLSearchParams({"data1": "blabla1", "data2": "blabla2"});
+
+  // xhr.open("POST", "/api?setNewMemory", true);
+  // xhr.send(params);
+
+  // xhr.addEventListener("load", () => {
+  //   console.log(xhr.responseText);
+  // });
+});
+
+// When clicking outside the dialog, then close it
+$dialogBackdrop.addEventListener("click", () => {
+  $dialogBackdrop.hidden = true;
+  $dialog.removeAttribute("open");
 });
 
 //*************//
@@ -228,6 +268,16 @@ function createMemorieEntries(memories) {
 // Renders the memory to the correct section
 function renderMemory ($memory, sectionId){
   sections[sectionId].querySelector(".articles").append($memory);
+}
+
+// Get the entered tags
+function getTags($tags){
+  const tags = [];
+  for (let element of $tags.children){
+    tags.push(element.textContent);
+  }
+
+  return tags;
 }
 
 // Gets the difference of months between two dates

@@ -315,7 +315,7 @@ fieldset {
   width: calc(100% - 3.5rem);
 }
 
-.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) input[type="submit"] {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #btn_saveMemory {
   width: 100%;
 }
 
