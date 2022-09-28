@@ -8,10 +8,13 @@ Folder/*File*                                             | Purpose
 &nbsp;&nbsp; *Dear Diary - Projecthandbook.docx*          | Projecthandbook of the project
 &nbsp;&nbsp; *Dear Diary - Wireframe.docx*                | Wireframe of the software
 **src**                                                   | Folder which stores the source code of the project           
+&nbsp;&nbsp; **api**                                      | Folder for storing api for the database           
+&nbsp;&nbsp;&nbsp;&nbsp; *setNewMemory.js*                | Stores functions to insert new memories and all associated data           
 &nbsp;&nbsp; **config**                                   | Folder for storing configuration files           
 &nbsp;&nbsp;&nbsp;&nbsp; *accesslist.json*                | Stores information about the access permissions for the client           
 &nbsp;&nbsp;&nbsp;&nbsp; *config.json*                    | Stores information about global settings of the webserver           
 &nbsp;&nbsp; **data**                                     | Folder for storing base data files
+&nbsp;&nbsp;&nbsp;&nbsp; *db.sqlite*                      | Sqlite database for storing the memories          
 &nbsp;&nbsp;&nbsp;&nbsp; *memories.json*                  | **Temporary File:** Stores the saved memories in json format           
 &nbsp;&nbsp;&nbsp;&nbsp; *mimetypes.json*                 | Stores the different mimetypes in json format           
 &nbsp;&nbsp;&nbsp;&nbsp; *users.json*                     | Stores the access data for each registered user           
