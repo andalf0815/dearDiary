@@ -1,3 +1,4 @@
-*.sqlite
+data/db.sqlite
 data/users.json
 data/memories.json
+node_modules
