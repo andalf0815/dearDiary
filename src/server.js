@@ -4,6 +4,7 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const http = require("http");
+const { insertMemory } = require("./api/memory.js");
 const {
   getBody,
   getBodyParams,
@@ -322,6 +323,36 @@ const server = http.createServer(function (request, response) {
   /*********************/
 
   // Eigene Endpunkte hier einbinden
+
+  /***********************/
+  /* SQLITE DB ENDPOINTS */
+  /***********************/
+
+  // Insert new memory entry
+  if (
+    request.url.pathname === "/api" &&
+    request.url.searchParams.get("setMemory") === "" &&
+    request.method === "POST"
+  ){
+    getBodyParams(request, function (error, params) {
+      if (error){
+        response.endWithStatus(500);
+        return;
+      }
+
+      // Insert the extracted body params to the sqlite db
+      insertMemory(params, (err, uuid) => {
+        if (err){
+          response.endWithStatus(400);
+          return;
+        }
+        response.end(uuid);
+        return;
+      })
+      return;
+    })
+    return;
+  }
 
   /*******************************************************/
   /* HTTP METHODE PRÜFEN UND INDEX.HTML DATEIEN ERGÄNZEN */

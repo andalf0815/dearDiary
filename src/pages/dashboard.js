@@ -63,9 +63,6 @@ for (const sectionId of sectionIds) {
 
 // CREATING MEMORIES (ARTICLES) //
 
-// Loop through the memories, copy the template_memory and add it dynamically to the sections
-// Depending on which section category the memory is related to, append it to the correct section
-
 // Create and render Memories
 createMemorieEntries(memories);
 
@@ -95,7 +92,7 @@ $favorite.addEventListener("click", () => {
 
 // Eventlistener for selectig an emoji
 $emojis.addEventListener("click", (e) => {
-  $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
+  $emojis.querySelector("span[data-selected]").toggleAttribute("data-selected", false);
   e.target.setAttribute("data-selected", "");
 });
 
@@ -104,36 +101,40 @@ $emojis.addEventListener("click", (e) => {
 // Eventlistener for clicking the Save Button
 $saveMemory.addEventListener("click", () => {
 
-  const test = $favorite.dataset.favoriteset === "" ? true : false;
-
-  console.log(test);
-
+  // Collection the data which where entered in the dialog
   const data = {
     "entryDate": $memoryDate.value,
     "title": $memoryTitle.value,
-    "favorite": $favorite.dataset.favoriteset === "" ? true : false,
+    "favorite": $favorite.dataset.favoriteset === "" ? 1 : 0,
     "emoji": $emojis.querySelector("span[data-selected]").textContent,
     "description": $description.value,
-    "locations": getTags($locations),
-    "activities": getTags($activities),
-    "persons": getTags($persons)
+    "url": "URL",
+    "locations": getTags($locations).join("; "),
+    "activities": getTags($activities).join("; )"),
+    "persons": getTags($persons).join("; ")
   };
 
-  console.log(data);
+  // Preparing the xhr and send it to the server
+  const xhr = new XMLHttpRequest();
+  const params = new URLSearchParams(data);
 
-  // const xhr = new XMLHttpRequest();
-  // const params = new URLSearchParams({"data1": "blabla1", "data2": "blabla2"});
+  xhr.open("POST", "/api?setMemory", true);
+  xhr.send(params);
 
-  // xhr.open("POST", "/api?setNewMemory", true);
-  // xhr.send(params);
+  xhr.addEventListener("load", () => {
+    if(xhr.status === 200 & xhr.readyState === 4){
+      alert("Memory saved successfully!");
 
-  // xhr.addEventListener("load", () => {
-  //   console.log(xhr.responseText);
-  // });
+      clearDialogData();
+      $dialogBackdrop.hidden = true;
+      $dialog.removeAttribute("open");
+    }
+  });
 });
 
 // When clicking outside the dialog, then close it
 $dialogBackdrop.addEventListener("click", () => {
+  clearDialogData();
   $dialogBackdrop.hidden = true;
   $dialog.removeAttribute("open");
 });
@@ -143,8 +144,9 @@ $dialogBackdrop.addEventListener("click", () => {
 //**************/
 
 
-// Loops through the sections and sets the arrow left + right buttons if more memories are available than can be shown on the screen
 function setSliderButtons() {
+  // Loops through the sections and sets the arrow left + right buttons if more memories are available than can be shown on the screen
+
   const amountVisibleMemories = window.innerWidth <= 1100 ? 1 : 2;
 
   for (let [ key, value ] of Object.entries(sections)) {
@@ -157,6 +159,8 @@ function setSliderButtons() {
 }
 
 function createMemorieEntries(memories) {
+  // Loop through the memories, copy the template_memory and add it dynamically to the sections
+  // Depending on which section category the memory is related to, append it to the correct section
 
   // Get the current date in new Date format
   const currentDate = new Date();
@@ -184,7 +188,7 @@ function createMemorieEntries(memories) {
     // Create the memory element and add its properties
     const $memory = $templ_memory.cloneNode(true);
     $memory.querySelector("h4").textContent = entryDate;
-    $memory.querySelector("h2").textContent = `${String.fromCodePoint(mood)} ${title}`;
+    $memory.querySelector("h2").textContent = `${mood} ${title}`;
     $memory.querySelector(".prev-description").textContent = description;
 
     // Set the data from the database to the memory article in the DOM elements
@@ -199,10 +203,11 @@ function createMemorieEntries(memories) {
     oneWeekAgo.setHours(0,0,0,0)
     oneWeekAgo.setDate(currentDate.getDate() - 7);
 
+    //
     // Set the "x days weeks/months/years ago ..." text
     let historyCaption;
 
-    // Recently added (within the last 7 days)
+    // SECTION Recently added (within the last 7 days)
     if (memoryDate >= (oneWeekAgo)){
       const daysAgo = parseInt((currentDate.getTime() - memoryDate.getTime()) / (1000 * 3600 * 24));
 
@@ -216,7 +221,7 @@ function createMemorieEntries(memories) {
       renderMemory($memory, sectionIds[2]);
     }
 
-    // All memories on the same date as today
+    // SECTION All memories on the same date as today
     else if (currentDay === memoryDay){
       const monthsAgo = getMonthDifference(memoryDate, currentDate);
 
@@ -225,10 +230,14 @@ function createMemorieEntries(memories) {
       }else if (monthsAgo % 12 === 0){
         historyCaption = `<big>${monthsAgo / 12}</big> years ago ...`
       }
+      // Don't render all other memories
+      else {
+        continue;
+      }
       renderMemory($memory, sectionIds[1]);
     }
 
-    // Remove the historyCaption from favorite entries
+    // SECTION favorites - Remove the historyCaption from favorite entries
     else if (favorite){
       historyCaption = "";
       renderMemory($memory, sectionIds[0]);
@@ -239,29 +248,44 @@ function createMemorieEntries(memories) {
       continue;
     }
 
+    // Finally set the correct historyCaption to the element
     $memory.querySelector("h6").innerHTML = historyCaption;
 
+    //
+    // Load the correct tag values for each tag (locations, activities and persons)
 
-    // Loop through the locations array and render the locations to the DOM
+    // Loop through the locations array and render the values to the DOM
     for (const location of locations) {
       const p = document.createElement("p");
       p.textContent = location;
       $memory.querySelector(".locations").append(p);
     }
 
-    // Loop through the activities array and render the locations to the DOM
+    // Loop through the activities array and render the values to the DOM
     for (const activity of activities) {
       const p = document.createElement("p");
       p.textContent = activity;
       $memory.querySelector(".activities").append(p);
     }
 
-    // Loop through the persons array and render the locations to the DOM
+    // Loop through the persons array and render the values to the DOM
     for (const person of persons) {
       const p = document.createElement("p");
       p.textContent = person;
       $memory.querySelector(".persons").append(p);
     }
+
+    // Add eventlistener to the edit button
+    // This loads the data from the entry, opens the dialog and sets the correct values to the fields
+    $memory.querySelector(".edit").addEventListener(("click"), (e) => {
+
+      // Set the dialog data with the loaded data from the db
+      setDialogData({uuid, entryDate, favorite, mood, title, description, locations, activities, persons, images});
+
+      // open the dialog
+      $dialogBackdrop.hidden = false;
+      $dialog.setAttribute("open", "");
+    });
   }
 }
 
@@ -276,8 +300,41 @@ function getTags($tags){
   for (let element of $tags.children){
     tags.push(element.textContent);
   }
-
   return tags;
+}
+
+// Clear the values of the fields within the dialog
+function clearDialogData() {
+  $dialog.dataset.uuid = "";
+  $memoryDate.value = "";
+  $memoryTitle.value = "";
+  $favorite.toggleAttribute("data-favoriteset", false);
+  $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
+  $emojis.querySelector("span:first-child").setAttribute("data-selected","");
+  $description.value = "";
+  $locations.innerHTML = "";
+  $activities.innerHTML = "";
+  $persons.innerHTML = "";
+}
+
+// Sets the values of the fields within the dialog
+function setDialogData(data) {
+  $dialog.dataset.uuid = data.uuid;
+  $memoryDate.value = data.entryDate;
+  $memoryTitle.value = data.title;
+  $favorite.toggleAttribute("data-favoriteset", data.favorite);
+
+  // Set the correct emoji
+  for ( let mood of $emojis.children){
+    if (mood.textContent === data.mood){
+      mood.setAttribute("data-selected","");
+      $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
+    }
+  }
+  $description.value = data.description;
+  $locations.innerHTML = "";
+  $activities.innerHTML = "";
+  $persons.innerHTML = "";
 }
 
 // Gets the difference of months between two dates

@@ -377,18 +377,21 @@ fieldset {
 }
 
 .bdy-dashboard main .article-section .articles article span {
-  width: 5%;
-  text-align: right;
-  transform: scalex(-1);
-  font-size: 3rem;
+  background-image: url(../images/edit.png);
+  width: 3rem;
+  height: 3rem;
+  background-size: contain;
   position: absolute;
   right: 2rem;
-  color: lightgrey;
 }
 
 .bdy-dashboard main .article-section .articles article span:hover {
   cursor: pointer;
-  color: dimgrey;
+  filter: invert(1);
+}
+
+.bdy-dashboard main .article-section .articles article span:active {
+  filter: invert(0);
 }
 
 .bdy-dashboard main .article-section .articles article h2,
