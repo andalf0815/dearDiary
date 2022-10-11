@@ -87,6 +87,7 @@ fieldset {
 
 :not(input[type="text"]),
 :not(textarea) {
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -315,6 +316,24 @@ fieldset {
 
             input {
               width: calc(100% - 3.5rem);
+            }
+
+            .tags {
+              span {
+                padding-left: 1rem;
+
+                &::after {
+                  content: "";
+                  margin-left: .5rem;
+                  background-image: url("../images/delete.png");
+                  background-size: contain;
+                  background-repeat: no-repeat;
+                  width: 1.3rem;
+                  height: 1.2rem;
+                  display: inline-block;
+                  cursor: pointer;
+                }
+              }
             }
           }
 

@@ -14,7 +14,7 @@ function insertMemory(data, cb) {
   data = data.map((entry) => entry.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
 
   // insert one row into the tbl_memories table
-  db.run(`INSERT OR REPLACE INTO tbl_memories VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,data , function(err) {
+  db.run(`INSERT OR REPLACE INTO tbl_memories VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, data , function(err) {
     if (err) {
       // send the error message back to the requester
       cb(err.message);

@@ -83,6 +83,7 @@ fieldset {
 
 :not(input[type="text"]),
 :not(textarea) {
+  -webkit-user-select: none;
   user-select: none;
 }
 
@@ -313,6 +314,22 @@ fieldset {
 
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset input {
   width: calc(100% - 3.5rem);
+}
+
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset .tags span {
+  padding-left: 1rem;
+}
+
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset .tags span::after {
+  content: "";
+  margin-left: .5rem;
+  background-image: url("../images/delete.png");
+  background-size: contain;
+  background-repeat: no-repeat;
+  width: 1.3rem;
+  height: 1.2rem;
+  display: inline-block;
+  cursor: pointer;
 }
 
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #btn_saveMemory {

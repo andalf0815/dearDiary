@@ -17,6 +17,7 @@ const $description = document.querySelector("#ta_description");
 const $locations = document.querySelector("#span_locations");
 const $activities = document.querySelector("#span_activities");
 const $persons = document.querySelector("#span_persons");
+const $tagParents = document.querySelectorAll(".icon-tags");
 
 const $saveMemory = document.querySelector("#btn_saveMemory");
 
@@ -64,7 +65,7 @@ for (const sectionId of sectionIds) {
 // CREATING MEMORIES (ARTICLES) //
 
 // Create and render Memories
-createMemorieEntries(memories);
+createMemoryEntries(memories);
 
 // Loads the arrow left + right buttons
 setSliderButtons();
@@ -85,7 +86,7 @@ $memoryTitle.addEventListener("click", () => {
   $dialog.setAttribute("open", "");
 });
 
-// Eventlistener for selectig set a memory to favorite
+// Eventlistener for setting a memory to favorite
 $favorite.addEventListener("click", () => {
   $favorite.toggleAttribute("data-favoriteSet");
 });
@@ -96,21 +97,47 @@ $emojis.addEventListener("click", (e) => {
   e.target.setAttribute("data-selected", "");
 });
 
+// Add eventlistener to the tags input (When entering a tag and click enter, then display the entered string below the tags element)
+$tagParents.forEach(($tagParent) => {
+  const $input = $tagParent.querySelector(".tag-input");
+  const $tags = $tagParent.querySelector(".tags");
+
+  $input.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && $input.value.trim()){
+      const $tag = document.createElement("span");
+      $tag.textContent = $input.value;
+      $input.value = "";
+      $tags.append($tag);
+
+      // Add eventlistener to the tags delete symbol (Deleting an tag)
+      $tag.addEventListener("click", (e) => {
+        deleteTag($tag, e);
+      });
+    }
+  });
+});
+
 //
-// SAVING A NEW MEMORY
+// SAVING A NEW MEMORY (XHR)
 // Eventlistener for clicking the Save Button
 $saveMemory.addEventListener("click", () => {
+
+  // If title and date is empty, don't save the memory
+  if(!$memoryTitle.value.trim() || !$memoryDate.value){
+    alert("Title and date must be filled out");
+    return;
+  }
 
   // Collection the data which where entered in the dialog
   const data = {
     "entryDate": $memoryDate.value,
-    "title": $memoryTitle.value,
+    "title": $memoryTitle.value.trim(),
     "favorite": $favorite.dataset.favoriteset === "" ? 1 : 0,
     "emoji": $emojis.querySelector("span[data-selected]").textContent,
-    "description": $description.value,
+    "description": $description.value.trim(),
     "url": "URL",
     "locations": getTags($locations).join("; "),
-    "activities": getTags($activities).join("; )"),
+    "activities": getTags($activities).join("; "),
     "persons": getTags($persons).join("; ")
   };
 
@@ -158,7 +185,7 @@ function setSliderButtons() {
   }
 }
 
-function createMemorieEntries(memories) {
+function createMemoryEntries(memories) {
   // Loop through the memories, copy the template_memory and add it dynamically to the sections
   // Depending on which section category the memory is related to, append it to the correct section
 
@@ -185,7 +212,13 @@ function createMemorieEntries(memories) {
     memoryDate.setHours(0,0,0,0);
     const memoryDay = memoryDate.getDate()
 
+    // Get the date from one week to then check if the current memory is within the range
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setHours(0,0,0,0)
+    oneWeekAgo.setDate(currentDate.getDate() - 7);
+
     // Create the memory element and add its properties
+    // The memory element is the main content for representing a single memory entry
     const $memory = $templ_memory.cloneNode(true);
     $memory.querySelector("h4").textContent = entryDate;
     $memory.querySelector("h2").textContent = `${mood} ${title}`;
@@ -196,14 +229,7 @@ function createMemorieEntries(memories) {
     favorite && $memory.classList.add("favorite");
 
     // Check if the memory entry should be displayed or not.
-    // If it should be displayed, then create the histoy caption
-
-    // Get the date from one week to check if the current memory is within the range
-    const oneWeekAgo = new Date();
-    oneWeekAgo.setHours(0,0,0,0)
-    oneWeekAgo.setDate(currentDate.getDate() - 7);
-
-    //
+    // If it should be displayed, then create the histoy caption.
     // Set the "x days weeks/months/years ago ..." text
     let historyCaption;
 
@@ -319,22 +345,49 @@ function clearDialogData() {
 
 // Sets the values of the fields within the dialog
 function setDialogData(data) {
+  const tags = [data.locations, data.activities, data.persons];
+
   $dialog.dataset.uuid = data.uuid;
   $memoryDate.value = data.entryDate;
   $memoryTitle.value = data.title;
   $favorite.toggleAttribute("data-favoriteset", data.favorite);
+  $description.value = data.description;
 
   // Set the correct emoji
-  for ( let mood of $emojis.children){
+  for (let mood of $emojis.children){
     if (mood.textContent === data.mood){
       mood.setAttribute("data-selected","");
       $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
     }
   }
-  $description.value = data.description;
-  $locations.innerHTML = "";
-  $activities.innerHTML = "";
-  $persons.innerHTML = "";
+
+  // Loading the tags
+  // Loop through the different tags (locations, activities and persons) and set the tags (array) to the correct span element
+  for (let index in tags){
+    let $tagContainer = $tagParents[index].querySelector(".tags");
+    for (let tag of tags[index]){
+      let $tag = document.createElement("span");
+
+      $tag.textContent = tag;
+      $tagContainer.append($tag);
+
+      // Add eventlistener to the tags delete symbol (Deleting an tag)
+      $tag.addEventListener("click", (e) => {
+        deleteTag($tag, e);
+      });
+    }
+  }
+}
+
+// Deleting the tags with the X symbol
+// This function will be the callback function of the click event of the X
+function deleteTag($tag, e) {
+  const xImgWidth = 13;
+  // A direct click on the pseudo element ::after is not possible,
+  // so check the coordinates of the click event and delete the tag
+  if(e.offsetX > (e.target.offsetLeft + e.target.offsetWidth - xImgWidth)){
+    $tag.remove();
+  }
 }
 
 // Gets the difference of months between two dates
