@@ -340,8 +340,10 @@ const server = http.createServer(function (request, response) {
         return;
       }
 
+      const userId = sessions[sessionID].id;
+      
       // Insert the extracted body params to the sqlite db
-      insertMemory(params, (err, uuid) => {
+      insertMemory(userId, params, (err, uuid) => {
         if (err){
           response.endWithStatus(400);
           return;

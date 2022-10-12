@@ -1,21 +1,19 @@
 {
   "block": [
+    "/.gitignore",
+    "/api/memory.js",
     "/config/accesslist.json",
     "/config/config.json",
+    "/data/db.sqlite",
     "/data/mimetypes.json",
     "/data/users.json",
-    "/.gitignore",
     "/lib/helpers.js",
+    "/package.json",
+    "/package-lock.json",
     "/server.js"
   ],
-  "login": [
-    "/pages/dashboard.html",
-    "/pages/dashboard.js",
-    "/script.js"
-  ],
+  "login": ["/pages/dashboard.html", "/pages/dashboard.js"],
   "groups": {
-    "admin": [
-      "/admin.html"
-    ]
+    "admin": []
   }
 }

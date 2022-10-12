@@ -7,7 +7,7 @@
     "port": 80
   },
   "session": {
-    "duration": 15,
+    "duration": 30,
     "homepage": "/pages/dashboard.html",
     "signs": 64
   },
