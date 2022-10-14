@@ -318,12 +318,14 @@ fieldset {
 
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset .tags span {
   padding-left: 1rem;
+  color: var(--color-lightBlue);
+  font-weight: bold;
 }
 
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset .tags span::after {
   content: "";
   margin-left: .5rem;
-  background-image: url("../images/delete.png");
+  background-image: url("../images/delete-x.png");
   background-size: contain;
   background-repeat: no-repeat;
   width: 1.3rem;
@@ -393,22 +395,33 @@ fieldset {
   color: var(--color-yellow);
 }
 
-.bdy-dashboard main .article-section .articles article span {
-  background-image: url(../images/edit.png);
-  width: 3rem;
-  height: 3rem;
+.bdy-dashboard main .article-section .articles article .edit,
+.bdy-dashboard main .article-section .articles article .delete {
+  width: 2rem;
+  height: 2rem;
   background-size: contain;
   position: absolute;
-  right: 2rem;
 }
 
-.bdy-dashboard main .article-section .articles article span:hover {
+.bdy-dashboard main .article-section .articles article .edit:hover,
+.bdy-dashboard main .article-section .articles article .delete:hover {
   cursor: pointer;
   filter: invert(1);
 }
 
-.bdy-dashboard main .article-section .articles article span:active {
+.bdy-dashboard main .article-section .articles article .edit:active,
+.bdy-dashboard main .article-section .articles article .delete:active {
   filter: invert(0);
+}
+
+.bdy-dashboard main .article-section .articles article .edit {
+  right: 5rem;
+  background-image: url("../images/edit.png");
+}
+
+.bdy-dashboard main .article-section .articles article .delete {
+  right: 2rem;
+  background-image: url("../images/delete-bin.png");
 }
 
 .bdy-dashboard main .article-section .articles article h2,
@@ -485,7 +498,7 @@ fieldset {
 
 .bdy-dashboard .favorite {
   border: 0.5rem solid var(--color-yellow);
-  background-image: url(../images/star.png);
+  background-image: url("../images/star.png");
   background-size: inherit;
   background-position: right;
   background-repeat: no-repeat;

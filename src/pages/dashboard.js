@@ -80,6 +80,19 @@ window.addEventListener("resize", () => {
   setSliderButtons();
 });
 
+// Show/hide edit and delete buttons when hover/leave an memory
+for (let $memory of $main.querySelectorAll("article")) {
+  $memory.addEventListener("mouseover", () => {
+    $memory.querySelector('.edit').hidden = false;
+    $memory.querySelector('.delete').hidden = false;
+  })
+
+  $memory.addEventListener("mouseleave", () => {
+    $memory.querySelector('.edit').hidden = true;
+    $memory.querySelector('.delete').hidden = true;
+  })
+}
+
 // When clicking on the input field "how was your day", then open the dialog
 $memoryTitle.addEventListener("click", () => {
   $dialogBackdrop.hidden = false;
@@ -301,16 +314,43 @@ function createMemoryEntries(memories) {
       $memory.querySelector(".persons").append(p);
     }
 
+    //
+    // Edit and Delete Buttons
+    //
+
     // Add eventlistener to the edit button
     // This loads the data from the entry, opens the dialog and sets the correct values to the fields
     $memory.querySelector(".edit").addEventListener(("click"), (e) => {
 
-      // Set the dialog data with the loaded data from the db
+      // Set the dialog data (popup for entering/updating memories) with the loaded data from the db
       setDialogData({uuid, entryDate, favorite, mood, title, description, locations, activities, persons, images});
 
       // open the dialog
       $dialogBackdrop.hidden = false;
       $dialog.setAttribute("open", "");
+    });
+
+    //
+    // DELETING A NEW MEMORY (XHR)
+    // Add eventlistener to the delete button
+    $memory.querySelector(".delete").addEventListener(("click"), (e) => {
+
+      // Safety check if the user really want to delete the memory
+      if(!confirm("Do you really want to delete the memory?")) return;
+
+      // Preparing the xhr and send it to the server
+      const xhr = new XMLHttpRequest();
+      const params = new URLSearchParams({"uuid": uuid});
+      
+      xhr.open("POST", "/api?deleteMemory", true);
+      xhr.send(params);
+
+      xhr.addEventListener("load", () => {
+        if(xhr.status === 200 & xhr.readyState === 4){
+          alert("Memory deleted successfully!");
+
+        }
+      });
     });
   }
 }

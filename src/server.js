@@ -4,7 +4,7 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const http = require("http");
-const { insertMemory } = require("./api/memory.js");
+const { insertMemory, deleteMemory } = require("./api/memory.js");
 const {
   getBody,
   getBodyParams,
@@ -335,15 +335,43 @@ const server = http.createServer(function (request, response) {
     request.method === "POST"
   ){
     getBodyParams(request, function (error, params) {
+      const userId = sessions[sessionID].id;
+
+      if (error){
+        response.endWithStatus(500);
+        return;
+      }
+
+      // Insert the extracted body params to the sqlite db
+      insertMemory(userId, params, (err, uuid) => {
+        if (err){
+          response.endWithStatus(400);
+          return;
+        }
+        response.end(uuid);
+        return;
+      })
+      return;
+    })
+    return;
+  }
+
+   // Delete memory entry
+   if (
+    request.url.pathname === "/api" &&
+    request.url.searchParams.get("deleteMemory") === "" &&
+    request.method === "POST"
+  ){
+    getBodyParams(request, function (error, params) {
       if (error){
         response.endWithStatus(500);
         return;
       }
 
       const userId = sessions[sessionID].id;
-      
+
       // Insert the extracted body params to the sqlite db
-      insertMemory(userId, params, (err, uuid) => {
+      deleteMemory(userId, params, (err, uuid) => {
         if (err){
           response.endWithStatus(400);
           return;

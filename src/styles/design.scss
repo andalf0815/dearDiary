@@ -321,11 +321,13 @@ fieldset {
             .tags {
               span {
                 padding-left: 1rem;
+                color: var(--color-lightBlue);
+                font-weight: bold;
 
                 &::after {
                   content: "";
                   margin-left: .5rem;
-                  background-image: url("../images/delete.png");
+                  background-image: url("../images/delete-x.png");
                   background-size: contain;
                   background-repeat: no-repeat;
                   width: 1.3rem;
@@ -401,13 +403,12 @@ fieldset {
             color: var(--color-yellow);
           }
 
-          span {
-            background-image: url(../images/edit.png);
-            width: 3rem;
-            height: 3rem;
+          .edit,
+          .delete {
+            width: 2rem;
+            height: 2rem;
             background-size: contain;
             position: absolute;
-            right: 2rem;
 
             &:hover {
               cursor: pointer;
@@ -417,6 +418,16 @@ fieldset {
             &:active {
               filter: invert(0);
             }
+          }
+
+          .edit {
+            right: 5rem;
+            background-image: url("../images/edit.png");
+          }
+
+          .delete {
+            right: 2rem;
+            background-image: url("../images/delete-bin.png");
           }
 
           h2,
@@ -489,7 +500,7 @@ fieldset {
 
   .favorite {
     border: 0.5rem solid var(--color-yellow);
-    background-image: url(../images/star.png);
+    background-image: url("../images/star.png");
     background-size: inherit;
     background-position: right;
     background-repeat: no-repeat;
