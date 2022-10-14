@@ -4,7 +4,7 @@
 
 **Dear Diary** is a light digital diary which is client - server based 
 
-It's necessary to create a user
+It's optimized for a PC with a Microsoft Edge or a Google Chrome Browser but i'ts possible to use it also on a Smartphone.
 
 ## Dependencies 
 
