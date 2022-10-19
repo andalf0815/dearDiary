@@ -53,9 +53,9 @@ nav {
   justify-content: center;
   height: 6rem;
   position: sticky;
-  background-color: var(--color-yellow);
-  border-bottom: 0.3rem solid black;
+  background-color: white;
   padding: 0 1rem;
+  box-shadow: 0rem 0.5rem 0.5rem grey;
 }
 
 nav > * {
@@ -289,6 +289,10 @@ fieldset {
   gap: 1rem;
 }
 
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) > * {
+  margin-bottom: 2rem;
+}
+
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #div_emojis {
   display: flex;
   overflow-x: auto;
@@ -296,6 +300,7 @@ fieldset {
 
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #div_emojis > span {
   cursor: pointer;
+  font-size: 3rem;
 }
 
 .bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) #div_emojis > span[data-selected] {
@@ -316,13 +321,17 @@ fieldset {
   width: calc(100% - 3.5rem);
 }
 
-.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset .tags span {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) .icon-tags {
+  margin-bottom: 0;
+}
+
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) .icon-tags .tags span {
   padding-left: 1rem;
   color: var(--color-lightBlue);
   font-weight: bold;
 }
 
-.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) fieldset .tags span::after {
+.bdy-dashboard main #dialog-section dialog[open] > div:nth-child(2) .icon-tags .tags span::after {
   content: "";
   margin-left: .5rem;
   background-image: url("../images/delete-x.png");
@@ -386,6 +395,7 @@ fieldset {
   flex-wrap: wrap;
   align-items: flex-start;
   align-content: flex-start;
+  width: 100%;
   min-width: calc(50% - 1rem);
   padding: 2rem;
   background-color: var(--color-lightBlue);
@@ -393,6 +403,8 @@ fieldset {
 
 .bdy-dashboard main .article-section .articles article h6 {
   color: var(--color-yellow);
+  font-size: 1.5rem;
+  text-shadow: 0.1rem 0.1rem grey;
 }
 
 .bdy-dashboard main .article-section .articles article .edit,

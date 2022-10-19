@@ -4,7 +4,7 @@
 const crypto = require("crypto");
 const fs = require("fs");
 const http = require("http");
-const { insertMemory, deleteMemory } = require("./api/memory.js");
+const { getMemories, insertMemory, deleteMemory } = require("./api/memory.js");
 const {
   getBody,
   getBodyParams,
@@ -328,6 +328,31 @@ const server = http.createServer(function (request, response) {
   /* SQLITE DB ENDPOINTS */
   /***********************/
 
+  // Get memory entries according to the query string
+  if (
+    request.url.pathname === "/api" &&
+    request.url.searchParams.get("getMemories") === "" &&
+    request.method === "GET"
+  ){
+    const userId = sessions[sessionID].id;
+    const params = [];
+
+    // Create a key - value array pair and send it to the memory.js api
+    for(let entry of request.url.searchParams.entries()) {
+      params.push(entry[0]+ ', '+ entry[1]);
+    }
+
+    getMemories(userId, params, (err, resData) => {
+      if (err){
+        response.endWithStatus(400);
+        return;
+      }
+      response.end(JSON.stringify(resData));
+      return;
+    })
+    return;
+  }
+
   // Insert new memory entry
   if (
     request.url.pathname === "/api" &&
@@ -350,9 +375,9 @@ const server = http.createServer(function (request, response) {
         }
         response.end(uuid);
         return;
-      })
+      });
       return;
-    })
+    });
     return;
   }
 
@@ -362,6 +387,7 @@ const server = http.createServer(function (request, response) {
     request.url.searchParams.get("deleteMemory") === "" &&
     request.method === "POST"
   ){
+    
     getBodyParams(request, function (error, params) {
       if (error){
         response.endWithStatus(500);
@@ -378,9 +404,9 @@ const server = http.createServer(function (request, response) {
         }
         response.end(uuid);
         return;
-      })
+      });
       return;
-    })
+    });
     return;
   }
 

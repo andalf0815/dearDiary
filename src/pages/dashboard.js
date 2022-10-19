@@ -26,12 +26,13 @@ const sectionIds = ["section_favorites", "section_timelineAll", "section_timelin
 
 // sections stores all created sections DOM elements
 const sections = {};
-import memories from '../data/memories.json' assert {type: 'json'};
+
+// Array will be filled with memories from the db
+let memories = [];
 
 //***********//
 //* ON LOAD *//
 //***********//
-
 
 // CREATING SECTIONS (A SECTION CONTAINS MULTIPLE ARTICLES) //
 
@@ -62,13 +63,8 @@ for (const sectionId of sectionIds) {
   }
 }
 
-// CREATING MEMORIES (ARTICLES) //
-
-// Create and render Memories
-createMemoryEntries(memories);
-
-// Loads the arrow left + right buttons
-setSliderButtons();
+// Initially load the dashboard
+loadDashboard();
 
 //**********//
 //* EVENTS *//
@@ -79,19 +75,6 @@ setSliderButtons();
 window.addEventListener("resize", () => {
   setSliderButtons();
 });
-
-// Show/hide edit and delete buttons when hover/leave an memory
-for (let $memory of $main.querySelectorAll("article")) {
-  $memory.addEventListener("mouseover", () => {
-    $memory.querySelector('.edit').hidden = false;
-    $memory.querySelector('.delete').hidden = false;
-  })
-
-  $memory.addEventListener("mouseleave", () => {
-    $memory.querySelector('.edit').hidden = true;
-    $memory.querySelector('.delete').hidden = true;
-  })
-}
 
 // When clicking on the input field "how was your day", then open the dialog
 $memoryTitle.addEventListener("click", () => {
@@ -143,7 +126,7 @@ $saveMemory.addEventListener("click", () => {
 
   // Collection the data which where entered in the dialog
   const data = {
-    "entryDate": $memoryDate.value,
+    "entry_date": $memoryDate.value,
     "title": $memoryTitle.value.trim(),
     "favorite": $favorite.dataset.favoriteset === "" ? 1 : 0,
     "emoji": $emojis.querySelector("span[data-selected]").textContent,
@@ -168,6 +151,9 @@ $saveMemory.addEventListener("click", () => {
       clearDialogData();
       $dialogBackdrop.hidden = true;
       $dialog.removeAttribute("open");
+
+      // After a memory was saved/updated, refresh the dashboard
+      loadDashboard();
     }
   });
 });
@@ -183,19 +169,38 @@ $dialogBackdrop.addEventListener("click", () => {
 //* FUNCTIONS *//
 //**************/
 
+// Loading the dashboard with memories from the db
+function loadDashboard() {
+  // Load memories from the db
+  const xhr = new XMLHttpRequest();
+  xhr.open("GET", "/api?getMemories&all", true);
+  xhr.send();
 
-function setSliderButtons() {
-  // Loops through the sections and sets the arrow left + right buttons if more memories are available than can be shown on the screen
+  xhr.addEventListener("load", () => {
+    memories = JSON.parse(xhr.responseText);
 
-  const amountVisibleMemories = window.innerWidth <= 1100 ? 1 : 2;
+    // CREATING MEMORIES (ARTICLES) //
 
-  for (let [ key, value ] of Object.entries(sections)) {
-    const $articleContainer = value.children[2].children;
+    // Create and render Memories
+    createMemoryEntries(memories);
 
-    value.querySelectorAll('.slide-memory').forEach((element) => {
-      element.hidden = $articleContainer?.length > amountVisibleMemories ? false : true;
-    });
-  }
+    // Show/hide edit and delete buttons when hover/leave an memory
+    for (let $memory of $main.querySelectorAll("article")) {
+
+      $memory.addEventListener("mouseover", () => {
+        $memory.querySelector('.edit').hidden = false;
+        $memory.querySelector('.delete').hidden = false;
+      })
+
+      $memory.addEventListener("mouseleave", () => {
+        $memory.querySelector('.edit').hidden = true;
+        $memory.querySelector('.delete').hidden = true;
+      })
+    }
+
+    // Loads the arrow left + right buttons
+    setSliderButtons();
+  });
 }
 
 function createMemoryEntries(memories) {
@@ -207,9 +212,12 @@ function createMemoryEntries(memories) {
   currentDate.setHours(0,0,0,0)
   const currentDay = currentDate.getDate();
 
+  // Reset the object which contains all al memories to be rendered
+  resetRenderedMemories();
+
   for (const {
     uuid,
-    entryDate,
+    entry_date,
     favorite,
     mood,
     title,
@@ -221,7 +229,7 @@ function createMemoryEntries(memories) {
   } of memories) {
 
     // Get the memory entry date in new Date format
-    const memoryDate = new Date(entryDate);
+    const memoryDate = new Date(entry_date);
     memoryDate.setHours(0,0,0,0);
     const memoryDay = memoryDate.getDate()
 
@@ -233,7 +241,7 @@ function createMemoryEntries(memories) {
     // Create the memory element and add its properties
     // The memory element is the main content for representing a single memory entry
     const $memory = $templ_memory.cloneNode(true);
-    $memory.querySelector("h4").textContent = entryDate;
+    $memory.querySelector("h4").textContent = entry_date;
     $memory.querySelector("h2").textContent = `${mood} ${title}`;
     $memory.querySelector(".prev-description").textContent = description;
 
@@ -294,23 +302,23 @@ function createMemoryEntries(memories) {
     // Load the correct tag values for each tag (locations, activities and persons)
 
     // Loop through the locations array and render the values to the DOM
-    for (const location of locations) {
+    for (const location of locations.split("; ")) {
       const p = document.createElement("p");
-      p.textContent = location;
+      p.textContent = location ? location : "-";
       $memory.querySelector(".locations").append(p);
     }
 
     // Loop through the activities array and render the values to the DOM
-    for (const activity of activities) {
+    for (const activity of activities.split("; ")) {
       const p = document.createElement("p");
-      p.textContent = activity;
+      p.textContent = activity ? activity : "-";
       $memory.querySelector(".activities").append(p);
     }
 
     // Loop through the persons array and render the values to the DOM
-    for (const person of persons) {
+    for (const person of persons.split("; ")) {
       const p = document.createElement("p");
-      p.textContent = person;
+      p.textContent = person ? person : "-";
       $memory.querySelector(".persons").append(p);
     }
 
@@ -323,7 +331,7 @@ function createMemoryEntries(memories) {
     $memory.querySelector(".edit").addEventListener(("click"), (e) => {
 
       // Set the dialog data (popup for entering/updating memories) with the loaded data from the db
-      setDialogData({uuid, entryDate, favorite, mood, title, description, locations, activities, persons, images});
+      setDialogData({uuid, entry_date, favorite, mood, title, description, locations, activities, persons, images});
 
       // open the dialog
       $dialogBackdrop.hidden = false;
@@ -331,7 +339,7 @@ function createMemoryEntries(memories) {
     });
 
     //
-    // DELETING A NEW MEMORY (XHR)
+    // DELETING A MEMORY (XHR)
     // Add eventlistener to the delete button
     $memory.querySelector(".delete").addEventListener(("click"), (e) => {
 
@@ -341,7 +349,7 @@ function createMemoryEntries(memories) {
       // Preparing the xhr and send it to the server
       const xhr = new XMLHttpRequest();
       const params = new URLSearchParams({"uuid": uuid});
-      
+
       xhr.open("POST", "/api?deleteMemory", true);
       xhr.send(params);
 
@@ -349,6 +357,8 @@ function createMemoryEntries(memories) {
         if(xhr.status === 200 & xhr.readyState === 4){
           alert("Memory deleted successfully!");
 
+          // After a memory was deleted, refresh the dashboard
+          loadDashboard();
         }
       });
     });
@@ -360,7 +370,27 @@ function renderMemory ($memory, sectionId){
   sections[sectionId].querySelector(".articles").append($memory);
 }
 
-// Get the entered tags
+// Resets the object which contains all the rendered memories
+function resetRenderedMemories() {
+  for (const sectionId of sectionIds) {
+    sections[sectionId].querySelector(".articles").innerHTML = "";
+  }
+}
+
+// Loops through the sections and sets the arrow left + right buttons if more memories are available than can be shown on the screen
+function setSliderButtons() {
+  const amountVisibleMemories = window.innerWidth <= 1100 ? 1 : 2;
+
+  for (let [ key, value ] of Object.entries(sections)) {
+    const $articleContainer = value.children[2].children;
+
+    value.querySelectorAll('.slide-memory').forEach((element) => {
+      element.hidden = $articleContainer?.length > amountVisibleMemories ? false : true;
+    });
+  }
+}
+
+// Get the entered tags from the dialog field (new/update)
 function getTags($tags){
   const tags = [];
   for (let element of $tags.children){
@@ -383,12 +413,14 @@ function clearDialogData() {
   $persons.innerHTML = "";
 }
 
+//
+// Loading dialog values
 // Sets the values of the fields within the dialog
 function setDialogData(data) {
   const tags = [data.locations, data.activities, data.persons];
 
   $dialog.dataset.uuid = data.uuid;
-  $memoryDate.value = data.entryDate;
+  $memoryDate.value = data.entry_date;
   $memoryTitle.value = data.title;
   $favorite.toggleAttribute("data-favoriteset", data.favorite);
   $description.value = data.description;
@@ -405,16 +437,19 @@ function setDialogData(data) {
   // Loop through the different tags (locations, activities and persons) and set the tags (array) to the correct span element
   for (let index in tags){
     let $tagContainer = $tagParents[index].querySelector(".tags");
-    for (let tag of tags[index]){
-      let $tag = document.createElement("span");
+    for (let tag of tags[index].split("; ")){
+      // set only tags which contain data
+      if (tag.length){
+        let $tag = document.createElement("span");
 
-      $tag.textContent = tag;
-      $tagContainer.append($tag);
+        $tag.textContent = tag;
+        $tagContainer.append($tag);
 
-      // Add eventlistener to the tags delete symbol (Deleting an tag)
-      $tag.addEventListener("click", (e) => {
-        deleteTag($tag, e);
-      });
+        // Add eventlistener to the tags delete symbol (Deleting an tag)
+        $tag.addEventListener("click", (e) => {
+          deleteTag($tag, e);
+        });
+      }
     }
   }
 }

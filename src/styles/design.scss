@@ -57,11 +57,11 @@ nav {
   justify-content: center;
   height: 6rem;
   position: sticky;
-  background-color: var(--color-yellow);
-  border-bottom: 0.3rem solid black;
+  background-color: white;
   padding: 0 1rem;
+  box-shadow: 0rem 0.5rem 0.5rem grey;
 
-  & > * {
+  &>* {
     margin: auto 0;
   }
 
@@ -107,6 +107,7 @@ fieldset {
 ::-webkit-scrollbar-thumb {
   background-color: var(--color-purple);
 }
+
 .background-elements {
 
   background-image: url("../images/purpleSquare.png"), url("../images/yellowCircle.png"), url("../images/blueCircle.png"), url("../images/blueLine.png"), url("../images/blueSquare.png"), url("../images/greenTriangle.png"), url("../images/purpleCircle.png"), url("../images/greenCircle.png");
@@ -267,7 +268,7 @@ fieldset {
         z-index: 3;
         padding: 8rem 6rem 2.5rem 6rem;
 
-        & > div:first-child {
+        &>div:first-child {
           display: flex;
 
           #inp_entryDate {
@@ -287,17 +288,22 @@ fieldset {
           }
         }
 
-        & > div:nth-child(2) {
+        &>div:nth-child(2) {
           display: flex;
           flex-direction: column;
           gap: 1rem;
+
+          &>* {
+            margin-bottom: 2rem;
+          }
 
           #div_emojis {
             display: flex;
             overflow-x: auto;
 
-            & > span {
+            &>span {
               cursor: pointer;
+              font-size: 3rem;
 
               &[data-selected] {
                 background-color: var(--color-deepBlue);
@@ -317,6 +323,10 @@ fieldset {
             input {
               width: calc(100% - 3.5rem);
             }
+          }
+
+          .icon-tags {
+            margin-bottom: 0;
 
             .tags {
               span {
@@ -339,6 +349,7 @@ fieldset {
             }
           }
 
+
           #btn_saveMemory {
             width: 100%;
           }
@@ -359,6 +370,7 @@ fieldset {
     }
 
     .article-section {
+
       .arrow-left,
       .arrow-right {
         width: 4rem;
@@ -395,12 +407,15 @@ fieldset {
           flex-wrap: wrap;
           align-items: flex-start;
           align-content: flex-start;
+          width: 100%;
           min-width: calc(50% - 1rem);
           padding: 2rem;
           background-color: var(--color-lightBlue);
 
           h6 {
             color: var(--color-yellow);
+            font-size: 1.5rem;
+            text-shadow: 0.1rem 0.1rem grey;
           }
 
           .edit,
@@ -455,12 +470,12 @@ fieldset {
             gap: 1rem;
             padding-bottom: 0.5rem;
 
-            > p:not(:last-child) {
+            >p:not(:last-child) {
               border-right: 0.1rem solid black;
               padding-right: 1rem;
             }
 
-            > p:nth-child(3) {
+            >p:nth-child(3) {
               visibility: hidden;
 
               &:before {
@@ -470,12 +485,12 @@ fieldset {
               }
             }
 
-            > p:nth-child(n + 4) {
+            >p:nth-child(n + 4) {
               display: none;
             }
           }
 
-          & > div:first-of-type {
+          &>div:first-of-type {
             width: calc(100% - var(--width-img-container));
           }
 
@@ -535,7 +550,7 @@ fieldset {
     }
 
     main {
-      .article-section{
+      .article-section {
         .articles {
           article {
             min-width: 100%;
@@ -583,7 +598,7 @@ fieldset {
   .bdy-dashboard {
     #dialog-section {
       dialog {
-        & > div:first-child {
+        &>div:first-child {
           margin-top: 5rem;
           flex-direction: column-reverse;
           gap: 0.5rem;
@@ -605,7 +620,7 @@ fieldset {
       .article-section {
         .articles {
           article {
-            & > div:first-of-type {
+            &>div:first-of-type {
               width: 100%;
             }
           }
