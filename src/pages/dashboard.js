@@ -231,17 +231,20 @@ function createMemoryEntries(memories) {
 
     // Get the memory entry date in new Date format
     const memoryDate = new Date(entry_date);
+
     memoryDate.setHours(0,0,0,0);
     const memoryDay = memoryDate.getDate()
 
     // Get the date from one week to then check if the current memory is within the range
     const oneWeekAgo = new Date();
+
     oneWeekAgo.setHours(0,0,0,0)
     oneWeekAgo.setDate(currentDate.getDate() - 7);
 
     // Create the memory element and add its properties
     // The memory element is the main content for representing a single memory entry
     const $memory = $templ_memory.cloneNode(true);
+
     $memory.querySelector("h4").textContent = entry_date;
     $memory.querySelector("h2").textContent = `${mood} ${title}`;
     $memory.querySelector(".prev-description").textContent = description;
@@ -369,12 +372,14 @@ function createMemoryEntries(memories) {
 // Renders the memory to the correct section
 function renderMemory ($memory, sectionId){
   sections[sectionId].querySelector(".articles").append($memory);
+  sections[sectionId].toggleAttribute("hidden", false);
 }
 
 // Resets the object which contains all the rendered memories
 function resetRenderedMemories() {
   for (const sectionId of sectionIds) {
     sections[sectionId].querySelector(".articles").innerHTML = "";
+    sections[sectionId].toggleAttribute("hidden", true);
   }
 }
 
