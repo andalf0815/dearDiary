@@ -256,7 +256,7 @@ fieldset {
         z-index: 4;
       }
 
-      dialog[open] {
+      #dialog_memory[open] {
         display: flex;
         flex-direction: column;
         border-radius: 0.4rem;
@@ -543,13 +543,13 @@ fieldset {
   /**************/
 
   .bdy-dashboard {
-    #dialog-section {
-      dialog {
-        width: 100%;
-      }
-    }
-
     main {
+      #dialog-section {
+        #dialog_memory[open] {
+          width: 100%;
+        }
+      }
+
       .article-section {
         .articles {
           article {
@@ -596,27 +596,27 @@ fieldset {
   /**************/
 
   .bdy-dashboard {
-    #dialog-section {
-      dialog {
-        &>div:first-child {
-          margin-top: 5rem;
-          flex-direction: column-reverse;
-          gap: 0.5rem;
+    main {
+      #dialog-section {
+        #dialog_memory[open] {
+          &>div:first-child {
+            margin-top: 5rem;
+            flex-direction: column-reverse;
+            gap: 0.5rem;
 
-          #inp_entryDate {
-            width: 50%;
-            margin: auto;
-          }
+            #inp_entryDate {
+              width: 50%;
+              margin: auto;
+            }
 
-          #img_favorite {
-            max-width: 3rem;
-            margin: auto;
+            #img_favorite {
+              max-width: 3rem;
+              margin: auto;
+            }
           }
         }
       }
-    }
 
-    main {
       .article-section {
         .articles {
           article {
