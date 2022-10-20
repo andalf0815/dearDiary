@@ -6,7 +6,7 @@ const $main = document.querySelector("main");
 const $templ_section = document.querySelector("#template_section").content.firstElementChild;
 const $templ_memory = document.querySelector("#template_memory").content.firstElementChild;
 
-const $dialog = document.querySelector("dialog");
+const $dialogMemory = document.querySelector("#dialog_memory");
 const $dialogBackdrop = document.querySelector("#div_dialogBackdrop");
 
 const $memoryTitle = document.querySelector("#inp_title");
@@ -79,7 +79,7 @@ window.addEventListener("resize", () => {
 // When clicking on the input field "how was your day", then open the dialog
 $memoryTitle.addEventListener("click", () => {
   $dialogBackdrop.hidden = false;
-  $dialog.setAttribute("open", "");
+  $dialogMemory.setAttribute("open", "");
 });
 
 // Eventlistener for setting a memory to favorite
@@ -124,8 +124,9 @@ $saveMemory.addEventListener("click", () => {
     return;
   }
 
-  // Collection the data which where entered in the dialog
+  // Collection the data which where entered in the dialogMemory
   const data = {
+    "uuid": $dialogMemory.dataset.uuid,
     "entry_date": $memoryDate.value,
     "title": $memoryTitle.value.trim(),
     "favorite": $favorite.dataset.favoriteset === "" ? 1 : 0,
@@ -150,7 +151,7 @@ $saveMemory.addEventListener("click", () => {
 
       clearDialogData();
       $dialogBackdrop.hidden = true;
-      $dialog.removeAttribute("open");
+      $dialogMemory.removeAttribute("open");
 
       // After a memory was saved/updated, refresh the dashboard
       loadDashboard();
@@ -162,7 +163,7 @@ $saveMemory.addEventListener("click", () => {
 $dialogBackdrop.addEventListener("click", () => {
   clearDialogData();
   $dialogBackdrop.hidden = true;
-  $dialog.removeAttribute("open");
+  $dialogMemory.removeAttribute("open");
 });
 
 //*************//
@@ -323,19 +324,19 @@ function createMemoryEntries(memories) {
     }
 
     //
-    // Edit and Delete Buttons
+    // Edit and Delete Button functions
     //
 
     // Add eventlistener to the edit button
-    // This loads the data from the entry, opens the dialog and sets the correct values to the fields
+    // This loads the data from the entry, opens the dialogMemory and sets the correct values to the fields
     $memory.querySelector(".edit").addEventListener(("click"), (e) => {
 
       // Set the dialog data (popup for entering/updating memories) with the loaded data from the db
       setDialogData({uuid, entry_date, favorite, mood, title, description, locations, activities, persons, images});
 
-      // open the dialog
+      // open the dialogMemory
       $dialogBackdrop.hidden = false;
-      $dialog.setAttribute("open", "");
+      $dialogMemory.setAttribute("open", "");
     });
 
     //
@@ -399,9 +400,9 @@ function getTags($tags){
   return tags;
 }
 
-// Clear the values of the fields within the dialog
+// Clear the values of the fields within the dialogMemory
 function clearDialogData() {
-  $dialog.dataset.uuid = "";
+  $dialogMemory.dataset.uuid = "";
   $memoryDate.value = "";
   $memoryTitle.value = "";
   $favorite.toggleAttribute("data-favoriteset", false);
@@ -419,17 +420,16 @@ function clearDialogData() {
 function setDialogData(data) {
   const tags = [data.locations, data.activities, data.persons];
 
-  $dialog.dataset.uuid = data.uuid;
+  $dialogMemory.dataset.uuid = data.uuid;
   $memoryDate.value = data.entry_date;
   $memoryTitle.value = data.title;
   $favorite.toggleAttribute("data-favoriteset", data.favorite);
   $description.value = data.description;
-
   // Set the correct emoji
   for (let mood of $emojis.children){
     if (mood.textContent === data.mood){
-      mood.setAttribute("data-selected","");
       $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
+      mood.setAttribute("data-selected","");
     }
   }
 

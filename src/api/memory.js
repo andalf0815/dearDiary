@@ -34,9 +34,13 @@ function insertMemory(userId, data, cb) {
   let db = new sqlite3.Database("data/db.sqlite");
   const uuid = crypto.randomUUID();
 
+  // If the uuid is empty, then a new entry in the sqlite db will be done
+  if (data.uuid === ""){
+    data.uuid = uuid;
+  }
+
   data = Object.values(data);
   data.push(userId);
-  data.unshift(uuid);
 
   // Encode the <> to prevent html and script injections
   data = data.map((entry) => entry.replace(/</g, "&lt;").replace(/>/g, "&gt;"));
@@ -49,7 +53,7 @@ function insertMemory(userId, data, cb) {
       return;
     }
     // send the last inserted id back to the requester
-    cb(null, uuid);
+    cb(null, data.uuid);
   });
 
   // close the database connection
