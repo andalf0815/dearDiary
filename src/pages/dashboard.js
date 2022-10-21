@@ -489,6 +489,7 @@ function loadEmojis() {
   const emojis = ["😅", "😇", "😈", "😌","😍","😎","😑","😓","😔","😕","😢","😭","😴","😵","🤪","🤬","🤯","🤮","🤒","🤕"];
 
   for(let $emojiContainer of $emojiContainers) {
+    $emojiContainer.innerHTML = "";
     for( let index in emojis){
       const $span = document.createElement("span");
 
