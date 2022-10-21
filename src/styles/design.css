@@ -179,6 +179,20 @@ fieldset {
   content: var(--logo);
 }
 
+.emojis-container {
+  display: flex;
+  overflow-x: auto;
+}
+
+.emojis-container > span {
+  cursor: pointer;
+  font-size: 3rem;
+}
+
+.emojis-container > span[data-selected] {
+  background-color: var(--color-deepBlue);
+}
+
 /**************/
 /* index.html */
 /**************/
@@ -239,9 +253,20 @@ fieldset {
   gap: 1rem;
 }
 
-.bdy-dashboard main #dialog-section #span_openFilter {
+.bdy-dashboard main #dialog-section #span_toggleFilter {
   font-size: 3rem;
   color: var(--color-lightGreen);
+  cursor: pointer;
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] {
+  position: absolute;
+  top: 4rem;
+  width: 50%;
+  height: 70rem;
+  z-index: 5;
+  border: 0.2rem solid var(--color-lightGreen);
+  border-radius: 0.4rem;
 }
 
 .bdy-dashboard main #dialog-section #inp_title {
@@ -291,20 +316,6 @@ fieldset {
 
 .bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) > * {
   margin-bottom: 2rem;
-}
-
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) #div_emojis {
-  display: flex;
-  overflow-x: auto;
-}
-
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) #div_emojis > span {
-  cursor: pointer;
-  font-size: 3rem;
-}
-
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) #div_emojis > span[data-selected] {
-  background-color: var(--color-deepBlue);
 }
 
 .bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) #ta_description {
@@ -532,6 +543,9 @@ fieldset {
   /**************/
   /* dashboard.html */
   /**************/
+  .bdy-dashboard main #dialog-section #dialog_filter[open] {
+    width: 55%;
+  }
   .bdy-dashboard main #dialog-section #dialog_memory[open] {
     width: 100%;
   }
@@ -567,6 +581,9 @@ fieldset {
   /**************/
   /* dashboard.html */
   /**************/
+  .bdy-dashboard main #dialog-section #dialog_filter[open] {
+    width: 100%;
+  }
   .bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-child {
     margin-top: 5rem;
     flex-direction: column-reverse;

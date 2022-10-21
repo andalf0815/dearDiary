@@ -17,8 +17,11 @@
     <main>
       <section id="dialog-section">
         <hr />
-        <dialog id="dialog_filter"></dialog>
-        <span id="span_openFilter">&#9660;</span>
+        <dialog id="dialog_filter">
+          <input id="inp_filterText" type="text" class="input-border-bottom">
+          <div id="div_filterEmojis" class="emojis-container"></div>
+        </dialog>
+        <span id="span_toggleFilter">▼</span>
         <input type="text" id="inp_title" class="input-border-bottom" placeholder="How was your day?" />
         <hr />
         <dialog id="dialog_memory" data-uuid="">
@@ -28,29 +31,7 @@
             <img id="img_favorite" alt="Favorite" />
           </div>
           <div>
-            <div id="div_emojis">
-              <span data-selected>😀</span>
-              <span>😅</span>
-              <span>😇</span>
-              <span>😈</span>
-              <span>😌</span>
-              <span>😍</span>
-              <span>😎</span>
-              <span>😑</span>
-              <span>😓</span>
-              <span>😔</span>
-              <span>😕</span>
-              <span>😢</span>
-              <span>😭</span>
-              <span>😴</span>
-              <span>😵</span>
-              <span>🤪</span>
-              <span>🤬</span>
-              <span>🤯</span>
-              <span>🤮</span>
-              <span>🤒</span>
-              <span>🤕</span>
-            </div>
+            <div id="div_emojis" class="emojis-container"></div>
             <textarea
               id="ta_description"
               rows="5"

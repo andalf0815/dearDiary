@@ -6,13 +6,18 @@ const $main = document.querySelector("main");
 const $templ_section = document.querySelector("#template_section").content.firstElementChild;
 const $templ_memory = document.querySelector("#template_memory").content.firstElementChild;
 
+const $dialogFilter = document.querySelector("#dialog_filter");
+const $toggleFilterDialog = document.querySelector("#span_toggleFilter");
+
 const $dialogMemory = document.querySelector("#dialog_memory");
 const $dialogBackdrop = document.querySelector("#div_dialogBackdrop");
 
 const $memoryTitle = document.querySelector("#inp_title");
 const $memoryDate = document.querySelector("#inp_entryDate");
 const $favorite = document.querySelector("#img_favorite");
-const $emojis = document.querySelector("#div_emojis");
+const $emojiContainers = document.querySelectorAll(".emojis-container");
+const $emojiContainerFilter = $emojiContainers[0];
+const $emojiContainerNewEntry = $emojiContainers[1];
 const $description = document.querySelector("#ta_description");
 const $locations = document.querySelector("#span_locations");
 const $activities = document.querySelector("#span_activities");
@@ -70,29 +75,26 @@ loadDashboard();
 //* EVENTS *//
 //***********/
 
-
+// Resizing window
 // When resizing the screen the arrow left + right buttons are loaded
 window.addEventListener("resize", () => {
   setSliderButtons();
 });
 
+// Mouse click into title
 // When clicking on the input field "how was your day", then open the dialog
 $memoryTitle.addEventListener("click", () => {
   $dialogBackdrop.hidden = false;
   $dialogMemory.setAttribute("open", "");
 });
 
+// Mouse click into favorite symbol
 // Eventlistener for setting a memory to favorite
 $favorite.addEventListener("click", () => {
   $favorite.toggleAttribute("data-favoriteSet");
 });
 
-// Eventlistener for selectig an emoji
-$emojis.addEventListener("click", (e) => {
-  $emojis.querySelector("span[data-selected]").toggleAttribute("data-selected", false);
-  e.target.setAttribute("data-selected", "");
-});
-
+// Enter click in tag input fields
 // Add eventlistener to the tags input (When entering a tag and click enter, then display the entered string below the tags element)
 $tagParents.forEach(($tagParent) => {
   const $input = $tagParent.querySelector(".tag-input");
@@ -130,7 +132,7 @@ $saveMemory.addEventListener("click", () => {
     "entry_date": $memoryDate.value,
     "title": $memoryTitle.value.trim(),
     "favorite": $favorite.dataset.favoriteset === "" ? 1 : 0,
-    "emoji": $emojis.querySelector("span[data-selected]").textContent,
+    "emoji": $emojiContainerNewEntry.querySelector("span[data-selected]").textContent,
     "description": $description.value.trim(),
     "url": "URL",
     "locations": getTags($locations).join("; "),
@@ -159,12 +161,19 @@ $saveMemory.addEventListener("click", () => {
   });
 });
 
+// Mouse click outside dialog new  memory
 // When clicking outside the dialog, then close it
 $dialogBackdrop.addEventListener("click", () => {
   clearDialogData();
   $dialogBackdrop.hidden = true;
   $dialogMemory.removeAttribute("open");
 });
+
+// Mouse click onto filter symbol
+// When clicking onto the filter symbol then toggle the filter dialog
+$toggleFilterDialog.addEventListener("click", () => {
+  $dialogFilter.toggleAttribute("open");
+})
 
 //*************//
 //* FUNCTIONS *//
@@ -201,6 +210,9 @@ function loadDashboard() {
 
     // Loads the arrow left + right buttons
     setSliderButtons();
+
+    // Load emoji bars
+    loadEmojis();
   });
 }
 
@@ -411,8 +423,8 @@ function clearDialogData() {
   $memoryDate.value = "";
   $memoryTitle.value = "";
   $favorite.toggleAttribute("data-favoriteset", false);
-  $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
-  $emojis.querySelector("span:first-child").setAttribute("data-selected","");
+  $emojiContainerNewEntry.querySelector("span[data-selected]").removeAttribute("data-selected");
+  $emojiContainerNewEntry.querySelector("span:first-child").setAttribute("data-selected","");
   $description.value = "";
   $locations.innerHTML = "";
   $activities.innerHTML = "";
@@ -431,9 +443,9 @@ function setDialogData(data) {
   $favorite.toggleAttribute("data-favoriteset", data.favorite);
   $description.value = data.description;
   // Set the correct emoji
-  for (let mood of $emojis.children){
+  for (let mood of $emojiContainerNewEntry.children){
     if (mood.textContent === data.mood){
-      $emojis.querySelector("span[data-selected]").removeAttribute("data-selected");
+      $emojiContainerNewEntry.querySelector("span[data-selected]").removeAttribute("data-selected");
       mood.setAttribute("data-selected","");
     }
   }
@@ -467,6 +479,33 @@ function deleteTag($tag, e) {
   // so check the coordinates of the click event and delete the tag
   if(e.offsetX > (e.target.offsetLeft + e.target.offsetWidth - xImgWidth)){
     $tag.remove();
+  }
+}
+
+// Emojy creation
+// Creates the content for the emojis-container set the click
+// events and renders it to the filter and new memory dialog
+function loadEmojis() {
+  const emojis = ["😅", "😇", "😈", "😌","😍","😎","😑","😓","😔","😕","😢","😭","😴","😵","🤪","🤬","🤯","🤮","🤒","🤕"];
+
+  for(let $emojiContainer of $emojiContainers) {
+    for( let index in emojis){
+      const $span = document.createElement("span");
+
+      $span.textContent = emojis[index];
+      if(index === "0") {
+        $span.setAttribute("data-selected", "");
+      }
+      $emojiContainer.append($span);
+    }
+
+    // Mouse click onto an emoji
+    // Eventlistener for selectig an emoji
+    $emojiContainer.addEventListener("click", (e) => {
+      $emojiContainer.querySelector("span[data-selected]").toggleAttribute("data-selected", false);
+      e.target.setAttribute("data-selected", "");
+    });
+
   }
 }
 
