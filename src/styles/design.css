@@ -179,6 +179,18 @@ fieldset {
   content: var(--logo);
 }
 
+.img_favorite {
+  content: url("../images/y-star-not-filled.png");
+}
+
+.img_favorite:hover {
+  cursor: pointer;
+}
+
+.img_favorite[data-favoriteSet] {
+  content: url("../images/y-star-filled.png");
+}
+
 .emojis-container {
   display: flex;
   overflow-x: auto;
@@ -288,61 +300,62 @@ fieldset {
   padding: 8rem 6rem 2.5rem 6rem;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-child {
-  display: flex;
+.bdy-dashboard main #dialog-section #dialog_memory[open] #img_closeNewEntryDialog {
+  position: absolute;
+  content: url("../images/delete-x.png");
+  width: 3rem;
+  height: 3rem;
+  right: 1rem;
+  top: 1rem;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-child #inp_entryDate {
-  width: 30%;
-}
-
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-child #img_favorite {
-  content: url("../images/y-star-not-filled.png");
-}
-
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-child #img_favorite:hover {
+.bdy-dashboard main #dialog-section #dialog_memory[open] #img_closeNewEntryDialog:hover {
   cursor: pointer;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-child #img_favorite[data-favoriteSet] {
-  content: url("../images/y-star-filled.png");
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-of-type {
+  display: flex;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-of-type #inp_entryDate {
+  width: 30%;
+}
+
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) {
   display: flex;
   flex-direction: column;
   gap: 1rem;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) > * {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) > * {
   margin-bottom: 2rem;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) #ta_description {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) #ta_description {
   resize: none;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) fieldset {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) fieldset {
   display: flex;
   flex-wrap: wrap;
   gap: 1rem;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) fieldset input {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) fieldset input {
   width: calc(100% - 3.5rem);
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) .icon-tags {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) .icon-tags {
   margin-bottom: 0;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) .icon-tags .tags span {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) .icon-tags .tags span {
   padding-left: 1rem;
   color: var(--color-lightBlue);
   font-weight: bold;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) .icon-tags .tags span::after {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) .icon-tags .tags span::after {
   content: "";
   margin-left: .5rem;
   background-image: url("../images/delete-x.png");
@@ -354,7 +367,7 @@ fieldset {
   cursor: pointer;
 }
 
-.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-child(2) #btn_saveMemory {
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) #btn_saveMemory {
   width: 100%;
 }
 
@@ -564,6 +577,10 @@ fieldset {
   main {
     padding: 1rem;
   }
+  main .img_favorite {
+    max-width: 3rem;
+    margin: auto;
+  }
   /**************/
   /* index.html */
   /**************/
@@ -591,10 +608,6 @@ fieldset {
   }
   .bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-child #inp_entryDate {
     width: 50%;
-    margin: auto;
-  }
-  .bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-child #img_favorite {
-    max-width: 3rem;
     margin: auto;
   }
   .bdy-dashboard main .article-section .articles article > div:first-of-type {

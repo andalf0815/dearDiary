@@ -11,13 +11,18 @@ const $toggleFilterDialog = document.querySelector("#span_toggleFilter");
 
 const $dialogMemory = document.querySelector("#dialog_memory");
 const $dialogBackdrop = document.querySelector("#div_dialogBackdrop");
+const $closeDialogMemory = document.querySelector("#img_closeNewEntryDialog");
 
 const $memoryTitle = document.querySelector("#inp_title");
 const $memoryDate = document.querySelector("#inp_entryDate");
-const $favorite = document.querySelector("#img_favorite");
+const $favorites = document.querySelectorAll(".img_favorite");
+const $favoriteFilter = $favorites[0];
+const $favoriteNewEntry = $favorites[1];
+
 const $emojiContainers = document.querySelectorAll(".emojis-container");
 const $emojiContainerFilter = $emojiContainers[0];
 const $emojiContainerNewEntry = $emojiContainers[1];
+
 const $description = document.querySelector("#ta_description");
 const $locations = document.querySelector("#span_locations");
 const $activities = document.querySelector("#span_activities");
@@ -86,13 +91,18 @@ window.addEventListener("resize", () => {
 $memoryTitle.addEventListener("click", () => {
   $dialogBackdrop.hidden = false;
   $dialogMemory.setAttribute("open", "");
+
+  // Close the filter dialog when opening the new entry dialog
+  $dialogFilter.open = false;
 });
 
-// Mouse click into favorite symbol
+// Mouse click into a favorite symbol (filter and new entry)
 // Eventlistener for setting a memory to favorite
-$favorite.addEventListener("click", () => {
-  $favorite.toggleAttribute("data-favoriteSet");
-});
+for(let $favorite of $favorites) {
+  $favorite.addEventListener("click", (e) => {
+    e.target.toggleAttribute("data-favoriteSet");
+  });
+}
 
 // Enter click in tag input fields
 // Add eventlistener to the tags input (When entering a tag and click enter, then display the entered string below the tags element)
@@ -131,7 +141,7 @@ $saveMemory.addEventListener("click", () => {
     "uuid": $dialogMemory.dataset.uuid,
     "entry_date": $memoryDate.value,
     "title": $memoryTitle.value.trim(),
-    "favorite": $favorite.dataset.favoriteset === "" ? 1 : 0,
+    "favorite": $favoriteNewEntry.dataset.favoriteset === "" ? 1 : 0,
     "emoji": $emojiContainerNewEntry.querySelector("span[data-selected]").textContent,
     "description": $description.value.trim(),
     "url": "URL",
@@ -165,15 +175,18 @@ $saveMemory.addEventListener("click", () => {
 // When clicking outside the dialog, then close it
 $dialogBackdrop.addEventListener("click", () => {
   clearDialogData();
-  $dialogBackdrop.hidden = true;
-  $dialogMemory.removeAttribute("open");
+  closeNewEntryDialog();
+});
+
+$closeDialogMemory.addEventListener("click", () => {
+  closeNewEntryDialog();
 });
 
 // Mouse click onto filter symbol
 // When clicking onto the filter symbol then toggle the filter dialog
 $toggleFilterDialog.addEventListener("click", () => {
   $dialogFilter.toggleAttribute("open");
-})
+});
 
 //*************//
 //* FUNCTIONS *//
@@ -352,6 +365,9 @@ function createMemoryEntries(memories) {
       // open the dialogMemory
       $dialogBackdrop.hidden = false;
       $dialogMemory.setAttribute("open", "");
+
+      // Close the filter dialog when opening the new entry dialog
+      $dialogFilter.open = false;
     });
 
     //
@@ -422,7 +438,7 @@ function clearDialogData() {
   $dialogMemory.dataset.uuid = "";
   $memoryDate.value = "";
   $memoryTitle.value = "";
-  $favorite.toggleAttribute("data-favoriteset", false);
+  $favoriteNewEntry.toggleAttribute("data-favoriteset", false);
   $emojiContainerNewEntry.querySelector("span[data-selected]").removeAttribute("data-selected");
   $emojiContainerNewEntry.querySelector("span:first-child").setAttribute("data-selected","");
   $description.value = "";
@@ -440,7 +456,7 @@ function setDialogData(data) {
   $dialogMemory.dataset.uuid = data.uuid;
   $memoryDate.value = data.entry_date;
   $memoryTitle.value = data.title;
-  $favorite.toggleAttribute("data-favoriteset", data.favorite);
+  $favoriteNewEntry.toggleAttribute("data-favoriteset", data.favorite);
   $description.value = data.description;
   // Set the correct emoji
   for (let mood of $emojiContainerNewEntry.children){
@@ -508,6 +524,12 @@ function loadEmojis() {
     });
 
   }
+}
+
+// This function closes the new entry dialog
+function closeNewEntryDialog() {
+  $dialogBackdrop.hidden = true;
+  $dialogMemory.removeAttribute("open");
 }
 
 // Gets the difference of months between two dates

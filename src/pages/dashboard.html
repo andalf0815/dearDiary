@@ -19,19 +19,21 @@
         <hr />
         <dialog id="dialog_filter">
           <input id="inp_filterText" type="text" class="input-border-bottom">
-          <div id="div_filterEmojis" class="emojis-container"></div>
+          <img class="img_favorite" alt="Favorite" />
+          <div class="emojis-container"></div>
         </dialog>
         <span id="span_toggleFilter">▼</span>
         <input type="text" id="inp_title" class="input-border-bottom" placeholder="How was your day?" />
         <hr />
         <dialog id="dialog_memory" data-uuid="">
+          <img id="img_closeNewEntryDialog" alt="">
           <div>
             <input type="date" id="inp_entryDate" class="input-border-bottom" />
             <hr />
-            <img id="img_favorite" alt="Favorite" />
+            <img class="img_favorite" alt="Favorite" />
           </div>
           <div>
-            <div id="div_emojis" class="emojis-container"></div>
+            <div class="emojis-container"></div>
             <textarea
               id="ta_description"
               rows="5"
