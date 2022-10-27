@@ -502,7 +502,7 @@ function deleteTag($tag, e) {
 // Creates the content for the emojis-container set the click
 // events and renders it to the filter and new memory dialog
 function loadEmojis() {
-  const emojis = ["😅", "😇", "😈", "😌","😍","😎","😑","😓","😔","😕","😢","😭","😴","😵","🤪","🤬","🤯","🤮","🤒","🤕"];
+  const emojis = ["😀", "😅", "😇", "😈", "😌","😍","😎","😑","😓","😔","😕","😢","😭","😴","😵","🤪","🤬","🤯","🤮","🤒","🤕"];
 
   for(let $emojiContainer of $emojiContainers) {
     $emojiContainer.innerHTML = "";
@@ -519,6 +519,13 @@ function loadEmojis() {
     // Mouse click onto an emoji
     // Eventlistener for selectig an emoji
     $emojiContainer.addEventListener("click", (e) => {
+
+      // AVOID GLITCHING
+      // When a user clicks on an emoji moves the curser
+      // and releases the mouse click on another position,
+      // then the target wouldn't be a emoji, but its emojiContainer itself
+      // So skip the click event
+      if (e.target === $emojiContainer) return;
       $emojiContainer.querySelector("span[data-selected]").toggleAttribute("data-selected", false);
       e.target.setAttribute("data-selected", "");
     });
