@@ -15,7 +15,7 @@ const $closeDialogMemory = document.querySelector("#img_closeNewEntryDialog");
 
 const $memoryTitle = document.querySelector("#inp_title");
 const $memoryDate = document.querySelector("#inp_entryDate");
-const $favorites = document.querySelectorAll(".img_favorite");
+const $favorites = document.querySelectorAll(".img-favorite");
 const $favoriteFilter = $favorites[0];
 const $favoriteNewEntry = $favorites[1];
 

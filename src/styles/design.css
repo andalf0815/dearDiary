@@ -179,15 +179,15 @@ fieldset {
   content: var(--logo);
 }
 
-.img_favorite {
+.img-favorite {
   content: url("../images/y-star-not-filled.png");
 }
 
-.img_favorite:hover {
+.img-favorite:hover {
   cursor: pointer;
 }
 
-.img_favorite[data-favoriteSet] {
+.img-favorite[data-favoriteSet] {
   content: url("../images/y-star-filled.png");
 }
 
@@ -577,7 +577,7 @@ fieldset {
   main {
     padding: 1rem;
   }
-  main .img_favorite {
+  main .img-favorite {
     max-width: 3rem;
     margin: auto;
   }
