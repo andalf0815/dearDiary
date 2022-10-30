@@ -17,16 +17,27 @@
     <main>
       <section id="dialog-section">
         <hr />
-        <dialog id="dialog_filter">
-          <input id="inp_filterText" type="text" class="input-border-bottom">
-          <img class="img-favorite" alt="Favorite" />
-          <div class="emojis-container"></div>
-        </dialog>
         <span id="span_toggleFilter">▼</span>
+        <dialog id="dialog_filter">
+          <img class="close-dialog" alt="">
+          <h1>Filter</h1>
+          <input id="inp_filterText" type="text" class="input-border-bottom" placeholder="Search for any word in a memory">
+          <div>
+            <p><b>Favorite</b></p>
+            <input type="radio" id="rb_favorite" name="rb-favorite" value="yes">
+            <label for="rb_favorite">Yes</label><br>
+            <input type="radio" id="rb_noFavorite" name="rb-favorite" value="no">
+            <label for="rb_noFavorite">No</label><br>
+            <input type="radio" id="rb_all" name="rb-favorite" value="both" checked>
+            <label for="rb_all">Both</label><br>
+          </div>
+          <div class="emojis-container"></div>
+          <input id="btn_searchMemories" type="submit" class="card btn-primary" value="Search" />
+        </dialog>
         <input type="text" id="inp_title" class="input-border-bottom" placeholder="How was your day?" />
         <hr />
         <dialog id="dialog_memory" data-uuid="">
-          <img id="img_closeNewEntryDialog" alt="">
+          <img class="close-dialog" alt="">
           <div>
             <input type="date" id="inp_entryDate" class="input-border-bottom" />
             <hr />

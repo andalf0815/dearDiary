@@ -194,6 +194,7 @@ fieldset {
 .emojis-container {
   display: flex;
   overflow-x: auto;
+  width: 100%;
 }
 
 .emojis-container > span {
@@ -203,6 +204,19 @@ fieldset {
 
 .emojis-container > span[data-selected] {
   background-color: var(--color-deepBlue);
+}
+
+.close-dialog {
+  position: absolute;
+  content: url("../images/close.png");
+  width: 2.5rem;
+  height: 2.5rem;
+  right: 1rem;
+  top: 1rem;
+}
+
+.close-dialog:hover {
+  cursor: pointer;
 }
 
 /**************/
@@ -273,12 +287,66 @@ fieldset {
 
 .bdy-dashboard main #dialog-section #dialog_filter[open] {
   position: absolute;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 3rem;
   top: 4rem;
   width: 50%;
-  height: 70rem;
+  margin: 0 auto;
   z-index: 5;
   border: 0.2rem solid var(--color-lightGreen);
   border-radius: 0.4rem;
+  padding: 2rem;
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] #inp_filterText {
+  width: 100%;
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] #btn_searchMemories {
+  width: 100%;
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] input[name="rb-favorite"] {
+  width: 3rem;
+  height: 3rem;
+  visibility: hidden;
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] input[name="rb-favorite"]:hover {
+  cursor: pointer;
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] input[name="rb-favorite"]:checked::after {
+  background-image: url("../images/y-star-filled.png");
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] input[name="rb-favorite"]::after {
+  content: "";
+  background-image: url("../images/b-star-filled.png");
+  position: absolute;
+  background-size: contain;
+  visibility: visible;
+  width: 3rem;
+  height: 3rem;
+  top: 0.6rem;
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] input[name="rb-favorite"]#rb_noFavorite::after {
+  background-image: url("../images/b-star-not-filled.png");
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] input[name="rb-favorite"]#rb_noFavorite:checked::after {
+  background-image: url("../images/y-star-not-filled.png");
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] input[name="rb-favorite"]#rb_all::after {
+  background-image: url("../images/b-star-half-filled.png");
+}
+
+.bdy-dashboard main #dialog-section #dialog_filter[open] input[name="rb-favorite"]#rb_all:checked::after {
+  background-image: url("../images/y-star-half-filled.png");
 }
 
 .bdy-dashboard main #dialog-section #inp_title {
@@ -298,19 +366,6 @@ fieldset {
   width: 60%;
   z-index: 3;
   padding: 8rem 6rem 2.5rem 6rem;
-}
-
-.bdy-dashboard main #dialog-section #dialog_memory[open] #img_closeNewEntryDialog {
-  position: absolute;
-  content: url("../images/delete-x.png");
-  width: 3rem;
-  height: 3rem;
-  right: 1rem;
-  top: 1rem;
-}
-
-.bdy-dashboard main #dialog-section #dialog_memory[open] #img_closeNewEntryDialog:hover {
-  cursor: pointer;
 }
 
 .bdy-dashboard main #dialog-section #dialog_memory[open] > div:first-of-type {
@@ -557,7 +612,7 @@ fieldset {
   /* dashboard.html */
   /**************/
   .bdy-dashboard main #dialog-section #dialog_filter[open] {
-    width: 55%;
+    width: 70%;
   }
   .bdy-dashboard main #dialog-section #dialog_memory[open] {
     width: 100%;
@@ -579,7 +634,6 @@ fieldset {
   }
   main .img-favorite {
     max-width: 3rem;
-    margin: auto;
   }
   /**************/
   /* index.html */

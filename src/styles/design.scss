@@ -199,6 +199,7 @@ fieldset {
 .emojis-container {
   display: flex;
   overflow-x: auto;
+  width: 100%;
 
   &>span {
     cursor: pointer;
@@ -207,6 +208,19 @@ fieldset {
     &[data-selected] {
       background-color: var(--color-deepBlue);
     }
+  }
+}
+
+.close-dialog {
+  position: absolute;
+  content: url("../images/close.png");
+  width: 2.5rem;
+  height: 2.5rem;
+  right: 1rem;
+  top: 1rem;
+
+  &:hover {
+    cursor: pointer;
   }
 }
 
@@ -279,12 +293,71 @@ fieldset {
 
       #dialog_filter[open] {
         position: absolute;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 3rem;
         top: 4rem;
         width: 50%;
-        height: 70rem;
+        margin: 0 auto;
         z-index: 5;
         border: 0.2rem solid var(--color-lightGreen);
         border-radius: 0.4rem;
+        padding: 2rem;
+
+        #inp_filterText {
+          width: 100%;
+        }
+
+        #btn_searchMemories {
+          width: 100%;
+        }
+
+        input[name="rb-favorite"] {
+          width: 3rem;
+          height: 3rem;
+          visibility: hidden;
+
+          &:hover {
+            cursor: pointer;
+          }
+
+          &:checked::after {
+            background-image: url("../images/y-star-filled.png");
+          }
+
+          &::after {
+            content: "";
+            background-image: url("../images/b-star-filled.png");
+            position: absolute;
+            background-size: contain;
+            visibility: visible;
+            width: 3rem;
+            height: 3rem;
+            top: 0.6rem;
+          }
+
+          &#rb_noFavorite {
+            &::after {
+              background-image: url("../images/b-star-not-filled.png");
+            }
+
+            &:checked::after {
+              background-image: url("../images/y-star-not-filled.png");
+            }
+         }
+
+          &#rb_all{
+            &::after {
+              background-image: url("../images/b-star-half-filled.png");
+            }
+
+            &:checked::after {
+              background-image: url("../images/y-star-half-filled.png");
+            }
+          }
+        }
+
       }
 
       #inp_title {
@@ -304,20 +377,6 @@ fieldset {
         width: 60%;
         z-index: 3;
         padding: 8rem 6rem 2.5rem 6rem;
-
-        #img_closeNewEntryDialog {
-          position: absolute;
-          content: url("../images/delete-x.png");
-          width: 3rem;
-          height: 3rem;
-          right: 1rem;
-          top: 1rem;
-
-          &:hover {
-            cursor: pointer;
-          }
-
-        }
 
         &>div:first-of-type {
           display: flex;
@@ -571,7 +630,7 @@ fieldset {
     main {
       #dialog-section {
         #dialog_filter[open] {
-          width: 55%;
+          width: 70%;
         }
 
         #dialog_memory[open] {
@@ -603,7 +662,6 @@ fieldset {
 
     .img-favorite {
       max-width: 3rem;
-      margin: auto;
     }
   }
 

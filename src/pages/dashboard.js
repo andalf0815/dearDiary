@@ -6,18 +6,20 @@ const $main = document.querySelector("main");
 const $templ_section = document.querySelector("#template_section").content.firstElementChild;
 const $templ_memory = document.querySelector("#template_memory").content.firstElementChild;
 
+const $closeDialogs = document.querySelectorAll(".close-dialog");
+
 const $dialogFilter = document.querySelector("#dialog_filter");
+const $closeDialogFilter = $closeDialogs[0];
 const $toggleFilterDialog = document.querySelector("#span_toggleFilter");
+const $searchMemories = document.querySelector("#btn_searchMemories");
 
 const $dialogMemory = document.querySelector("#dialog_memory");
 const $dialogBackdrop = document.querySelector("#div_dialogBackdrop");
-const $closeDialogMemory = document.querySelector("#img_closeNewEntryDialog");
+const $closeDialogMemory = $closeDialogs[1];
 
 const $memoryTitle = document.querySelector("#inp_title");
 const $memoryDate = document.querySelector("#inp_entryDate");
-const $favorites = document.querySelectorAll(".img-favorite");
-const $favoriteFilter = $favorites[0];
-const $favoriteNewEntry = $favorites[1];
+const $favoriteNewEntry = document.querySelector(".img-favorite");
 
 const $emojiContainers = document.querySelectorAll(".emojis-container");
 const $emojiContainerFilter = $emojiContainers[0];
@@ -96,13 +98,12 @@ $memoryTitle.addEventListener("click", () => {
   $dialogFilter.open = false;
 });
 
-// Mouse click into a favorite symbol (filter and new entry)
+// Mouse click into a favorite symbol
 // Eventlistener for setting a memory to favorite
-for(let $favorite of $favorites) {
-  $favorite.addEventListener("click", (e) => {
-    e.target.toggleAttribute("data-favoriteSet");
-  });
-}
+$favoriteNewEntry.addEventListener("click", (e) => {
+  e.target.toggleAttribute("data-favoriteSet");
+});
+
 
 // Enter click in tag input fields
 // Add eventlistener to the tags input (When entering a tag and click enter, then display the entered string below the tags element)
@@ -127,7 +128,7 @@ $tagParents.forEach(($tagParent) => {
 
 //
 // SAVING A NEW MEMORY (XHR)
-// Eventlistener for clicking the Save Button
+// Eventlistener for clicking the Save button
 $saveMemory.addEventListener("click", () => {
 
   // If title and date is empty, don't save the memory
@@ -171,20 +172,36 @@ $saveMemory.addEventListener("click", () => {
   });
 });
 
+//
+// SEARCHING MEMORIES (XHR)
+// Eventlistener for clicking the Search button
+
 // Mouse click outside dialog new  memory
 // When clicking outside the dialog, then close it
 $dialogBackdrop.addEventListener("click", () => {
   clearDialogData();
   closeNewEntryDialog();
+  closeFilterDialog();
 });
 
-$closeDialogMemory.addEventListener("click", () => {
-  closeNewEntryDialog();
-});
+// Mouse click onto closing dialogs X symbol
+// When clicking on the X ymbol in the dialogs, then close it
+
+for (let $closeDialog of $closeDialogs){
+  $closeDialog.addEventListener("click", () => {
+    if ($closeDialog === $closeDialogMemory){
+      clearDialogData();
+      closeNewEntryDialog();
+    }else {
+      closeFilterDialog();
+    }
+  });
+}
 
 // Mouse click onto filter symbol
 // When clicking onto the filter symbol then toggle the filter dialog
 $toggleFilterDialog.addEventListener("click", () => {
+  $dialogBackdrop.hidden = false;
   $dialogFilter.toggleAttribute("open");
 });
 
@@ -502,10 +519,17 @@ function deleteTag($tag, e) {
 // Creates the content for the emojis-container set the click
 // events and renders it to the filter and new memory dialog
 function loadEmojis() {
-  const emojis = ["😀", "😅", "😇", "😈", "😌","😍","😎","😑","😓","😔","😕","😢","😭","😴","😵","🤪","🤬","🤯","🤮","🤒","🤕"];
+  const emojis = ["🚫", "😀", "😅", "😇", "😈", "😌","😍","😎","😑","😓","😔","😕","😢","😭","😴","😵","🤪","🤬","🤯","🤮","🤒","🤕"];
 
   for(let $emojiContainer of $emojiContainers) {
     $emojiContainer.innerHTML = "";
+
+    // For loading the new Entry emojis, delete 🚫 at the beginning of the emojis array
+    // Because it's meant to be a filter for any of the emojis
+    if ($emojiContainer !== $emojiContainerFilter){
+      emojis.shift();
+    }
+
     for( let index in emojis){
       const $span = document.createElement("span");
 
@@ -531,6 +555,12 @@ function loadEmojis() {
     });
 
   }
+}
+
+// This function closes the filter dialog
+function closeFilterDialog() {
+  $dialogBackdrop.hidden = true;
+  $dialogFilter.removeAttribute("open");
 }
 
 // This function closes the new entry dialog
