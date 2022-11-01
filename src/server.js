@@ -335,11 +335,11 @@ const server = http.createServer(function (request, response) {
     request.method === "GET"
   ){
     const userId = sessions[sessionID].id;
-    const params = [];
+    const params = {};
 
     // Create a key - value array pair and send it to the memory.js api
     for(let entry of request.url.searchParams.entries()) {
-      params.push(entry[0]+ ', '+ entry[1]);
+      params[entry[0]] = entry[1];
     }
 
     getMemories(userId, params, (err, resData) => {
@@ -387,7 +387,7 @@ const server = http.createServer(function (request, response) {
     request.url.searchParams.get("deleteMemory") === "" &&
     request.method === "POST"
   ){
-    
+
     getBodyParams(request, function (error, params) {
       if (error){
         response.endWithStatus(500);

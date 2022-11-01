@@ -3,14 +3,49 @@
 const crypto = require("crypto");
 const sqlite3 = require("sqlite3").verbose();
 
-function getMemories(userId, data = {}, cb) {
+function getMemories($userId, data = {}, cb) {
   let db = new sqlite3.Database("data/db.sqlite");
 
-  data = Object.values(data);
-  data.push(userId);
+  const mood = data.hasOwnProperty("$mood");
+
+  // Prepare the statement which searches title, description, locations, activities
+  // and persons for the entered search string
+  // If no search string was entered then let the searchClauses be empty
+  let searchClauses = "";
+  if (data.hasOwnProperty("$search") && data.$search.trim() !== ""){
+    searchClauses = "AND (title LIKE $search OR description LIKE $search OR locations LIKE $search OR activities LIKE $search OR persons LIKE $search)";
+    data.$search = `%${data.$search}%`;
+  } else {
+    delete data.$search;
+  }
+
+  // Prepare the statement which additionally filters the records to
+  // 0 -> no favorites
+  // 1 -> favorites
+  // all other numbers -> both (delete the favorite filter)
+  let favoriteClause = "";
+  if (data.hasOwnProperty("$favorite") && (data.$favorite === "0" || data.$favorite === "1")){
+    favoriteClause = "AND favorite = $favorite";
+  } else {
+    delete data.$favorite;
+  }
+
+   // Prepare the statement which additionally filters the records to the mood
+   // 🚫 or an empty string means no mood filter
+  let moodClause = "";
+  if (data.hasOwnProperty("$mood") && data.$mood.trim() !== "" && data.$mood !== "🚫"){
+    moodClause = "AND mood = $mood";
+  } else {
+    delete data.$mood;
+  }
+
+  // Add the $userId to the data object & delete the getMemories property
+  // Otherwise the used and defined wildcards don't match -> error
+  data.$userId = $userId;
+  delete data.getMemories;
 
   // insert one row into the tbl_memories table
-  db.all(`SELECT * FROM tbl_memories WHERE user_id=(?) ORDER BY entry_date`, ["dca5f097-d3bd-4677-8b62-15212d104a49"], function(err, rows) {
+  db.all(`SELECT * FROM tbl_memories WHERE user_id = $userId ${searchClauses} ${favoriteClause} ${moodClause} ORDER BY entry_date`, data, function(err, rows) {
     if (err) {
       // send the error message back to the requester
       cb(err.message);
