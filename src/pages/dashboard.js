@@ -11,6 +11,8 @@ const $closeDialogs = document.querySelectorAll(".close-dialog");
 const $dialogFilter = document.querySelector("#dialog_filter");
 const $closeDialogFilter = $closeDialogs[0];
 const $toggleFilterDialog = document.querySelector("#span_toggleFilter");
+const $filterSearch = document.querySelector("#inp_filterText");
+const $radiosFavorite = document.querySelectorAll("input[name=rb-favorite]");
 const $searchMemories = document.querySelector("#btn_searchMemories");
 
 const $dialogMemory = document.querySelector("#dialog_memory");
@@ -205,15 +207,47 @@ $toggleFilterDialog.addEventListener("click", () => {
   $dialogFilter.toggleAttribute("open");
 });
 
+// Mouse click on search memory filter
+// When clicking onto the search button then get the set the filter object and load the dashboard
+$searchMemories.addEventListener("click", () => {
+  let favoriteFilter = 2;
+
+  for (let radioFavorite of $radiosFavorite) {
+    if (radioFavorite.checked){
+      favoriteFilter = radioFavorite.defaultValue;
+      break;
+    }
+  }
+
+  const filter = {
+    "$search": $filterSearch.value,
+    "$favorite": favoriteFilter,
+    "$mood": $emojiContainerFilter.querySelector("span[data-selected]").textContent
+  };
+
+  loadDashboard(filter);
+
+  // Reset filter to defaut values
+  $filterSearch.value = "";
+  $radiosFavorite[2].click();
+
+  // Close filter popup
+  closeFilterDialog();
+});
+
 //*************//
 //* FUNCTIONS *//
 //**************/
 
 // Loading the dashboard with memories from the db
-function loadDashboard() {
+function loadDashboard(filter = null) {
   // Load memories from the db
   const xhr = new XMLHttpRequest();
-  xhr.open("GET", "/api?getMemories&all", true);
+
+  filter = {"getMemories": "", ...filter};
+  let params = new URLSearchParams(filter);
+
+  xhr.open("GET", `/api?${params}`, true);
   xhr.send();
 
   xhr.addEventListener("load", () => {

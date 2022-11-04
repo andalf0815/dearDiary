@@ -6,20 +6,18 @@ const sqlite3 = require("sqlite3").verbose();
 function getMemories($userId, data = {}, cb) {
   let db = new sqlite3.Database("data/db.sqlite");
 
-  const mood = data.hasOwnProperty("$mood");
-
-  // Prepare the statement which searches title, description, locations, activities
+  // Prepare the where clause which searches title, description, locations, activities
   // and persons for the entered search string
   // If no search string was entered then let the searchClauses be empty
   let searchClauses = "";
   if (data.hasOwnProperty("$search") && data.$search.trim() !== ""){
-    searchClauses = "AND (title LIKE $search OR description LIKE $search OR locations LIKE $search OR activities LIKE $search OR persons LIKE $search)";
+    searchClauses = "AND (entry_date LIKE $search OR title LIKE $search OR description LIKE $search OR locations LIKE $search OR activities LIKE $search OR persons LIKE $search)";
     data.$search = `%${data.$search}%`;
   } else {
     delete data.$search;
   }
 
-  // Prepare the statement which additionally filters the records to
+  // Prepare the where clause which additionally filters the records to
   // 0 -> no favorites
   // 1 -> favorites
   // all other numbers -> both (delete the favorite filter)
@@ -30,7 +28,7 @@ function getMemories($userId, data = {}, cb) {
     delete data.$favorite;
   }
 
-   // Prepare the statement which additionally filters the records to the mood
+   // Prepare the where ckause which additionally filters the records to the mood
    // 🚫 or an empty string means no mood filter
   let moodClause = "";
   if (data.hasOwnProperty("$mood") && data.$mood.trim() !== "" && data.$mood !== "🚫"){
