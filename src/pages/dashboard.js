@@ -174,10 +174,6 @@ $saveMemory.addEventListener("click", () => {
   });
 });
 
-//
-// SEARCHING MEMORIES (XHR)
-// Eventlistener for clicking the Search button
-
 // Mouse click outside dialog new  memory
 // When clicking outside the dialog, then close it
 $dialogBackdrop.addEventListener("click", () => {
@@ -203,6 +199,15 @@ for (let $closeDialog of $closeDialogs){
 // Mouse click onto filter symbol
 // When clicking onto the filter symbol then toggle the filter dialog
 $toggleFilterDialog.addEventListener("click", () => {
+  // If a filter is already set then reset the filter when clicking on the symbol
+  if ($toggleFilterDialog.hasAttribute("data-filtered")) {
+    loadDashboard();
+    $toggleFilterDialog.removeAttribute("data-filtered");
+    $toggleFilterDialog.textContent = "";
+    return
+  }
+
+  // Open filter popup
   $dialogBackdrop.hidden = false;
   $dialogFilter.toggleAttribute("open");
 });
@@ -244,6 +249,11 @@ function loadDashboard(filter = null) {
   // Load memories from the db
   const xhr = new XMLHttpRequest();
 
+  // Check if a filter is set or not
+  // If yes, then we will change the way how the the memories are rendered,
+  // because we don't render special times spans anymore (today one year/month/... ago, ...)
+  const filterSet = filter ? true : false;
+
   filter = {"getMemories": "", ...filter};
   let params = new URLSearchParams(filter);
 
@@ -253,10 +263,17 @@ function loadDashboard(filter = null) {
   xhr.addEventListener("load", () => {
     memories = JSON.parse(xhr.responseText);
 
+    if (filterSet) {
+      $toggleFilterDialog.setAttribute("data-filtered","");
+      $toggleFilterDialog.textContent = memories.length;
+    } else {
+      $toggleFilterDialog.removeAttribute("data-filtered");
+    }
+
     // CREATING MEMORIES (ARTICLES) //
 
     // Create and render Memories
-    createMemoryEntries(memories);
+    createMemoryEntries(memories, filterSet);
 
     // Show/hide edit and delete buttons when hover/leave an memory
     for (let $memory of $main.querySelectorAll("article")) {
@@ -280,7 +297,7 @@ function loadDashboard(filter = null) {
   });
 }
 
-function createMemoryEntries(memories) {
+function createMemoryEntries(memories, filterSet) {
   // Loop through the memories, copy the template_memory and add it dynamically to the sections
   // Depending on which section category the memory is related to, append it to the correct section
 
@@ -288,6 +305,13 @@ function createMemoryEntries(memories) {
   const currentDate = new Date();
   currentDate.setHours(0,0,0,0)
   const currentDay = currentDate.getDate();
+
+  // We need this to spread the memories across every section, when a filter is activated
+  // So we have a nicer overview of the searched memories
+  const memoriesAmount = memories.length;
+  const memoriesPerSection = memoriesAmount / 3;
+  let memoriesCounter = 0;
+  let sectionIndex = 2;
 
   // Reset the object which contains all al memories to be rendered
   resetRenderedMemories();
@@ -329,54 +353,67 @@ function createMemoryEntries(memories) {
     $memory.dataset.uuid = uuid;
     favorite && $memory.classList.add("favorite");
 
-    // Check if the memory entry should be displayed or not.
-    // If it should be displayed, then create the histoy caption.
-    // Set the "x days weeks/months/years ago ..." text
-    let historyCaption;
-
-    // SECTION Recently added (within the last 7 days)
-    if (memoryDate >= (oneWeekAgo)){
-      const daysAgo = parseInt((currentDate.getTime() - memoryDate.getTime()) / (1000 * 3600 * 24));
-
-      if (daysAgo === 7){
-        historyCaption = `<big>${daysAgo/7}</big> week ago ...`;
-      } else if (daysAgo === 0){
-        historyCaption = `<big>Today</big>`;
-      } else {
-        historyCaption = `<big>${daysAgo}</big> day${daysAgo !== 1 ? "s" : ""} ago ...`;
+    // If a filter is set, we render every result of the filter spread to the sections
+    // If no filter is set, we will render according to our defined sections
+    if (filterSet) {
+      if (memoriesCounter < memoriesPerSection){
+        renderMemory($memory, sectionIds[sectionIndex]);
+        memoriesCounter++;
+      }else {
+        memoriesCounter = 1;
+        sectionIndex--;
+        renderMemory($memory, sectionIds[sectionIndex]);
       }
-      renderMemory($memory, sectionIds[2]);
-    }
+    }else {
+      // Check if the memory entry should be displayed or not.
+      // If it should be displayed, then create the histoy caption.
+      // Set the "x days weeks/months/years ago ..." text
+      let historyCaption;
 
-    // SECTION All memories on the same date as today
-    else if (currentDay === memoryDay){
-      const monthsAgo = getMonthDifference(memoryDate, currentDate);
+      // SECTION Recently added (within the last 7 days)
+      if (memoryDate >= (oneWeekAgo)){
+        const daysAgo = parseInt((currentDate.getTime() - memoryDate.getTime()) / (1000 * 3600 * 24));
 
-      if (monthsAgo <= 12 ){
-        historyCaption = `<big>${monthsAgo}</big> month${monthsAgo !== 1 ? "s" : ""} ago ...`;
-      }else if (monthsAgo % 12 === 0){
-        historyCaption = `<big>${monthsAgo / 12}</big> years ago ...`
+        if (daysAgo === 7){
+          historyCaption = `<big>${daysAgo/7}</big> week ago ...`;
+        } else if (daysAgo === 0){
+          historyCaption = `<big>Today</big>`;
+        } else {
+          historyCaption = `<big>${daysAgo}</big> day${daysAgo !== 1 ? "s" : ""} ago ...`;
+        }
+        renderMemory($memory, sectionIds[2]);
       }
+
+      // SECTION All memories on the same date as today
+      else if (currentDay === memoryDay){
+        const monthsAgo = getMonthDifference(memoryDate, currentDate);
+
+        if (monthsAgo <= 12 ){
+          historyCaption = `<big>${monthsAgo}</big> month${monthsAgo !== 1 ? "s" : ""} ago ...`;
+        }else if (monthsAgo % 12 === 0){
+          historyCaption = `<big>${monthsAgo / 12}</big> years ago ...`
+        }
+        // Don't render all other memories
+        else {
+          continue;
+        }
+        renderMemory($memory, sectionIds[1]);
+      }
+
+      // SECTION favorites - Remove the historyCaption from favorite entries
+      else if (favorite){
+        historyCaption = "";
+        renderMemory($memory, sectionIds[0]);
+      }
+
       // Don't render all other memories
       else {
         continue;
       }
-      renderMemory($memory, sectionIds[1]);
-    }
 
-    // SECTION favorites - Remove the historyCaption from favorite entries
-    else if (favorite){
-      historyCaption = "";
-      renderMemory($memory, sectionIds[0]);
+      // Finally set the correct historyCaption to the element
+      $memory.querySelector("h6").innerHTML = historyCaption;
     }
-
-    // Don't render all other memories
-    else {
-      continue;
-    }
-
-    // Finally set the correct historyCaption to the element
-    $memory.querySelector("h6").innerHTML = historyCaption;
 
     //
     // Load the correct tag values for each tag (locations, activities and persons)

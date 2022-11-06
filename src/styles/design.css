@@ -280,9 +280,21 @@ fieldset {
 }
 
 .bdy-dashboard main #dialog-section #span_toggleFilter {
-  font-size: 3rem;
-  color: var(--color-lightGreen);
   cursor: pointer;
+  background-image: url("../images/filter.png");
+  background-size: contain;
+  width: 3rem;
+  background-repeat: no-repeat;
+  background-position-y: 0.7rem;
+}
+
+.bdy-dashboard main #dialog-section #span_toggleFilter[data-filtered] {
+  background-image: url("../images/filtered.png");
+  padding-top: 3rem;
+  background-position-y: 0;
+  color: var(--color-purple);
+  font-weight: bold;
+  text-align: center;
 }
 
 .bdy-dashboard main #dialog-section #dialog_filter[open] {
