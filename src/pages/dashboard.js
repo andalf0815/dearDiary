@@ -194,6 +194,9 @@ $saveMemory.addEventListener("click", () => {
 
   const imageBase64Collection = [ ...$imgPreviewContainer.children ];
 
+  // Joining the array of base64 code with the separator ;; so that it can be later easily splitted
+  const imgB64 = imageBase64Collection.map((entry) => entry.src).join(";;");
+
   // Collection the data which where entered in the dialogMemory
   const data = {
     "uuid": $dialogMemory.dataset.uuid,
@@ -202,7 +205,7 @@ $saveMemory.addEventListener("click", () => {
     "favorite": $favoriteNewEntry.dataset.favoriteset === "" ? 1 : 0,
     "emoji": $emojiContainerNewEntry.querySelector("span[data-selected]").textContent,
     "description": $description.value.trim(),
-    "url": imageBase64Collection.map((entry) => entry.src),
+    "imgB64": imgB64,
     "locations": getTags($locations).join("; "),
     "activities": getTags($activities).join("; "),
     "persons": getTags($persons).join("; ")
