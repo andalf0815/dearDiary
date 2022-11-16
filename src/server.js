@@ -361,7 +361,6 @@ const server = http.createServer(function (request, response) {
   ){
     getBodyParams(request, function (error, params) {
       const userId = sessions[sessionID].id;
-
       if (error){
         response.endWithStatus(500);
         return;

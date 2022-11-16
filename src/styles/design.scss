@@ -293,7 +293,7 @@ fieldset {
         background-repeat: no-repeat;
         background-position-y: 0.7rem;
 
-        &[data-filtered]{
+        &[data-filtered] {
           background-image: url("../images/filtered.png");
           padding-top: 3rem;
           background-position-y: 0;
@@ -357,9 +357,9 @@ fieldset {
             &:checked::after {
               background-image: url("../images/y-star-not-filled.png");
             }
-         }
+          }
 
-          &#rb_all{
+          &#rb_all {
             &::after {
               background-image: url("../images/b-star-half-filled.png");
             }
@@ -418,6 +418,18 @@ fieldset {
 
             input {
               width: calc(100% - 3.5rem);
+            }
+
+            #div_imgPreviewContainer {
+              display: flex;
+              flex-wrap: wrap;
+              gap: 1rem;
+
+              .img-preview {
+                width: 24%;
+                min-width: 15rem;
+                object-fit: contain;
+              }
             }
           }
 

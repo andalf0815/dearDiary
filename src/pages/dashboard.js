@@ -28,6 +28,10 @@ const $emojiContainerFilter = $emojiContainers[0];
 const $emojiContainerNewEntry = $emojiContainers[1];
 
 const $description = document.querySelector("#ta_description");
+
+const $imgToUpload = document.querySelector("#inp_imgToUpload");
+const $imgPreviewContainer = document.querySelector("#div_imgPreviewContainer");
+
 const $locations = document.querySelector("#span_locations");
 const $activities = document.querySelector("#span_activities");
 const $persons = document.querySelector("#span_persons");
@@ -106,6 +110,55 @@ $favoriteNewEntry.addEventListener("click", (e) => {
   e.target.toggleAttribute("data-favoriteSet");
 });
 
+// Mouse click on "Select Files"
+// When clicking on "Select Files" and choose images, then create a preview
+// of those images in the div_imgPreviewContainer
+$imgToUpload.addEventListener("change", () => {
+  const files = $imgToUpload.files;
+
+  // Reset preview container
+  $imgPreviewContainer.innerHTML = "";
+
+  // MAx 4 images per memory are allowed to upload
+  if (files.length < 1 || files.length > 4) return;
+
+  // Loop through the selected images
+  // Then create a File reader to read the file and get the base64 code from it
+  for (let file of files){
+
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+
+    // After the reader finished to read the file,
+    // create a temporary img element to draw a canvas and
+    // reduce the resolution (to save space on the db)
+    // Then get the new base64 code from the comprimized image to then save it
+    reader.addEventListener("load", (e) => {
+      const $imgTemp = document.createElement("img");
+      $imgTemp.src = e.target.result;
+
+      $imgTemp.addEventListener("load", (e) => {
+        const canvas = document.createElement("canvas");
+        const MAX_WIDTH = 1024;
+
+        const scaleSize = MAX_WIDTH / e.target.width;
+        canvas.width = MAX_WIDTH;
+        canvas.height = e.target.height * scaleSize;
+
+        const ctx = canvas.getContext("2d");
+
+        ctx.drawImage(e.target, 0, 0, canvas.width, canvas.height);
+
+        const srcEncoded = ctx.canvas.toDataURL(e.target, "image/png");
+        const $img = document.createElement("img");
+        $img.className = "img-preview";
+        $img.src = srcEncoded;
+        $imgPreviewContainer.append($img);
+      })
+    });
+  }
+})
+
 
 // Enter click in tag input fields
 // Add eventlistener to the tags input (When entering a tag and click enter, then display the entered string below the tags element)
@@ -139,6 +192,8 @@ $saveMemory.addEventListener("click", () => {
     return;
   }
 
+  const imageBase64Collection = [ ...$imgPreviewContainer.children ];
+
   // Collection the data which where entered in the dialogMemory
   const data = {
     "uuid": $dialogMemory.dataset.uuid,
@@ -147,7 +202,7 @@ $saveMemory.addEventListener("click", () => {
     "favorite": $favoriteNewEntry.dataset.favoriteset === "" ? 1 : 0,
     "emoji": $emojiContainerNewEntry.querySelector("span[data-selected]").textContent,
     "description": $description.value.trim(),
-    "url": "URL",
+    "url": imageBase64Collection.map((entry) => entry.src),
     "locations": getTags($locations).join("; "),
     "activities": getTags($activities).join("; "),
     "persons": getTags($persons).join("; ")

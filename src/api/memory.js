@@ -42,7 +42,7 @@ function getMemories($userId, data = {}, cb) {
   data.$userId = $userId;
   delete data.getMemories;
 
-  // insert one row into the tbl_memories table
+  // Get the rows according to the select statement
   db.all(`SELECT * FROM tbl_memories WHERE user_id = $userId ${searchClauses} ${favoriteClause} ${moodClause} ORDER BY entry_date`, data, function(err, rows) {
     if (err) {
       // send the error message back to the requester
@@ -66,6 +66,12 @@ function getMemories($userId, data = {}, cb) {
 function insertMemory(userId, data, cb) {
   let db = new sqlite3.Database("data/db.sqlite");
   const uuid = crypto.randomUUID();
+
+
+//***********TODO: Convert the base64 code to blob and save it in the database */
+//*********** */
+//***************** */
+
 
   // If the uuid is empty, then a new entry in the sqlite db will be done
   if (data.uuid === ""){

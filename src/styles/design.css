@@ -412,6 +412,18 @@ fieldset {
   width: calc(100% - 3.5rem);
 }
 
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) fieldset #div_imgPreviewContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) fieldset #div_imgPreviewContainer .img-preview {
+  width: 24%;
+  min-width: 15rem;
+  object-fit: contain;
+}
+
 .bdy-dashboard main #dialog-section #dialog_memory[open] > div:nth-of-type(2) .icon-tags {
   margin-bottom: 0;
 }
