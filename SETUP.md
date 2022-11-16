@@ -15,7 +15,7 @@ ___
 
 ## Setup
 
-1. Download the src folder and put it in your root folder
+1. Download the src folder from the repository https://andreasgru@git.wifi.messner.top/Projekte/Projekt-AndreasGru.git and put it in your root folder where you want to store the app
 2. Install node.js and npm on your system -> https://nodejs.org/en/
 3. Install node package sqlite3 in src folder (Terminal): ```npm install sqlite3```
 4. Start server.js (Terminal): ```node server.js```
