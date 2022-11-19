@@ -38,6 +38,7 @@ ___
     * n months/years ago
     * favorites
 6. **NEW MEMORY**: Click into the input field at the top, then enter your information and hit save button. Then the entry will be saved - The dashboard will be updated
+    * For adding tags, just enter a text in the proper field and click enter to accept the change. For deleting tags just click on th "x" symbol.
 7. **UPDATE MEMORY**: Hover over a memory in the dashboard and click the edit symbol - Now you can adapt your information and hit the save button. The entry will be updated
 8. **DELETE MEMORY**: Hover over a memory in the dashboard and click the delete symbol
 9. **SEARCH FOR MEMORIES**: 
