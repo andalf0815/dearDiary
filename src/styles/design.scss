@@ -520,6 +520,60 @@ fieldset {
           padding: 2rem;
           background-color: var(--color-lightBlue);
 
+          @keyframes detailview {
+            0% {
+              opacity: 0;
+              overflow: hidden;
+              width: 0;
+              padding: 0;
+              border: 0;
+              max-height: 0;
+            }
+
+            15% {
+              opacity: 0;
+              width: 0;
+              overflow: hidden;
+              max-width: 0;
+              padding: 0;
+              border: 0;
+              max-height: 0;
+            }
+
+            40% {
+              position: fixed;
+              left: 50%;
+              top: 30%;
+              width: 50%;
+              max-height: 0;
+              overflow: hidden;
+              transform: translate(-50%, -50%);
+              opacity: 0;
+            }
+
+            60% {
+              position: fixed;
+              left: 50%;
+              top: 37%;
+              width: 85%;
+              min-height: 45%;
+              z-index: 4;
+              transform: translate(-50%, -50%);
+              opacity: 1;
+            }
+
+            100% {
+              position: fixed;
+              left: 50%;
+              top: 37%;
+              width: 85%;
+              min-height: 45%;
+              z-index: 4;
+              transform: translate(-50%, -50%);
+              opacity: 1;
+            }
+          }
+
           h6 {
             color: var(--color-yellow);
             font-size: 1.5rem;
@@ -527,7 +581,8 @@ fieldset {
           }
 
           .edit,
-          .delete {
+          .delete,
+          .detail-view {
             width: 2rem;
             height: 2rem;
             background-size: contain;
@@ -541,6 +596,11 @@ fieldset {
             &:active {
               filter: invert(0);
             }
+          }
+
+          .detail-view {
+            right: 8rem;
+            background-image: url("../images/zoom-in.png");
           }
 
           .edit {
@@ -616,6 +676,45 @@ fieldset {
               height: 10rem;
             }
           }
+
+          &[data-detailview] {
+            animation: detailview 0.5s forwards;
+
+            .detail-view {
+              background-image: url("../images/zoom-out.png");
+            }
+
+            .prev-description {
+              display: block;
+            }
+
+            .locations,
+            .activities,
+            .persons {
+              >p:nth-child(3) {
+                visibility: visible;
+
+                &:before {
+                  content: "";
+                  position: relative;
+                  visibility: visible;
+                }
+              }
+
+              >p:nth-child(n + 4) {
+                display: block;
+              }
+            }
+
+            .images {
+              margin-top: 1.5rem;
+              display: block;
+            }
+
+            >div:first-of-type {
+              width: 100%;
+            }
+          }
         }
       }
     }
@@ -666,6 +765,11 @@ fieldset {
         .articles {
           article {
             min-width: 100%;
+
+            &[data-detailview] {
+              max-height: 55%;
+              overflow-x: auto;
+            }
           }
         }
       }

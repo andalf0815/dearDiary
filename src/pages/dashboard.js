@@ -333,18 +333,20 @@ function loadDashboard(filter = null) {
     // Create and render Memories
     createMemoryEntries(memories, filterSet);
 
-    // Show/hide edit and delete buttons when hover/leave an memory
+    // Show/hide detail-view, edit and delete buttons when hover/leave an memory
     for (let $memory of $main.querySelectorAll("article")) {
 
       $memory.addEventListener("mouseover", () => {
         $memory.querySelector('.edit').hidden = false;
         $memory.querySelector('.delete').hidden = false;
-      })
+        $memory.querySelector('.detail-view').hidden = false;
+      });
 
       $memory.addEventListener("mouseleave", () => {
         $memory.querySelector('.edit').hidden = true;
         $memory.querySelector('.delete').hidden = true;
-      })
+        $memory.querySelector('.detail-view').hidden = true;
+      });
     }
 
     // Loads the arrow left + right buttons
@@ -539,6 +541,11 @@ function createMemoryEntries(memories, filterSet) {
           loadDashboard();
         }
       });
+    });
+
+    // When clicking on the magnifying symbol, then maximize the memory entry to see the complete information
+    $memory.querySelector(".detail-view").addEventListener("click", () => {
+      $memory.toggleAttribute("data-detailview");
     });
   }
 }

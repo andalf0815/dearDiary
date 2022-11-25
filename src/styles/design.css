@@ -504,6 +504,56 @@ fieldset {
   background-color: var(--color-lightBlue);
 }
 
+@keyframes detailview {
+  0% {
+    opacity: 0;
+    overflow: hidden;
+    width: 0;
+    padding: 0;
+    border: 0;
+    max-height: 0;
+  }
+  15% {
+    opacity: 0;
+    width: 0;
+    overflow: hidden;
+    max-width: 0;
+    padding: 0;
+    border: 0;
+    max-height: 0;
+  }
+  40% {
+    position: fixed;
+    left: 50%;
+    top: 30%;
+    width: 50%;
+    max-height: 0;
+    overflow: hidden;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+  }
+  60% {
+    position: fixed;
+    left: 50%;
+    top: 37%;
+    width: 85%;
+    min-height: 45%;
+    z-index: 4;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+  100% {
+    position: fixed;
+    left: 50%;
+    top: 37%;
+    width: 85%;
+    min-height: 45%;
+    z-index: 4;
+    transform: translate(-50%, -50%);
+    opacity: 1;
+  }
+}
+
 .bdy-dashboard main .article-section .articles article h6 {
   color: var(--color-yellow);
   font-size: 1.5rem;
@@ -511,7 +561,8 @@ fieldset {
 }
 
 .bdy-dashboard main .article-section .articles article .edit,
-.bdy-dashboard main .article-section .articles article .delete {
+.bdy-dashboard main .article-section .articles article .delete,
+.bdy-dashboard main .article-section .articles article .detail-view {
   width: 2rem;
   height: 2rem;
   background-size: contain;
@@ -519,14 +570,21 @@ fieldset {
 }
 
 .bdy-dashboard main .article-section .articles article .edit:hover,
-.bdy-dashboard main .article-section .articles article .delete:hover {
+.bdy-dashboard main .article-section .articles article .delete:hover,
+.bdy-dashboard main .article-section .articles article .detail-view:hover {
   cursor: pointer;
   filter: invert(1);
 }
 
 .bdy-dashboard main .article-section .articles article .edit:active,
-.bdy-dashboard main .article-section .articles article .delete:active {
+.bdy-dashboard main .article-section .articles article .delete:active,
+.bdy-dashboard main .article-section .articles article .detail-view:active {
   filter: invert(0);
+}
+
+.bdy-dashboard main .article-section .articles article .detail-view {
+  right: 8rem;
+  background-image: url("../images/zoom-in.png");
 }
 
 .bdy-dashboard main .article-section .articles article .edit {
@@ -611,6 +669,47 @@ fieldset {
   height: 10rem;
 }
 
+.bdy-dashboard main .article-section .articles article[data-detailview] {
+  animation: detailview 0.5s forwards;
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview] .detail-view {
+  background-image: url("../images/zoom-out.png");
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview] .prev-description {
+  display: block;
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview] .locations > p:nth-child(3),
+.bdy-dashboard main .article-section .articles article[data-detailview] .activities > p:nth-child(3),
+.bdy-dashboard main .article-section .articles article[data-detailview] .persons > p:nth-child(3) {
+  visibility: visible;
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview] .locations > p:nth-child(3):before,
+.bdy-dashboard main .article-section .articles article[data-detailview] .activities > p:nth-child(3):before,
+.bdy-dashboard main .article-section .articles article[data-detailview] .persons > p:nth-child(3):before {
+  content: "";
+  position: relative;
+  visibility: visible;
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview] .locations > p:nth-child(n + 4),
+.bdy-dashboard main .article-section .articles article[data-detailview] .activities > p:nth-child(n + 4),
+.bdy-dashboard main .article-section .articles article[data-detailview] .persons > p:nth-child(n + 4) {
+  display: block;
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview] .images {
+  margin-top: 1.5rem;
+  display: block;
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview] > div:first-of-type {
+  width: 100%;
+}
+
 .bdy-dashboard .favorite {
   border: 0.5rem solid var(--color-yellow);
   background-image: url("../images/star.png");
@@ -643,6 +742,10 @@ fieldset {
   }
   .bdy-dashboard main .article-section .articles article {
     min-width: 100%;
+  }
+  .bdy-dashboard main .article-section .articles article[data-detailview] {
+    max-height: 55%;
+    overflow-x: auto;
   }
 }
 
