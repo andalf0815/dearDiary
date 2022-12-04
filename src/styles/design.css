@@ -268,7 +268,7 @@ fieldset {
   display: flex;
   flex-direction: column;
   gap: 2rem;
-  max-width: 160rem;
+  max-width: 180rem;
   margin: 0 auto;
 }
 
@@ -504,56 +504,6 @@ fieldset {
   background-color: var(--color-lightBlue);
 }
 
-@keyframes detailview {
-  0% {
-    opacity: 0;
-    overflow: hidden;
-    width: 0;
-    padding: 0;
-    border: 0;
-    max-height: 0;
-  }
-  15% {
-    opacity: 0;
-    width: 0;
-    overflow: hidden;
-    max-width: 0;
-    padding: 0;
-    border: 0;
-    max-height: 0;
-  }
-  40% {
-    position: fixed;
-    left: 50%;
-    top: 30%;
-    width: 50%;
-    max-height: 0;
-    overflow: hidden;
-    transform: translate(-50%, -50%);
-    opacity: 0;
-  }
-  60% {
-    position: fixed;
-    left: 50%;
-    top: 37%;
-    width: 85%;
-    min-height: 45%;
-    z-index: 4;
-    transform: translate(-50%, -50%);
-    opacity: 1;
-  }
-  100% {
-    position: fixed;
-    left: 50%;
-    top: 37%;
-    width: 85%;
-    min-height: 45%;
-    z-index: 4;
-    transform: translate(-50%, -50%);
-    opacity: 1;
-  }
-}
-
 .bdy-dashboard main .article-section .articles article h6 {
   color: var(--color-yellow);
   font-size: 1.5rem;
@@ -663,14 +613,26 @@ fieldset {
 }
 
 .bdy-dashboard main .article-section .articles article .images img {
-  content: var(--test-image);
   object-fit: cover;
   width: 10rem;
   height: 10rem;
 }
 
 .bdy-dashboard main .article-section .articles article[data-detailview] {
-  animation: detailview 0.5s forwards;
+  position: fixed;
+  left: 50%;
+  top: 37%;
+  width: 85%;
+  min-height: 45%;
+  z-index: 4;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview]::backdrop {
+  background-color: rgba(255, 255, 255, 0.4);
+  -webkit-backdrop-filter: blur(5px);
+  backdrop-filter: blur(5px);
 }
 
 .bdy-dashboard main .article-section .articles article[data-detailview] .detail-view {

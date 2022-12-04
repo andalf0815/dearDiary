@@ -276,7 +276,7 @@ fieldset {
     display: flex;
     flex-direction: column;
     gap: 2rem;
-    max-width: 160rem;
+    max-width: 180rem;
     margin: 0 auto;
 
     #dialog-section {
@@ -520,59 +520,59 @@ fieldset {
           padding: 2rem;
           background-color: var(--color-lightBlue);
 
-          @keyframes detailview {
-            0% {
-              opacity: 0;
-              overflow: hidden;
-              width: 0;
-              padding: 0;
-              border: 0;
-              max-height: 0;
-            }
+          // @keyframes detailview {
+          //   0% {
+          //     opacity: 0;
+          //     overflow: hidden;
+          //     width: 0;
+          //     padding: 0;
+          //     border: 0;
+          //     max-height: 0;
+          //   }
 
-            15% {
-              opacity: 0;
-              width: 0;
-              overflow: hidden;
-              max-width: 0;
-              padding: 0;
-              border: 0;
-              max-height: 0;
-            }
+          //   15% {
+          //     opacity: 0;
+          //     width: 0;
+          //     overflow: hidden;
+          //     max-width: 0;
+          //     padding: 0;
+          //     border: 0;
+          //     max-height: 0;
+          //   }
 
-            40% {
-              position: fixed;
-              left: 50%;
-              top: 30%;
-              width: 50%;
-              max-height: 0;
-              overflow: hidden;
-              transform: translate(-50%, -50%);
-              opacity: 0;
-            }
+          //   40% {
+          //     position: fixed;
+          //     left: 50%;
+          //     top: 30%;
+          //     width: 50%;
+          //     max-height: 0;
+          //     overflow: hidden;
+          //     transform: translate(-50%, -50%);
+          //     opacity: 0;
+          //   }
 
-            60% {
-              position: fixed;
-              left: 50%;
-              top: 37%;
-              width: 85%;
-              min-height: 45%;
-              z-index: 4;
-              transform: translate(-50%, -50%);
-              opacity: 1;
-            }
+          //   60% {
+          //     position: fixed;
+          //     left: 50%;
+          //     top: 37%;
+          //     width: 85%;
+          //     min-height: 45%;
+          //     z-index: 4;
+          //     transform: translate(-50%, -50%);
+          //     opacity: 1;
+          //   }
 
-            100% {
-              position: fixed;
-              left: 50%;
-              top: 37%;
-              width: 85%;
-              min-height: 45%;
-              z-index: 4;
-              transform: translate(-50%, -50%);
-              opacity: 1;
-            }
-          }
+          //   100% {
+          //     position: fixed;
+          //     left: 50%;
+          //     top: 37%;
+          //     width: 85%;
+          //     min-height: 45%;
+          //     z-index: 4;
+          //     transform: translate(-50%, -50%);
+          //     opacity: 1;
+          //   }
+          // }
 
           h6 {
             color: var(--color-yellow);
@@ -670,7 +670,6 @@ fieldset {
             height: 100%;
 
             img {
-              content: var(--test-image);
               object-fit: cover;
               width: 10rem;
               height: 10rem;
@@ -678,7 +677,21 @@ fieldset {
           }
 
           &[data-detailview] {
-            animation: detailview 0.5s forwards;
+            // animation: detailview 1s forwards;
+            position: fixed;
+            left: 50%;
+            top: 37%;
+            width: 85%;
+            min-height: 45%;
+            z-index: 4;
+            transform: translate(-50%, -50%);
+            opacity: 1;
+
+            &::backdrop {
+              background-color: rgba(255, 255, 255, 0.4);
+              -webkit-backdrop-filter: blur(5px);
+              backdrop-filter: blur(5px);
+            }
 
             .detail-view {
               background-image: url("../images/zoom-out.png");

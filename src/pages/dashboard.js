@@ -119,13 +119,12 @@ $imgToUpload.addEventListener("change", () => {
   // Reset preview container
   $imgPreviewContainer.innerHTML = "";
 
-  // MAx 4 images per memory are allowed to upload
+  // Max 4 images per memory are allowed to upload
   if (files.length < 1 || files.length > 4) return;
 
   // Loop through the selected images
   // Then create a File reader to read the file and get the base64 code from it
   for (let file of files){
-
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
@@ -258,11 +257,14 @@ for (let $closeDialog of $closeDialogs){
 // When clicking onto the filter symbol then toggle the filter dialog
 $toggleFilterDialog.addEventListener("click", () => {
   // If a filter is already set then reset the filter when clicking on the symbol
+  // Trigger the removeAttribute after the loadDashboard is finished,
+  // so no delay will be noticed
   if ($toggleFilterDialog.hasAttribute("data-filtered")) {
-    loadDashboard();
-    $toggleFilterDialog.removeAttribute("data-filtered");
-    $toggleFilterDialog.textContent = "";
-    return
+    loadDashboard(null, () => {
+      $toggleFilterDialog.removeAttribute("data-filtered");
+      $toggleFilterDialog.textContent = "";
+    });
+    return;
   }
 
   // Open filter popup
@@ -303,7 +305,7 @@ $searchMemories.addEventListener("click", () => {
 //**************/
 
 // Loading the dashboard with memories from the db
-function loadDashboard(filter = null) {
+function loadDashboard(filter = null, cb = null) {
   // Load memories from the db
   const xhr = new XMLHttpRequest();
 
@@ -354,6 +356,12 @@ function loadDashboard(filter = null) {
 
     // Load emoji bars
     loadEmojis();
+
+    // If a callback function was passed as parameter then call it
+    if (cb){
+      cb();
+    }
+
   });
 }
 
@@ -376,7 +384,7 @@ function createMemoryEntries(memories, filterSet) {
   // Reset the object which contains all al memories to be rendered
   resetRenderedMemories();
 
-  for (const {
+  for (let {
     uuid,
     entry_date,
     favorite,
@@ -474,6 +482,23 @@ function createMemoryEntries(memories, filterSet) {
       // Finally set the correct historyCaption to the element
       $memory.querySelector("h6").innerHTML = historyCaption;
     }
+
+    // Load the images of the memory entry
+    const $images = [...$memory.querySelector(".images").children];
+
+    images = images.split(";;");
+
+    // Loading the images from the database data and put it to the four img tags
+    $images.forEach(($img, index) => {
+
+      // If no image from a memory entry is in the database
+      // or no valid base64 code is available, then don't show any img
+      if (images[index] && images[index].slice(0, 22) === "data:image/png;base64,"){
+        $img.src = images[index];
+      } else {
+        $img.hidden = true;
+      }
+    })
 
     //
     // Load the correct tag values for each tag (locations, activities and persons)
@@ -595,6 +620,7 @@ function clearDialogData() {
   $emojiContainerNewEntry.querySelector("span[data-selected]").removeAttribute("data-selected");
   $emojiContainerNewEntry.querySelector("span:first-child").setAttribute("data-selected","");
   $description.value = "";
+  $imgPreviewContainer.innerHTML = "";
   $locations.innerHTML = "";
   $activities.innerHTML = "";
   $persons.innerHTML = "";
@@ -611,6 +637,22 @@ function setDialogData(data) {
   $memoryTitle.value = data.title;
   $favoriteNewEntry.toggleAttribute("data-favoriteset", data.favorite);
   $description.value = data.description;
+
+  // Set the correct images to the dialog new/edit entry
+  const images = data.images;
+
+  images.forEach((img, index) => {
+
+    // If no image from a memory entry is in the database
+    // or no valid base64 code is available, then don't show any img
+    if (img && img.slice(0, 22) === "data:image/png;base64,"){
+      const $img = document.createElement("img");
+      $img.className = "img-preview";
+      $img.src = images[index];
+      $imgPreviewContainer.append($img);
+    }
+  });
+
   // Set the correct emoji
   for (let mood of $emojiContainerNewEntry.children){
     if (mood.textContent === data.mood){
@@ -680,10 +722,10 @@ function loadEmojis() {
     // Eventlistener for selectig an emoji
     $emojiContainer.addEventListener("click", (e) => {
 
-      // AVOID GLITCHING
-      // When a user clicks on an emoji moves the curser
+      // TO AVOID GLITCHING
+      // When a user clicks on an emoji, moves the cursor
       // and releases the mouse click on another position,
-      // then the target wouldn't be a emoji, but its emojiContainer itself
+      // then the target wouldn't be an emoji, but its emojiContainer itself
       // So skip the click event
       if (e.target === $emojiContainer) return;
       $emojiContainer.querySelector("span[data-selected]").toggleAttribute("data-selected", false);
