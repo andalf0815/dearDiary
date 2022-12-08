@@ -662,6 +662,17 @@ fieldset {
   display: block;
 }
 
+.bdy-dashboard main .article-section .articles article[data-detailview] .images img {
+  object-fit: contain;
+  width: 24%;
+  height: auto;
+}
+
+.bdy-dashboard main .article-section .articles article[data-detailview] .images img:hover {
+  z-index: 5;
+  transform: scale(1.5);
+}
+
 .bdy-dashboard main .article-section .articles article[data-detailview] > div:first-of-type {
   width: 100%;
 }

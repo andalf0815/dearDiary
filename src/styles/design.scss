@@ -716,6 +716,17 @@ fieldset {
             .images {
               margin-top: 1.5rem;
               display: block;
+
+              img {
+                object-fit: contain;
+                width: 24%;
+                height: auto;
+
+                &:hover {
+                  z-index: 5;
+                  transform: scale(1.5);
+                }
+              }
             }
 
             >div:first-of-type {
