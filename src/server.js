@@ -455,14 +455,16 @@ const server = http.createServer(function (request, response) {
       // Zugriffe auf alle Dateien, welche nicht explizit in der Allowlist stehen, verbieten
       if (!accesslist.allow.includes(request.url.pathname)) {
         response.endWithStatus(403);
-    return;
-  }
+        return;
+      }
     }
 
-    // Existiert keine Allowlist, dann darf ein nicht angemeldeter Benutzer nur auf die Dateien der
-    // `login` Liste nicht zugreifen
+    // Existiert keine Allowlist, dann darf ein nicht angemeldeter Benutzer auf die Dateien der
+    // `login` Liste nicht zugreifen -> Witerleitung zum Login
     else if (accesslist.login?.includes(request.url.pathname)) {
-      response.endWithStatus(403);
+      response.statusCode = 302;
+      response.setHeader("Location", "\\index.html");
+      response.end();
     return;
     }
   }
