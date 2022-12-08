@@ -330,6 +330,7 @@ const server = http.createServer(function (request, response) {
 
   // Get memory entries according to the query string
   if (
+    session &&
     request.url.pathname === "/api" &&
     request.url.searchParams.get("getMemories") === "" &&
     request.method === "GET"
@@ -355,6 +356,7 @@ const server = http.createServer(function (request, response) {
 
   // Insert new memory entry
   if (
+    session &&
     request.url.pathname === "/api" &&
     request.url.searchParams.get("setMemory") === "" &&
     request.method === "POST"
@@ -382,6 +384,7 @@ const server = http.createServer(function (request, response) {
 
    // Delete memory entry
    if (
+    session &&
     request.url.pathname === "/api" &&
     request.url.searchParams.get("deleteMemory") === "" &&
     request.method === "POST"
