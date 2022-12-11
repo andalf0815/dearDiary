@@ -13,10 +13,10 @@
     "username": "andreas-gruber@outlook.at",
     "password": "b405d0595969351d03a5d5d72b7b28b945cf59f332721d56bf3b0b96df572bae"
   },
-  "hissisissi@re-gister.com": {
-    "id": "3153683d-b074-4878-a4f0-ceb44d952129",
+  "test@tester.com": {
+    "id": "810cc995-9a1f-48d2-8080-5c970c0cc17e",
     "groups": [],
-    "username": "hissisissi@re-gister.com",
-    "password": "4d676be9bc9ee9ef9357f6a2a4be964bbdc1522eb96d79ad9b47b1e259cdde86"
+    "username": "test@tester.com",
+    "password": "0affadb8a7ee3f9f2db6ec138656d7fbc68ef83f718e66d6015729c11b68ad1c"
   }
 }
