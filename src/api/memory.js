@@ -11,7 +11,7 @@ function getMemories($userId, data = {}, cb) {
   // If no search string was entered then let the searchClauses be empty
   let searchClauses = "";
   if (data.hasOwnProperty("$search") && data.$search.trim() !== "") {
-    searchClauses = "AND (entry_date LIKE $search OR title LIKE $search OR description LIKE $search OR locations LIKE $search OR activities LIKE $search OR persons LIKE $search)";
+    searchClauses = " AND (entry_date LIKE $search OR title LIKE $search OR description LIKE $search OR locations LIKE $search OR activities LIKE $search OR persons LIKE $search)";
     data.$search = `%${data.$search}%`;
   } else {
     delete data.$search;
@@ -23,7 +23,7 @@ function getMemories($userId, data = {}, cb) {
   // all other numbers -> both (delete the favorite filter)
   let favoriteClause = "";
   if (data.hasOwnProperty("$favorite") && (data.$favorite === "0" || data.$favorite === "1")) {
-    favoriteClause = "AND favorite = $favorite";
+    favoriteClause = " AND favorite = $favorite";
   } else {
     delete data.$favorite;
   }
@@ -32,7 +32,7 @@ function getMemories($userId, data = {}, cb) {
   // 🚫 or an empty string means no mood filter
   let moodClause = "";
   if (data.hasOwnProperty("$mood") && data.$mood.trim() !== "" && data.$mood !== "🚫") {
-    moodClause = "AND mood = $mood";
+    moodClause = " AND mood = $mood";
   } else {
     delete data.$mood;
   }
@@ -60,7 +60,7 @@ function getMemories($userId, data = {}, cb) {
     );`);
 
     // Get the rows according to the select statement
-    db.all(`SELECT * FROM tbl_memories WHERE user_id = $userId ${searchClauses} ${favoriteClause} ${moodClause} ORDER BY entry_date`, data, function (err, rows) {
+    db.all(`SELECT * FROM tbl_memories WHERE user_id = $userId${searchClauses}${favoriteClause}${moodClause} ORDER BY entry_date`, data, function (err, rows) {
       if (err) {
         // send the error message back to the requester
         cb(err.message);

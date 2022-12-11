@@ -441,7 +441,6 @@ function createMemoryEntries(memories, filterSet) {
       // SECTION Recently added (within the last 7 days)
       if (memoryDate >= (oneWeekAgo)){
         const daysAgo = parseInt((currentDate.getTime() - memoryDate.getTime()) / (1000 * 3600 * 24));
-
         if (daysAgo === 7){
           historyCaption = `<big>${daysAgo/7}</big> week ago ...`;
         } else if (daysAgo === 0){
