@@ -1,24 +1,26 @@
 # Dear Diary Setup
 
-## Dependencies 
-
-node package - sqlite3
-___
-
 ## System requirements
 
 * Development OS: Windows 11 Pro 22H2
 * min. Node.js version: 18.12
 * min. sqlite3 version: 5.1.1 (node package)
+* min. Git Bash version: 2.38.1
 
+___
+
+## Node.js dependencies 
+
+node package - sqlite3
 ___
 
 ## Setup
 
-1. Download the src folder from the repository https://andreasgru@git.wifi.messner.top/Projekte/Projekt-AndreasGru.git and put it in your root folder where you want to store the app
-2. Install node.js and npm on your system -> https://nodejs.org/en/
-3. Install node package sqlite3 in src folder (Terminal): ```npm install sqlite3```
-4. Start server.js (Terminal): ```node server.js```
+1. Download and install Git Bash -> https://git-scm.com/downloads
+1. Download and install node.js and npm -> https://nodejs.org/en/
+2. Clone the repository https://andreasgru@git.wifi.messner.top/Projekte/Projekt-AndreasGru.git and move to src/ folder in Git Bash 
+3. Install node package sqlite3 in src folder: ```npm install sqlite3``` or ```npm install```
+4. Start server.js: ```node server.js```
 5. The server is running on port 80
 
 ___
@@ -31,7 +33,7 @@ ___
 ___
 
 1. Open webserver address in browser
-2. Register(E-mail address, Password: Min. 6, max. 30 characters, at least one number and one special character !@#$%^&*_=+-)
+2. Register (E-mail address, Password: Min. 6, max. 30 characters, at least one number and one special character !@#$%^&*_=+-)
 3. Log in with your credencials
 4. After login, you will be forwarded to the dashboard
 5. The dashboard has three sections 
