@@ -226,7 +226,7 @@ $saveMemory.addEventListener("click", () => {
       $dialogMemory.removeAttribute("open");
 
       // After a memory was saved/updated, refresh the dashboard
-      loadDashboard();
+      loadDashboard(null, resetFilterIndication);
     }
   });
 });
@@ -260,10 +260,7 @@ $toggleFilterDialog.addEventListener("click", () => {
   // Trigger the removeAttribute after the loadDashboard is finished,
   // so no delay will be noticed
   if ($toggleFilterDialog.hasAttribute("data-filtered")) {
-    loadDashboard(null, () => {
-      $toggleFilterDialog.removeAttribute("data-filtered");
-      $toggleFilterDialog.textContent = "";
-    });
+    loadDashboard(null, resetFilterIndication);
     return;
   }
 
@@ -457,14 +454,20 @@ function createMemoryEntries(memories, filterSet) {
 
         if (monthsAgo <= 12 ){
           historyCaption = `<big>${monthsAgo}</big> month${monthsAgo !== 1 ? "s" : ""} ago ...`;
+          renderMemory($memory, sectionIds[1]);
         }else if (monthsAgo % 12 === 0){
-          historyCaption = `<big>${monthsAgo / 12}</big> years ago ...`
+          historyCaption = `<big>${monthsAgo / 12}</big> years ago ...`;
+          renderMemory($memory, sectionIds[1]);
+        }
+        // Show memory in favorite section
+        else if (favorite){
+          historyCaption = "";
+          renderMemory($memory, sectionIds[0]);
         }
         // Don't render all other memories
         else {
           continue;
         }
-        renderMemory($memory, sectionIds[1]);
       }
 
       // SECTION favorites - Remove the historyCaption from favorite entries
@@ -562,7 +565,7 @@ function createMemoryEntries(memories, filterSet) {
           alert("Memory deleted successfully!");
 
           // After a memory was deleted, refresh the dashboard
-          loadDashboard();
+          loadDashboard(null, resetFilterIndication);
         }
       });
     });
@@ -619,6 +622,7 @@ function clearDialogData() {
   $emojiContainerNewEntry.querySelector("span[data-selected]").removeAttribute("data-selected");
   $emojiContainerNewEntry.querySelector("span:first-child").setAttribute("data-selected","");
   $description.value = "";
+  $imgToUpload.value = "";
   $imgPreviewContainer.innerHTML = "";
   $locations.innerHTML = "";
   $activities.innerHTML = "";
@@ -744,6 +748,11 @@ function closeFilterDialog() {
 function closeNewEntryDialog() {
   $dialogBackdrop.hidden = true;
   $dialogMemory.removeAttribute("open");
+}
+
+function resetFilterIndication() {
+  $toggleFilterDialog.removeAttribute("data-filtered");
+  $toggleFilterDialog.textContent = "";
 }
 
 // Gets the difference of months between two dates
