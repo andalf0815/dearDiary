@@ -395,7 +395,6 @@ const server = http.createServer(function (request, response) {
         response.endWithStatus(500);
         return;
       }
-
       const userId = sessions[sessionID].id;
 
       // Insert the extracted body params to the sqlite db

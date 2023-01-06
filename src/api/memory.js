@@ -110,7 +110,7 @@ function insertMemory(userId, data, cb) {
       return;
     }
     // send the last inserted id back to the requester
-    cb(null, data.uuid);
+    cb(null, data[0]);
   });
 
   // close the database connection

@@ -191,24 +191,29 @@ $saveMemory.addEventListener("click", () => {
     return;
   }
 
+  $dialogBackdrop.hidden = true;
+  $dialogMemory.removeAttribute("open");
+
   const imageBase64Collection = [ ...$imgPreviewContainer.children ];
 
   // Joining the array of base64 code with the separator ;; so that it can be later easily splitted
   const imgB64 = imageBase64Collection.map((entry) => entry.src).join(";;");
-
+ 
   // Collection the data which where entered in the dialogMemory
   const data = {
     "uuid": $dialogMemory.dataset.uuid,
     "entry_date": $memoryDate.value,
     "title": $memoryTitle.value.trim(),
     "favorite": $favoriteNewEntry.dataset.favoriteset === "" ? 1 : 0,
-    "emoji": $emojiContainerNewEntry.querySelector("span[data-selected]").textContent,
+    "mood": $emojiContainerNewEntry.querySelector("span[data-selected]").textContent,
     "description": $description.value.trim(),
-    "imgB64": imgB64,
+    "images": imgB64,
     "locations": getTags($locations).join("; "),
     "activities": getTags($activities).join("; "),
     "persons": getTags($persons).join("; ")
   };
+
+  clearDialogData();
 
   // Preparing the xhr and send it to the server
   const xhr = new XMLHttpRequest();
@@ -220,13 +225,8 @@ $saveMemory.addEventListener("click", () => {
   xhr.addEventListener("load", () => {
     if(xhr.status === 200 & xhr.readyState === 4){
       alert("Memory saved successfully!");
-
-      clearDialogData();
-      $dialogBackdrop.hidden = true;
-      $dialogMemory.removeAttribute("open");
-
-      // After a memory was saved/updated, refresh the dashboard
-      loadDashboard(null, resetFilterIndication);
+      data.uuid = xhr.responseText;
+      createMemoryEntries([data], false, false);
     }
   });
 });
@@ -260,7 +260,7 @@ $toggleFilterDialog.addEventListener("click", () => {
   // Trigger the removeAttribute after the loadDashboard is finished,
   // so no delay will be noticed
   if ($toggleFilterDialog.hasAttribute("data-filtered")) {
-    loadDashboard(null, resetFilterIndication);
+    loadDashboard(false, resetFilterIndication);
     return;
   }
 
@@ -330,23 +330,7 @@ function loadDashboard(filter = null, cb = null) {
     // CREATING MEMORIES (ARTICLES) //
 
     // Create and render Memories
-    createMemoryEntries(memories, filterSet);
-
-    // Show/hide detail-view, edit and delete buttons when hover/leave an memory
-    for (let $memory of $main.querySelectorAll("article")) {
-
-      $memory.addEventListener("mouseover", () => {
-        $memory.querySelector('.edit').hidden = false;
-        $memory.querySelector('.delete').hidden = false;
-        $memory.querySelector('.detail-view').hidden = false;
-      });
-
-      $memory.addEventListener("mouseleave", () => {
-        $memory.querySelector('.edit').hidden = true;
-        $memory.querySelector('.delete').hidden = true;
-        $memory.querySelector('.detail-view').hidden = true;
-      });
-    }
+    createMemoryEntries(memories, filterSet, true);
 
     // Loads the arrow left + right buttons
     setSliderButtons();
@@ -362,10 +346,9 @@ function loadDashboard(filter = null, cb = null) {
   });
 }
 
-function createMemoryEntries(memories, filterSet) {
+function createMemoryEntries(memories, filterSet, refresh) {
   // Loop through the memories, copy the template_memory and add it dynamically to the sections
   // Depending on which section category the memory is related to, append it to the correct section
-
   // Get the current date in new Date format
   const currentDate = new Date();
   currentDate.setHours(0,0,0,0)
@@ -378,8 +361,19 @@ function createMemoryEntries(memories, filterSet) {
   let memoriesCounter = 0;
   let sectionIndex = 2;
 
-  // Reset the object which contains all al memories to be rendered
-  resetRenderedMemories();
+  // Get the memories from $main.querySelectorAll("article") and check if the current parameter memories contains it, when yes, then remove it and let it be rendered
+  const currentlyRenderedMemories = [...$main.querySelectorAll("article")];
+  if (refresh || currentlyRenderedMemories.length === 0 || !filterSet) {
+    // Reset the object which contains all memories to be rendered
+    console.log("resetert")
+    resetRenderedMemories();
+  } else {
+    currentlyRenderedMemories.map($memory => {
+      if ($memory.dataset.uuid === memories[0].uuid){
+        $memory.remove();
+      }
+    })
+  }
 
   for (let {
     uuid,
@@ -393,7 +387,6 @@ function createMemoryEntries(memories, filterSet) {
     persons,
     images,
   } of memories) {
-
     // Get the memory entry date in new Date format
     const memoryDate = new Date(entry_date);
 
@@ -529,7 +522,7 @@ function createMemoryEntries(memories, filterSet) {
     //
     // Edit and Delete Button functions
     //
-
+    
     // Add eventlistener to the edit button
     // This loads the data from the entry, opens the dialogMemory and sets the correct values to the fields
     $memory.querySelector(".edit").addEventListener(("click"), (e) => {
@@ -549,25 +542,16 @@ function createMemoryEntries(memories, filterSet) {
     // DELETING A MEMORY (XHR)
     // Add eventlistener to the delete button
     $memory.querySelector(".delete").addEventListener(("click"), (e) => {
-
       // Safety check if the user really want to delete the memory
       if(!confirm("Do you really want to delete the memory?")) return;
 
+      $memory.remove();
       // Preparing the xhr and send it to the server
       const xhr = new XMLHttpRequest();
       const params = new URLSearchParams({"uuid": uuid});
 
       xhr.open("POST", "/api?deleteMemory", true);
       xhr.send(params);
-
-      xhr.addEventListener("load", () => {
-        if(xhr.status === 200 & xhr.readyState === 4){
-          alert("Memory deleted successfully!");
-
-          // After a memory was deleted, refresh the dashboard
-          loadDashboard(null, resetFilterIndication);
-        }
-      });
     });
 
     // When clicking on the magnifying symbol, then maximize the memory entry to see the complete information
@@ -581,6 +565,19 @@ function createMemoryEntries(memories, filterSet) {
 function renderMemory ($memory, sectionId){
   sections[sectionId].querySelector(".articles").append($memory);
   sections[sectionId].toggleAttribute("hidden", false);
+
+  // Show/hide detail-view, edit and delete buttons when hover/leave an memory
+  $memory.addEventListener("mouseover", () => {
+    $memory.querySelector('.edit').hidden = false;
+    $memory.querySelector('.delete').hidden = false;
+    $memory.querySelector('.detail-view').hidden = false;
+  });
+
+  $memory.addEventListener("mouseleave", () => {
+    $memory.querySelector('.edit').hidden = true;
+    $memory.querySelector('.delete').hidden = true;
+    $memory.querySelector('.detail-view').hidden = true;
+  });
 }
 
 // Resets the object which contains all the rendered memories
