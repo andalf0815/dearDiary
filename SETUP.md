@@ -18,7 +18,7 @@ ___
 
 1. Download and install Git Bash -> https://git-scm.com/downloads
 1. Download and install node.js and npm -> https://nodejs.org/en/
-2. Clone the repository https://andreasgru@git.wifi.messner.top/Projekte/Projekt-AndreasGru.git and move to src/ folder in Git Bash 
+2. Clone the repository https://github.com/andalf0815/dearDiary.git and move to src/ folder in Git Bash 
 3. Install node package sqlite3 in src folder: ```npm install sqlite3``` or ```npm install```
 4. Start server.js: ```node server.js```
 5. The server is running on port 80
@@ -27,7 +27,7 @@ ___
 
 ## User manual
 
-*Info:* A test user was added to skip the registration process if wanted
+*Info:* A test user was added to skip the registration process if you want to test the app
 * Username: test@tester.com
 * Password: hallo123$
 ___
