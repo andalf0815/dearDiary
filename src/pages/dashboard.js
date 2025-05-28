@@ -365,7 +365,6 @@ function createMemoryEntries(memories, filterSet, refresh) {
   const currentlyRenderedMemories = [...$main.querySelectorAll("article")];
   if (refresh || currentlyRenderedMemories.length === 0 || !filterSet) {
     // Reset the object which contains all memories to be rendered
-    console.log("resetert")
     resetRenderedMemories();
   } else {
     currentlyRenderedMemories.map($memory => {

@@ -1,16 +1,14 @@
-"use strict";
+'use strict';
 
-const $form = document.querySelector("#frm_login");
-const $register = document.querySelector("#btn_register");
+const $form = document.querySelector('#frm_login');
+const $register = document.querySelector('#btn_register');
 const $submit = document.querySelector('[type="submit"]');
 const $pswList = document.querySelectorAll('[type="password"]');
 
-const $validation = document.querySelector("#p_validation");
+const $validation = document.querySelector('#p_validation');
 
-const pswPattern =
- "^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+-]).{6,30}$";
-const pswTitle =
-  "Min. 6, max. 30 characters, at least one number and one special character (!@#$%^&*_=+-)";
+const pswPattern = '^(?=.*[a-zA-Z])(?=.*[0-9])(?=.*[!@#$%^&*_=+\\-]).{6,30}$';
+const pswTitle = 'Min. 6, max. 30 characters, at least one number and one special character (!@#$%^&*_=+-)';
 
 /**********/
 /* EVENTS */
@@ -21,27 +19,27 @@ const pswTitle =
 // send the request to the server
 // Further we register the xhr eventlistener within the submit eventlistener
 
-$form.addEventListener("submit", (event) => {
+$form.addEventListener('submit', (event) => {
   event.preventDefault();
-  let isLogin = $form.dataset.login === "" ? true : false;
+  let isLogin = $form.dataset.login === '' ? true : false;
 
   // Get the username and the password from the form,
   // create a queryString and a XMLHttpRequest
   let username = event.target[0].value;
   let psw = event.target[1].value;
 
-  const params = new URLSearchParams({"username": username, "password": psw});
+  const params = new URLSearchParams({ username: username, password: psw });
   const xhr = new XMLHttpRequest();
 
   // Listen to the response of the server and check if the
   // login/registration did work
   xhr.addEventListener(
-    "load",
+    'load',
     () => {
       // If we get not an status of OK or Forwarded, then inform the user
       // with the proper message according to the current view (login/regiater)
       if (xhr.status !== 200 && xhr.status !== 302) {
-          alert(`${isLogin ? 'Login' : 'Registrierung'} fehlgeschlagen!`)
+        alert(`${isLogin ? 'Login' : 'Registrierung'} fehlgeschlagen!`);
         return;
       }
       window.location.href = xhr.responseURL;
@@ -56,56 +54,55 @@ $form.addEventListener("submit", (event) => {
   // If we are in the register view, then make the password validation check
   // before send then the request to the server
   if (!isLogin) {
-    if ($validation.dataset.matching === "true") {
-      xhr.open("post", "/?register", true);
+    if ($validation.dataset.matching === 'true') {
+      xhr.open('post', '/?register', true);
       xhr.send(params);
       return;
     }
     return;
   }
-  xhr.open("post", "/?login", true);
+  xhr.open('post', '/?login', true);
   xhr.send(params);
 });
 
 // Set an eventListener to toggle between the login view
 // and the register view
 
-$register.addEventListener("click", (event) => {
+$register.addEventListener('click', (event) => {
   event.preventDefault();
   if ($form.dataset.login !== undefined) {
     // Click on Sign Up -> switch to register view from sign in view and set action to ?register
 
-    $submit.value = "Sign Up";
-    $register.textContent = "Log In";
+    $submit.value = 'Sign Up';
+    $register.textContent = 'Log In';
     $validation.hidden = false;
-    $pswList[0].setAttribute("pattern", pswPattern);
-    $pswList[0].setAttribute("title", pswTitle);
+    $pswList[0].setAttribute('pattern', pswPattern);
+    $pswList[0].setAttribute('title', pswTitle);
   } else {
-
     // Click on Log In -> switch to login view register view and set action to ?login
-    $submit.value = "Log In";
-    $register.textContent = "Sign Up";
+    $submit.value = 'Log In';
+    $register.textContent = 'Sign Up';
     $validation.hidden = true;
-    $pswList[0].removeAttribute("pattern");
-    $pswList[0].removeAttribute("title");
+    $pswList[0].removeAttribute('pattern');
+    $pswList[0].removeAttribute('title');
   }
 
   // Toogle the second password input field and the data-login attribute in frm_login
-  $form.toggleAttribute("data-login");
-  $pswList[1].toggleAttribute("hidden");
-  $pswList[1].toggleAttribute("required");
+  $form.toggleAttribute('data-login');
+  $pswList[1].toggleAttribute('hidden');
+  $pswList[1].toggleAttribute('required');
 });
 
 // EventListener registered on the password input fields for validating the repeated password -> Check if the repeated password is the same as the first entered on every key up
 
 for (let $element of $pswList) {
-  $element.addEventListener("keyup", () => {
+  $element.addEventListener('keyup', () => {
     if ($pswList[0].value === $pswList[1].value) {
-      $validation.setAttribute("data-matching", true);
-      $validation.textContent = "Matching passwords";
+      $validation.setAttribute('data-matching', true);
+      $validation.textContent = 'Matching passwords';
     } else {
-      $validation.setAttribute("data-matching", false);
-      $validation.textContent = "Not matching passwords";
+      $validation.setAttribute('data-matching', false);
+      $validation.textContent = 'Not matching passwords';
     }
   });
 }
