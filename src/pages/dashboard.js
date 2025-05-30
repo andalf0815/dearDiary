@@ -70,12 +70,12 @@ for (const sectionId of sectionIds) {
   const $articleContainer = $section.querySelector(".articles");
   const $slideMemory = $section.querySelectorAll(".slide-memory");
 
-  for (const $slideElement of $slideMemory){
+  for (const $slideElement of $slideMemory) {
     $slideElement.addEventListener("click", (e) => {
       const scrollDirection = e.target.classList.contains("arrow-right") ? 1 : -1;
       $articleContainer.scrollBy({
-        left : scrollDirection * ($articleContainer.firstChild?.offsetWidth + 20),
-        behavior: 'smooth'
+        left: scrollDirection * ($articleContainer.firstChild?.offsetWidth + 20),
+        behavior: "smooth",
       });
     });
   }
@@ -124,7 +124,7 @@ $imgToUpload.addEventListener("change", () => {
 
   // Loop through the selected images
   // Then create a File reader to read the file and get the base64 code from it
-  for (let file of files){
+  for (let file of files) {
     const reader = new FileReader();
     reader.readAsDataURL(file);
 
@@ -153,11 +153,10 @@ $imgToUpload.addEventListener("change", () => {
         $img.className = "img-preview";
         $img.src = srcEncoded;
         $imgPreviewContainer.append($img);
-      })
+      });
     });
   }
-})
-
+});
 
 // Enter click in tag input fields
 // Add eventlistener to the tags input (When entering a tag and click enter, then display the entered string below the tags element)
@@ -166,7 +165,7 @@ $tagParents.forEach(($tagParent) => {
   const $tags = $tagParent.querySelector(".tags");
 
   $input.addEventListener("keydown", (e) => {
-    if (e.key === "Enter" && $input.value.trim()){
+    if (e.key === "Enter" && $input.value.trim()) {
       const $tag = document.createElement("span");
       $tag.textContent = $input.value;
       $input.value = "";
@@ -184,9 +183,8 @@ $tagParents.forEach(($tagParent) => {
 // SAVING A NEW MEMORY (XHR)
 // Eventlistener for clicking the Save button
 $saveMemory.addEventListener("click", () => {
-
   // If title and date is empty, don't save the memory
-  if(!$memoryTitle.value.trim() || !$memoryDate.value){
+  if (!$memoryTitle.value.trim() || !$memoryDate.value) {
     alert("Title and date must be filled out");
     return;
   }
@@ -194,23 +192,23 @@ $saveMemory.addEventListener("click", () => {
   $dialogBackdrop.hidden = true;
   $dialogMemory.removeAttribute("open");
 
-  const imageBase64Collection = [ ...$imgPreviewContainer.children ];
+  const imageBase64Collection = [...$imgPreviewContainer.children];
 
   // Joining the array of base64 code with the separator ;; so that it can be later easily splitted
   const imgB64 = imageBase64Collection.map((entry) => entry.src).join(";;");
- 
+
   // Collection the data which where entered in the dialogMemory
   const data = {
-    "uuid": $dialogMemory.dataset.uuid,
-    "entry_date": $memoryDate.value,
-    "title": $memoryTitle.value.trim(),
-    "favorite": $favoriteNewEntry.dataset.favoriteset === "" ? 1 : 0,
-    "mood": $emojiContainerNewEntry.querySelector("span[data-selected]").textContent,
-    "description": $description.value.trim(),
-    "images": imgB64,
-    "locations": getTags($locations).join("; "),
-    "activities": getTags($activities).join("; "),
-    "persons": getTags($persons).join("; ")
+    uuid: $dialogMemory.dataset.uuid,
+    entry_date: $memoryDate.value,
+    title: $memoryTitle.value.trim(),
+    favorite: $favoriteNewEntry.dataset.favoriteset === "" ? 1 : 0,
+    mood: $emojiContainerNewEntry.querySelector("span[data-selected]").textContent,
+    description: $description.value.trim(),
+    images: imgB64,
+    locations: getTags($locations).join("; "),
+    activities: getTags($activities).join("; "),
+    persons: getTags($persons).join("; "),
   };
 
   clearDialogData();
@@ -223,7 +221,7 @@ $saveMemory.addEventListener("click", () => {
   xhr.send(params);
 
   xhr.addEventListener("load", () => {
-    if(xhr.status === 200 & xhr.readyState === 4){
+    if ((xhr.status === 200) & (xhr.readyState === 4)) {
       alert("Memory saved successfully!");
       data.uuid = xhr.responseText;
       createMemoryEntries([data], false, false);
@@ -242,12 +240,12 @@ $dialogBackdrop.addEventListener("click", () => {
 // Mouse click onto closing dialogs X symbol
 // When clicking on the X ymbol in the dialogs, then close it
 
-for (let $closeDialog of $closeDialogs){
+for (let $closeDialog of $closeDialogs) {
   $closeDialog.addEventListener("click", () => {
-    if ($closeDialog === $closeDialogMemory){
+    if ($closeDialog === $closeDialogMemory) {
       clearDialogData();
       closeNewEntryDialog();
-    }else {
+    } else {
       closeFilterDialog();
     }
   });
@@ -275,16 +273,16 @@ $searchMemories.addEventListener("click", () => {
   let favoriteFilter = 2;
 
   for (let radioFavorite of $radiosFavorite) {
-    if (radioFavorite.checked){
+    if (radioFavorite.checked) {
       favoriteFilter = radioFavorite.defaultValue;
       break;
     }
   }
 
   const filter = {
-    "$search": $filterSearch.value,
-    "$favorite": favoriteFilter,
-    "$mood": $emojiContainerFilter.querySelector("span[data-selected]").textContent
+    $search: $filterSearch.value,
+    $favorite: favoriteFilter,
+    $mood: $emojiContainerFilter.querySelector("span[data-selected]").textContent,
   };
 
   loadDashboard(filter);
@@ -311,7 +309,7 @@ function loadDashboard(filter = null, cb = null) {
   // because we don't render special times spans anymore (today one year/month/... ago, ...)
   const filterSet = filter ? true : false;
 
-  filter = {"getMemories": "", ...filter};
+  filter = { getMemories: "", ...filter };
   let params = new URLSearchParams(filter);
 
   xhr.open("GET", `/api?${params}`, true);
@@ -321,7 +319,7 @@ function loadDashboard(filter = null, cb = null) {
     memories = JSON.parse(xhr.responseText);
 
     if (filterSet) {
-      $toggleFilterDialog.setAttribute("data-filtered","");
+      $toggleFilterDialog.setAttribute("data-filtered", "");
       $toggleFilterDialog.textContent = memories.length;
     } else {
       $toggleFilterDialog.removeAttribute("data-filtered");
@@ -339,10 +337,9 @@ function loadDashboard(filter = null, cb = null) {
     loadEmojis();
 
     // If a callback function was passed as parameter then call it
-    if (cb){
+    if (cb) {
       cb();
     }
-
   });
 }
 
@@ -351,7 +348,7 @@ function createMemoryEntries(memories, filterSet, refresh) {
   // Depending on which section category the memory is related to, append it to the correct section
   // Get the current date in new Date format
   const currentDate = new Date();
-  currentDate.setHours(0,0,0,0)
+  currentDate.setHours(0, 0, 0, 0);
   const currentDay = currentDate.getDate();
 
   // We need this to spread the memories across every section, when a filter is activated
@@ -367,11 +364,11 @@ function createMemoryEntries(memories, filterSet, refresh) {
     // Reset the object which contains all memories to be rendered
     resetRenderedMemories();
   } else {
-    currentlyRenderedMemories.map($memory => {
-      if ($memory.dataset.uuid === memories[0].uuid){
+    currentlyRenderedMemories.map(($memory) => {
+      if ($memory.dataset.uuid === memories[0].uuid) {
         $memory.remove();
       }
-    })
+    });
   }
 
   for (let {
@@ -389,13 +386,13 @@ function createMemoryEntries(memories, filterSet, refresh) {
     // Get the memory entry date in new Date format
     const memoryDate = new Date(entry_date);
 
-    memoryDate.setHours(0,0,0,0);
-    const memoryDay = memoryDate.getDate()
+    memoryDate.setHours(0, 0, 0, 0);
+    const memoryDay = memoryDate.getDate();
 
     // Get the date from one week to then check if the current memory is within the range
     const oneWeekAgo = new Date();
 
-    oneWeekAgo.setHours(0,0,0,0)
+    oneWeekAgo.setHours(0, 0, 0, 0);
     oneWeekAgo.setDate(currentDate.getDate() - 7);
 
     // Create the memory element and add its properties
@@ -413,26 +410,26 @@ function createMemoryEntries(memories, filterSet, refresh) {
     // If a filter is set, we render every result of the filter spread to the sections
     // If no filter is set, we will render according to our defined sections
     if (filterSet) {
-      if (memoriesCounter < memoriesPerSection){
+      if (memoriesCounter < memoriesPerSection) {
         renderMemory($memory, sectionIds[sectionIndex]);
         memoriesCounter++;
-      }else {
+      } else {
         memoriesCounter = 1;
         sectionIndex--;
         renderMemory($memory, sectionIds[sectionIndex]);
       }
-    }else {
+    } else {
       // Check if the memory entry should be displayed or not.
       // If it should be displayed, then create the histoy caption.
       // Set the "x days weeks/months/years ago ..." text
       let historyCaption;
 
       // SECTION Recently added (within the last 7 days)
-      if (memoryDate >= (oneWeekAgo)){
+      if (memoryDate >= oneWeekAgo) {
         const daysAgo = parseInt((currentDate.getTime() - memoryDate.getTime()) / (1000 * 3600 * 24));
-        if (daysAgo === 7){
-          historyCaption = `<big>${daysAgo/7}</big> week ago ...`;
-        } else if (daysAgo === 0){
+        if (daysAgo === 7) {
+          historyCaption = `<big>${daysAgo / 7}</big> week ago ...`;
+        } else if (daysAgo === 0) {
           historyCaption = `<big>Today</big>`;
         } else {
           historyCaption = `<big>${daysAgo}</big> day${daysAgo !== 1 ? "s" : ""} ago ...`;
@@ -441,18 +438,18 @@ function createMemoryEntries(memories, filterSet, refresh) {
       }
 
       // SECTION All memories on the same date as today
-      else if (currentDay === memoryDay){
+      else if (currentDay === memoryDay) {
         const monthsAgo = getMonthDifference(memoryDate, currentDate);
 
-        if (monthsAgo <= 12 ){
+        if (monthsAgo <= 12) {
           historyCaption = `<big>${monthsAgo}</big> month${monthsAgo !== 1 ? "s" : ""} ago ...`;
           renderMemory($memory, sectionIds[1]);
-        }else if (monthsAgo % 12 === 0){
+        } else if (monthsAgo % 12 === 0) {
           historyCaption = `<big>${monthsAgo / 12}</big> years ago ...`;
           renderMemory($memory, sectionIds[1]);
         }
         // Show memory in favorite section
-        else if (favorite){
+        else if (favorite) {
           historyCaption = "";
           renderMemory($memory, sectionIds[0]);
         }
@@ -463,7 +460,7 @@ function createMemoryEntries(memories, filterSet, refresh) {
       }
 
       // SECTION favorites - Remove the historyCaption from favorite entries
-      else if (favorite){
+      else if (favorite) {
         historyCaption = "";
         renderMemory($memory, sectionIds[0]);
       }
@@ -480,19 +477,22 @@ function createMemoryEntries(memories, filterSet, refresh) {
     // Load the images of the memory entry
     const $images = [...$memory.querySelector(".images").children];
 
-    images = images.split(";;");
+    if (typeof images === "string") {
+      images = images.split(";;");
+    } else {
+      images = []; // or whatever default makes sense
+    }
 
     // Loading the images from the database data and put it to the four img tags
     $images.forEach(($img, index) => {
-
       // If no image from a memory entry is in the database
       // or no valid base64 code is available, then don't show any img
-      if (images[index] && images[index].slice(0, 22) === "data:image/png;base64,"){
+      if (images[index] && images[index].slice(0, 22) === "data:image/png;base64,") {
         $img.src = images[index];
       } else {
         $img.hidden = true;
       }
-    })
+    });
 
     //
     // Load the correct tag values for each tag (locations, activities and persons)
@@ -521,13 +521,23 @@ function createMemoryEntries(memories, filterSet, refresh) {
     //
     // Edit and Delete Button functions
     //
-    
+
     // Add eventlistener to the edit button
     // This loads the data from the entry, opens the dialogMemory and sets the correct values to the fields
-    $memory.querySelector(".edit").addEventListener(("click"), (e) => {
-
+    $memory.querySelector(".edit").addEventListener("click", (e) => {
       // Set the dialog data (popup for entering/updating memories) with the loaded data from the db
-      setDialogData({uuid, entry_date, favorite, mood, title, description, locations, activities, persons, images});
+      setDialogData({
+        uuid,
+        entry_date,
+        favorite,
+        mood,
+        title,
+        description,
+        locations,
+        activities,
+        persons,
+        images,
+      });
 
       // open the dialogMemory
       $dialogBackdrop.hidden = false;
@@ -540,14 +550,14 @@ function createMemoryEntries(memories, filterSet, refresh) {
     //
     // DELETING A MEMORY (XHR)
     // Add eventlistener to the delete button
-    $memory.querySelector(".delete").addEventListener(("click"), (e) => {
+    $memory.querySelector(".delete").addEventListener("click", (e) => {
       // Safety check if the user really want to delete the memory
-      if(!confirm("Do you really want to delete the memory?")) return;
+      if (!confirm("Do you really want to delete the memory?")) return;
 
       $memory.remove();
       // Preparing the xhr and send it to the server
       const xhr = new XMLHttpRequest();
-      const params = new URLSearchParams({"uuid": uuid});
+      const params = new URLSearchParams({ uuid: uuid });
 
       xhr.open("POST", "/api?deleteMemory", true);
       xhr.send(params);
@@ -561,21 +571,21 @@ function createMemoryEntries(memories, filterSet, refresh) {
 }
 
 // Renders the memory to the correct section
-function renderMemory ($memory, sectionId){
+function renderMemory($memory, sectionId) {
   sections[sectionId].querySelector(".articles").append($memory);
   sections[sectionId].toggleAttribute("hidden", false);
 
   // Show/hide detail-view, edit and delete buttons when hover/leave an memory
   $memory.addEventListener("mouseover", () => {
-    $memory.querySelector('.edit').hidden = false;
-    $memory.querySelector('.delete').hidden = false;
-    $memory.querySelector('.detail-view').hidden = false;
+    $memory.querySelector(".edit").hidden = false;
+    $memory.querySelector(".delete").hidden = false;
+    $memory.querySelector(".detail-view").hidden = false;
   });
 
   $memory.addEventListener("mouseleave", () => {
-    $memory.querySelector('.edit').hidden = true;
-    $memory.querySelector('.delete').hidden = true;
-    $memory.querySelector('.detail-view').hidden = true;
+    $memory.querySelector(".edit").hidden = true;
+    $memory.querySelector(".delete").hidden = true;
+    $memory.querySelector(".detail-view").hidden = true;
   });
 }
 
@@ -591,19 +601,19 @@ function resetRenderedMemories() {
 function setSliderButtons() {
   const amountVisibleMemories = window.innerWidth <= 1100 ? 1 : 2;
 
-  for (let [ key, value ] of Object.entries(sections)) {
+  for (let [key, value] of Object.entries(sections)) {
     const $articleContainer = value.children[2].children;
 
-    value.querySelectorAll('.slide-memory').forEach((element) => {
+    value.querySelectorAll(".slide-memory").forEach((element) => {
       element.hidden = $articleContainer?.length > amountVisibleMemories ? false : true;
     });
   }
 }
 
 // Get the entered tags from the dialog field (new/update)
-function getTags($tags){
+function getTags($tags) {
   const tags = [];
-  for (let element of $tags.children){
+  for (let element of $tags.children) {
     tags.push(element.textContent);
   }
   return tags;
@@ -616,7 +626,7 @@ function clearDialogData() {
   $memoryTitle.value = "";
   $favoriteNewEntry.toggleAttribute("data-favoriteset", false);
   $emojiContainerNewEntry.querySelector("span[data-selected]").removeAttribute("data-selected");
-  $emojiContainerNewEntry.querySelector("span:first-child").setAttribute("data-selected","");
+  $emojiContainerNewEntry.querySelector("span:first-child").setAttribute("data-selected", "");
   $description.value = "";
   $imgToUpload.value = "";
   $imgPreviewContainer.innerHTML = "";
@@ -641,10 +651,9 @@ function setDialogData(data) {
   const images = data.images;
 
   images.forEach((img, index) => {
-
     // If no image from a memory entry is in the database
     // or no valid base64 code is available, then don't show any img
-    if (img && img.slice(0, 22) === "data:image/png;base64,"){
+    if (img && img.slice(0, 22) === "data:image/png;base64,") {
       const $img = document.createElement("img");
       $img.className = "img-preview";
       $img.src = images[index];
@@ -653,20 +662,20 @@ function setDialogData(data) {
   });
 
   // Set the correct emoji
-  for (let mood of $emojiContainerNewEntry.children){
-    if (mood.textContent === data.mood){
+  for (let mood of $emojiContainerNewEntry.children) {
+    if (mood.textContent === data.mood) {
       $emojiContainerNewEntry.querySelector("span[data-selected]").removeAttribute("data-selected");
-      mood.setAttribute("data-selected","");
+      mood.setAttribute("data-selected", "");
     }
   }
 
   // Loading the tags
   // Loop through the different tags (locations, activities and persons) and set the tags (array) to the correct span element
-  for (let index in tags){
+  for (let index in tags) {
     let $tagContainer = $tagParents[index].querySelector(".tags");
-    for (let tag of tags[index].split("; ")){
+    for (let tag of tags[index].split("; ")) {
       // set only tags which contain data
-      if (tag.length){
+      if (tag.length) {
         let $tag = document.createElement("span");
 
         $tag.textContent = tag;
@@ -687,7 +696,7 @@ function deleteTag($tag, e) {
   const xImgWidth = 13;
   // A direct click on the pseudo element ::after is not possible,
   // so check the coordinates of the click event and delete the tag
-  if(e.offsetX > (e.target.offsetLeft + e.target.offsetWidth - xImgWidth)){
+  if (e.offsetX > e.target.offsetLeft + e.target.offsetWidth - xImgWidth) {
     $tag.remove();
   }
 }
@@ -696,22 +705,45 @@ function deleteTag($tag, e) {
 // Creates the content for the emojis-container set the click
 // events and renders it to the filter and new memory dialog
 function loadEmojis() {
-  const emojis = ["🚫", "😀", "😅", "😇", "😈", "😌","😍","😎","😑","😓","😔","😕","😢","😭","😴","😵","🤪","🤬","🤯","🤮","🤒","🤕"];
+  const emojis = [
+    "🚫",
+    "😀",
+    "😅",
+    "😇",
+    "😈",
+    "😌",
+    "😍",
+    "😎",
+    "😑",
+    "😓",
+    "😔",
+    "😕",
+    "😢",
+    "😭",
+    "😴",
+    "😵",
+    "🤪",
+    "🤬",
+    "🤯",
+    "🤮",
+    "🤒",
+    "🤕",
+  ];
 
-  for(let $emojiContainer of $emojiContainers) {
+  for (let $emojiContainer of $emojiContainers) {
     $emojiContainer.innerHTML = "";
 
     // For loading the new Entry emojis, delete 🚫 at the beginning of the emojis array
     // Because it's meant to be a filter for any of the emojis
-    if ($emojiContainer !== $emojiContainerFilter){
+    if ($emojiContainer !== $emojiContainerFilter) {
       emojis.shift();
     }
 
-    for( let index in emojis){
+    for (let index in emojis) {
       const $span = document.createElement("span");
 
       $span.textContent = emojis[index];
-      if(index === "0") {
+      if (index === "0") {
         $span.setAttribute("data-selected", "");
       }
       $emojiContainer.append($span);
@@ -720,7 +752,6 @@ function loadEmojis() {
     // Mouse click onto an emoji
     // Eventlistener for selectig an emoji
     $emojiContainer.addEventListener("click", (e) => {
-
       // TO AVOID GLITCHING
       // When a user clicks on an emoji, moves the cursor
       // and releases the mouse click on another position,
@@ -730,7 +761,6 @@ function loadEmojis() {
       $emojiContainer.querySelector("span[data-selected]").toggleAttribute("data-selected", false);
       e.target.setAttribute("data-selected", "");
     });
-
   }
 }
 
@@ -753,9 +783,5 @@ function resetFilterIndication() {
 
 // Gets the difference of months between two dates
 function getMonthDifference(startDate, endDate) {
-  return (
-    endDate.getMonth() -
-    startDate.getMonth() +
-    12 * (endDate.getFullYear() - startDate.getFullYear())
-  )
+  return endDate.getMonth() - startDate.getMonth() + 12 * (endDate.getFullYear() - startDate.getFullYear());
 }
